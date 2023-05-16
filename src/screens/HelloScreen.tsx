@@ -20,6 +20,7 @@ export default function HelloScreen() {
                 fontSize="lg"
                 borderWidth="0"
                 bg="white"
+                shadow="10"
                 p="5"
             />
         </VStack>

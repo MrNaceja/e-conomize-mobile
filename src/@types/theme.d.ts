@@ -1,7 +1,7 @@
-import { defaultTheme } from "theme/defaultTheme";
+import { THEME } from "theme";
 
-export type TTheme = typeof defaultTheme
+type TTheme = typeof THEME;
 
 declare module 'native-base' {
-    interface TTheme extends CustomThemeType {};
+  interface ICustomTheme extends TTheme {}
 }
