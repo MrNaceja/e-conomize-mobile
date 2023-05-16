@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import { NativeBaseProvider } from 'native-base'
+import HelloScreen from './src/screens/HelloScreen';
 
 export default function App() {
   return (
-    <View>
+    <NativeBaseProvider>
       <StatusBar style="auto" />
-    </View>
+      <HelloScreen />
+    </NativeBaseProvider>
   );
 }
