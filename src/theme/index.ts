@@ -1,15 +1,10 @@
-import { extendTheme } from "native-base";
-
+import { extendTheme, theme } from "native-base";
+const { colors } = theme
 export const THEME = extendTheme({
   shadows: {
     '10': {
-      shadowColor: 'gray.800',
-      shadowOffset: {
-          width: 2,
-          height: 5,
-      },
-      shadowOpacity: .5,
-      elevation: 2
+      shadowColor: colors.gray[400],
+      elevation: 30,
     }
   }
 });
