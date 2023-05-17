@@ -1,16 +1,22 @@
-import { Box, Center, Heading, Input, Text, VStack } from "native-base";
+import { useState } from "react";
+import { Box, Center, FormControl, Heading, Input, Text, VStack } from "native-base";
 
-import Logo from 'assets/logo-economize.svg'
+import LogoSvg from 'assets/logo-economize.svg'
+
 import ButtonCircular from "components/ButtonCircular";
+import Screen from "components/Screen";
 
 /**
  * Tela de Boas Vindas do App.
  */
 export default function HelloScreen() {
+    const [userName, setUserName] = useState('')
     return (
-        <VStack bg="gray.100" flex={1} justifyContent="center" px="5">
+        <Screen showHeader={false} justifyContent="center">
             <VStack space="5">
-                <Center> <Logo /> </Center>
+                <Center> 
+                    <LogoSvg /> 
+                </Center>
                 <Box>
                     <Heading color="gray.900" fontSize="4xl">Bora economizar?</Heading>
                     <Text color="gray.500" textAlign="left">
@@ -29,9 +35,11 @@ export default function HelloScreen() {
                         borderColor: "green.500"
                     }}
                     p="5"
+                    onChangeText={setUserName}
+                    value={userName}
                 />
+                <ButtonCircular alignSelf="center" mt="10" isDisabled={userName == ''}/>
             </VStack>
-            <ButtonCircular alignSelf="center" mt="10" />
-        </VStack>
+        </Screen>
     )
 }
