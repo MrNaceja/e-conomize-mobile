@@ -17,7 +17,7 @@ export default function HomeScreen() {
                 _contentContainerStyle={{gap: sizes["0.5"], px: "5"} as Partial<IFlatListProps<number>>}
                 showsHorizontalScrollIndicator={false} 
                 horizontal
-                maxH={ACCOUNT_CARD_WIDTH / 2}
+                maxH={ACCOUNT_CARD_WIDTH / 2 + sizes["5"]}
                 data={[1,2,3,4, 5, 6]}
                 keyExtractor={item => item.toString()}
                 renderItem={() => <AccountCard />}

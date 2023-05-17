@@ -1,18 +1,42 @@
-import { Box, HStack, Heading, Text, VStack, theme, useTheme } from "native-base";
+import { Box, HStack, Heading, Icon, Text, VStack, theme } from "native-base";
 import { Dimensions } from 'react-native';
+import { Ionicons } from "@expo/vector-icons"
 
 export const ACCOUNT_CARD_WIDTH = Dimensions.get('window').width - theme.sizes["10"]
 
 export default function AccountCard() {
     return (
-        <VStack bg="indigo.500" h="full" rounded="2xl" w={ACCOUNT_CARD_WIDTH} p="3">
-            <Heading textTransform="uppercase" color="white">Nubank</Heading>
+        <VStack bg="indigo.500" h="full" rounded="2xl" w={ACCOUNT_CARD_WIDTH} px="3" py="5" space="3">
+            <Heading textTransform="uppercase" color="white" fontSize="md">Nubank</Heading>
             <Box>
-                <Text>total acumulado</Text>
-                <Heading fontSize="5xl">R$ 1.200,89</Heading>
+                <Text color="gray.100" fontWeight="light" fontSize="md">total acumulado</Text>
+                <Heading fontSize="5xl" color="white">R$ 1.200,89</Heading>
             </Box>
-            <HStack>
-
+            <HStack justifyContent="center" bg="indigo.600" space="10" p="1" rounded="lg">
+                <HStack alignItems="center" space="2">
+                    <Icon 
+                        as={Ionicons}
+                        name="trending-up"
+                        color="white"
+                        size="md"
+                    />
+                    <VStack>
+                        <Text color="gray.100" textTransform="uppercase" fontSize="2xs">ganhos</Text>
+                        <Text color="gray.100" fontWeight="bold">R$ 310,76</Text>
+                    </VStack>
+                </HStack>
+                <HStack alignItems="center" space="2">
+                    <Icon 
+                        as={Ionicons}
+                        name="trending-down"
+                        color="white"
+                        size="md"
+                    />
+                    <VStack>
+                        <Text color="gray.100" textTransform="uppercase" fontSize="2xs">despesas</Text>
+                        <Text color="gray.100" fontWeight="bold">R$ 128,00</Text>
+                    </VStack>
+                </HStack>
             </HStack>
         </VStack>
     )

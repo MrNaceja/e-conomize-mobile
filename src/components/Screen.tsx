@@ -7,7 +7,7 @@ interface IScreenProps extends IVStackProps {
 }
 export default function Screen({showHeader = true, ...vStackProps} : IScreenProps) {
     return (
-        <VStack bg="gray.100" flex={1} pt="10">
+        <VStack bg="gray.100" flex={1} pt="10" space="2">
             { showHeader && <Header /> }
             <VStack flex={1} {...vStackProps}/>
         </VStack>
