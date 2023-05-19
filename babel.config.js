@@ -11,12 +11,14 @@ module.exports = function(api) {
           alias: {
             components: './src/components',
             screens   : './src/screens',
+            routes    : './src/routes',
             assets    : './src/assets',
             theme     : './src/theme',
             utils     : './src/utils'
           }
         }
-      ]
+      ],
+      ['react-native-paper/babel']
     ]
   };
 };

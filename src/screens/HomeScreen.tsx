@@ -1,9 +1,9 @@
-import AccountCard, { ACCOUNT_CARD_WIDTH } from "components/AccountCard";
-import Screen from "components/Screen";
+import { useState } from "react";
 import { FlatList, useTheme } from "native-base";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList";
-import { useState } from "react";
-import { Dimensions } from "react-native";
+
+import AccountCard, { ACCOUNT_CARD_WIDTH } from "components/AccountCard";
+import Screen from "components/Screen";
 
 /**
  * Tela de Inicio do App.

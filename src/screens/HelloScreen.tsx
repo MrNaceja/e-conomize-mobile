@@ -5,15 +5,18 @@ import LogoSvg from 'assets/logo-economize.svg'
 
 import ButtonCircular from "components/ButtonCircular";
 import Screen from "components/Screen";
+import { TStartRoutesScreens } from "routes/start.routes";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 /**
  * Tela de Boas Vindas do App.
  */
-export default function HelloScreen() {
+export default function HelloScreen({ navigation } : NativeStackScreenProps<TStartRoutesScreens>) {
     const [userName, setUserName] = useState('')
+
     return (
         <Screen showHeader={false} justifyContent="center">
-            <VStack space="5">
+            <VStack space="5" px="5">
                 <Center> 
                     <LogoSvg /> 
                 </Center>
@@ -38,7 +41,12 @@ export default function HelloScreen() {
                     onChangeText={setUserName}
                     value={userName}
                 />
-                <ButtonCircular alignSelf="center" mt="10" isDisabled={userName == ''}/>
+                <ButtonCircular 
+                    alignSelf="center" 
+                    mt="10" 
+                    isDisabled={userName == ''}
+                    onPress={() => navigation.navigate("main")}
+                />
             </VStack>
         </Screen>
     )
