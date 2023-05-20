@@ -6,7 +6,7 @@ interface IScreenProps extends IVStackProps {
 }
 export default function Screen(props : IScreenProps) {
     return (
-        <VStack bg="gray.100" flex={1} pt="10" space="2">
+        <VStack bg="gray.100" flex={1} space="2" pt="5">
             <VStack flex={1} {...props}/>
         </VStack>
     )
