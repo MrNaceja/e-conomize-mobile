@@ -1,12 +1,12 @@
 import { createBottomTabNavigator, BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import Header from 'components/Header';
-import { Box, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 
 import AccountsScreen from 'screens/AccountsScreen';
 import HomeScreen from 'screens/HomeScreen';
 
 import { Entypo } from '@expo/vector-icons'
-import ButtonCircular from 'components/ButtonCircular';
+import MenuNew from 'components/MenuNew';
 
 export type TMainRoutesScreens = {
     home: undefined,
@@ -49,7 +49,7 @@ export default function MainRoutes() {
                 component={HomeScreen}
                 options={{
                     tabBarIcon: () => (
-                        <ButtonCircular iconName="plus" size={sizes[6]} mb="16" />
+                        <MenuNew />
                     )
                 }}
                 listeners={({ navigation }) => ({
