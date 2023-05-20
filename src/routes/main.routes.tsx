@@ -47,11 +47,11 @@ export default function MainRoutes() {
             <TabNavigation.Screen 
                 name='new'
                 component={HomeScreen}
-                options={{
+                options={({ route }) => ({
                     tabBarIcon: () => (
                         <MenuNew />
                     )
-                }}
+                })}
                 listeners={({ navigation }) => ({
                     tabPress: (e) => {
                       e.preventDefault(); // Impede a mudança de tela
