@@ -1,10 +1,10 @@
 import { Box, HStack, Heading, Text, VStack } from "native-base";
-
+import { StatusBar } from 'react-native'
 import LogoSvg from 'assets/logo-economize.svg'
 
 export default function Header() {
     return (
-        <HStack alignItems="center" justifyContent="space-between" px="5">
+        <HStack alignItems="center" justifyContent="space-between" px="5" style={{marginTop: StatusBar.currentHeight}}>
            <VStack>
                 <Text color="gray.600" fontSize="md">Bom dia,</Text>
                 <Heading fontSize="2xl">Eduardo</Heading>

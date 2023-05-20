@@ -15,7 +15,7 @@ export default function HelloScreen({ navigation } : NativeStackScreenProps<TSta
     const [userName, setUserName] = useState('')
 
     return (
-        <Screen showHeader={false} justifyContent="center">
+        <Screen justifyContent="center">
             <VStack space="5" px="5">
                 <Center> 
                     <LogoSvg /> 
