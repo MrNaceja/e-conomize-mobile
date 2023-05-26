@@ -5,7 +5,7 @@ import { useTheme } from 'native-base';
 import AccountsScreen from 'screens/AccountsScreen';
 import HomeScreen from 'screens/HomeScreen';
 
-import { Entypo } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import MenuNew from 'components/MenuNew';
 
 export type TMainRoutesScreens = {
@@ -41,7 +41,7 @@ export default function MainRoutes() {
                 name='home'
                 component={HomeScreen}
                 options={{
-                    tabBarIcon: ({ color, size }) => <Entypo name="home" color={color} size={size}/>
+                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="view-dashboard" color={color} size={size}/>
                 }}
             />
             <TabNavigation.Screen 
@@ -63,7 +63,7 @@ export default function MainRoutes() {
                 name='accounts'
                 component={AccountsScreen}
                 options={{
-                    tabBarIcon: ({ color, size }) => <Entypo name="wallet" color={color} size={size}/>
+                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="wallet" color={color} size={size}/>
                 }}
             />
         </TabNavigation.Navigator>

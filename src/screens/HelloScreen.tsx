@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Box, Center, FormControl, Heading, Input, Text, VStack } from "native-base";
+import { Box, Center, Heading, Input, Text, VStack } from "native-base";
 
 import LogoSvg from 'assets/logo-economize.svg'
 
-import ButtonCircular from "components/ButtonCircular";
+import {ButtonCircular} from "components/ButtonCircular";
 import Screen from "components/Screen";
+
 import { TStartRoutesScreens } from "routes/start.routes";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -43,7 +44,10 @@ export default function HelloScreen({ navigation } : NativeStackScreenProps<TSta
                 />
                 <ButtonCircular 
                     alignSelf="center" 
-                    mt="10" 
+                    iconName="forward"
+                    size="32"
+                    shadow="10"
+                    mt="10"
                     isDisabled={userName == ''}
                     onPress={() => navigation.navigate("main")}
                 />

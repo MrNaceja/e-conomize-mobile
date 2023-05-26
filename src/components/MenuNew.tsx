@@ -14,12 +14,13 @@ export default function MenuNew() {
 
     return (
         <Menu 
-            trigger={(triggerProps) => (
+            trigger={triggerProps => (
                 <ButtonCircular iconName="plus" size="20" mb="10" shadow="10" ref={triggerProps.ref} {...triggerProps}/>
             )}
             placement="top"
             shadow="10"
             rounded="2xl"
+            _backdrop={{bg:"gray.500"}}
         >
             <Menu.Group title={`Nova ${routeInFocus == "home" ? "Transação" : "Conta"}`}>
                 {
