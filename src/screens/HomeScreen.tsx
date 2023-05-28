@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Box, FlatList, Heading, ScrollView, useTheme } from "native-base";
-import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList";
+import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList/types";
 
-import AccountCard, { ACCOUNT_CARD_WIDTH } from "components/AccountCard";
-import Screen from "components/Screen";
+import AccountCard from "components/AccountCard";
+import Screen, { SCREEN_CONTAINER_WIDTH } from "components/Screen";
 import TransactionsListView from "components/TransactionsListView";
 
 import { EXPENSE, GAIN, TTransactionsByDate } from "utils/interfaces/TransactionDTO";
@@ -24,13 +24,13 @@ export default function HomeScreen() {
                 _contentContainerStyle={{gap: sizes["0.5"], px: "5"} as Partial<IFlatListProps<number>>}
                 showsHorizontalScrollIndicator={false} 
                 horizontal
-                maxH={ACCOUNT_CARD_WIDTH / 2 + sizes["5"]}
+                maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]}
                 data={[1,2,3,4, 5, 6]}
                 keyExtractor={item => item.toString()}
                 renderItem={() => <AccountCard />}
-                onScroll={e => setCurrentAccount(parseInt((e.nativeEvent.contentOffset.x / ACCOUNT_CARD_WIDTH).toFixed(0)))}
+                onScroll={e => setCurrentAccount(parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0)))}
                 decelerationRate="fast"
-                snapToInterval={(ACCOUNT_CARD_WIDTH + (4 * sizes["0.5"]))}
+                snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
             />
             <Box px="5" mt="2" flex={1}>
                 <ScrollView horizontal snapToInterval={320} decelerationRate="fast" showsHorizontalScrollIndicator={false}>

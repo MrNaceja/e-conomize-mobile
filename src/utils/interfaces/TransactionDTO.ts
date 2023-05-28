@@ -28,6 +28,53 @@ export const GAIN : TTransactionsByDate[] = [
                 type: 'gain',
                 value: 0,
                 description: 'teste'
+            },
+            {
+                id: '3',
+                type: 'gain',
+                value: 0,
+                description: 'teste'
+            },
+            {
+                id: '4',
+                type: 'gain',
+                value: 0,
+                description: 'teste'
+            },
+            {
+                id: '5',
+                type: 'gain',
+                value: 0,
+                description: 'teste'
+            },
+            {
+                id: '6',
+                type: 'gain',
+                value: 0,
+                description: 'teste'
+            },
+            {
+                id: '7',
+                type: 'gain',
+                value: 0,
+                description: 'teste'
+            },
+        ]
+    },
+    {
+        title: 'Há um mês',
+        data: [
+            {
+                id: '1',
+                type: 'gain',
+                value: 0,
+                description: 'teste'
+            },
+            {
+                id: '2',
+                type: 'gain',
+                value: 0,
+                description: 'teste'
             }
         ]
     }

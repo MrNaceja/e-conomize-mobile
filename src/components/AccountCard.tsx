@@ -1,12 +1,12 @@
-import { Box, HStack, Heading, Icon, Text, VStack, theme } from "native-base";
-import { Dimensions } from 'react-native';
+import { Box, HStack, Heading, Icon, Text, VStack } from "native-base";
+
 import { Ionicons } from "@expo/vector-icons"
 
-export const ACCOUNT_CARD_WIDTH = Dimensions.get('window').width - theme.sizes["10"]
+import { SCREEN_CONTAINER_WIDTH } from "./Screen";
 
 export default function AccountCard() {
     return (
-        <VStack bg="indigo.500" h="full" rounded="2xl" w={ACCOUNT_CARD_WIDTH} px="3" py="5" space="3">
+        <VStack bg="indigo.500" h="full" rounded="2xl" w={SCREEN_CONTAINER_WIDTH} px="3" py="5" space="3">
             <Heading textTransform="uppercase" color="white" fontSize="md">Nubank</Heading>
             <Box>
                 <Text color="gray.100" fontWeight="light" fontSize="md">total acumulado</Text>
