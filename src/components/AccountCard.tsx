@@ -1,12 +1,14 @@
-import { Box, HStack, Heading, Icon, Text, VStack } from "native-base";
+import { Box, HStack, Heading, Icon, Text, VStack, useTheme } from "native-base";
 
 import { Ionicons } from "@expo/vector-icons"
 
 import { SCREEN_CONTAINER_WIDTH } from "./Screen";
 
 export default function AccountCard() {
+    const { sizes } = useTheme()
+
     return (
-        <VStack bg="indigo.500" h="full" rounded="2xl" w={SCREEN_CONTAINER_WIDTH} px="3" py="5" space="3">
+        <VStack bg="indigo.500" maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]} rounded="2xl" w={SCREEN_CONTAINER_WIDTH} px="3" py="5" space="3">
             <Heading textTransform="uppercase" color="white" fontSize="md">Nubank</Heading>
             <Box>
                 <Text color="gray.100" fontWeight="light" fontSize="md">total acumulado</Text>

@@ -3,7 +3,7 @@ import { Box, FlatList, Heading, ScrollView, useTheme } from "native-base";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList/types";
 
 import AccountCard from "components/AccountCard";
-import Screen, { SCREEN_CONTAINER_WIDTH } from "components/Screen";
+import Screen, { SCREEN_HORIZONTAL_SPACING, SCREEN_CONTAINER_WIDTH } from "components/Screen";
 import TransactionsListView from "components/TransactionsListView";
 
 import { EXPENSE, GAIN, TTransactionsByDate } from "utils/interfaces/TransactionDTO";
@@ -21,7 +21,7 @@ export default function HomeScreen() {
         <Screen space="2">
             <Heading pl="5" color="gray.800" fontSize="lg">Suas contas</Heading>
             <FlatList
-                _contentContainerStyle={{gap: sizes["0.5"], px: "5"} as Partial<IFlatListProps<number>>}
+                _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING} as Partial<IFlatListProps<number>>}
                 showsHorizontalScrollIndicator={false} 
                 horizontal
                 maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]}
@@ -32,7 +32,7 @@ export default function HomeScreen() {
                 decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
             />
-            <Box px="5" mt="2" flex={1}>
+            <Box px={SCREEN_HORIZONTAL_SPACING} mt="2" flex={1}>
                 <ScrollView horizontal snapToInterval={320} decelerationRate="fast" showsHorizontalScrollIndicator={false}>
                     <TransactionsListView title="Seus Ganhos" type="gain" transactionsList={gainTransactions} />
                     <TransactionsListView title="Suas Despesas" type="expense" transactionsList={expenseTransactions} />

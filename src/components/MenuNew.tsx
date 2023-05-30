@@ -22,7 +22,7 @@ export default function MenuNew() {
             rounded="2xl"
             _backdrop={{bg:"gray.500"}}
         >
-            <Menu.Group title={`Nova ${routeInFocus == "home" ? "Transação" : "Conta"}`}>
+            <Menu.Group title={routeInFocus == "home" ? "Transações" : "Contas"}>
                 {
                     routeInFocus == "home" 
                     ?

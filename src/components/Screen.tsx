@@ -9,10 +9,12 @@ import { theme } from 'native-base'
  */
 export const SCREEN_WIDTH = Dimensions.get('window').width
 
+export const SCREEN_HORIZONTAL_SPACING = 5
+
 /**
  * Largura do dispositivo reduzindo o espaçamento horizontal
  */
-export const SCREEN_CONTAINER_WIDTH = SCREEN_WIDTH - theme.sizes["10"] 
+export const SCREEN_CONTAINER_WIDTH = SCREEN_WIDTH - (theme.sizes[SCREEN_HORIZONTAL_SPACING] * 2)
 
 interface IScreenProps extends IVStackProps {
     showHeader?: boolean
