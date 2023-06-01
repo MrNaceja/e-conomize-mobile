@@ -1,17 +1,18 @@
+import { useNavigation, findFocusedRoute } from "@react-navigation/native";
 import { Icon, Menu, Text } from "native-base";
+import { Ionicons } from "@expo/vector-icons"
+
 import { ButtonCircular } from "./ButtonCircular";
 
-import { Ionicons } from "@expo/vector-icons"
-import { useNavigation, findFocusedRoute } from "@react-navigation/native";
 import { TMainRoutesScreens } from "routes/main.routes";
-import useModalTransaction from "hooks/useModalTransaction";
+import useManagerModal from "hooks/useManagerModal";
 
 /**
  * Menu de Interações para novos dados.
  */
 export default function MenuNew() {
     const nav = useNavigation()
-    const { openModalTransaction } = useModalTransaction()
+    const { openModal } = useManagerModal()
     const routeInFocus = (findFocusedRoute(nav.getState())?.name || "home") as keyof TMainRoutesScreens
 
     return (
@@ -29,18 +30,18 @@ export default function MenuNew() {
                     routeInFocus == "home" 
                     ?
                         <>
-                            <Menu.Item onPress={() => openModalTransaction("gain")}>
+                            <Menu.Item onPress={() => openModal("gain")}>
                                 <Icon as={Ionicons} name="trending-up" size="8" color="green.500"/>
                                 <Text fontSize="md">Novo Ganho</Text>
                             </Menu.Item>
-                            <Menu.Item onPress={() => openModalTransaction("expense")}>
+                            <Menu.Item onPress={() => openModal("expense")}>
                                 <Icon as={Ionicons} name="trending-down" size="8" color="red.500"/>
                                 <Text fontSize="md">Nova Despesa</Text>
                             </Menu.Item>
                         </> 
                     :
                         <>
-                            <Menu.Item>
+                            <Menu.Item onPress={() => openModal("account")}>
                                 <Icon as={Ionicons} name="wallet" size="8" color="gray.700"/>
                                 <Text fontSize="md">Nova Conta</Text>
                             </Menu.Item>

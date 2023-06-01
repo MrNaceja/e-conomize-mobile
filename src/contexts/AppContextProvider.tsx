@@ -1,48 +1,43 @@
-import { ReactNode, createContext, useReducer, useState } from "react";
-
-import ModalNewTransaction from "components/ModalNewTransaction";
+import { PropsWithChildren, createContext, useReducer, useState } from "react";
 
 import { TAccount } from "utils/interfaces/AccountDTO";
-import { TTransaction, TTransactionType } from "utils/interfaces/TransactionDTO";
-import { EModalTransactionReducerActionType, MODAL_TRANSACTION_REDUCER_INITIAL_STATE, TModalTransactionReducerState } from "utils/interfaces/ModalTransactionReducerDTO";
+import { TTransaction } from "utils/interfaces/TransactionDTO";
+import { 
+    EManagerModalActionTypes, 
+    TManagerModalType,
+    MANAGER_MODAL_INITIAL_STATE,
+    TManagerModalState
+ } from "utils/interfaces/ManagerModalDTO";
 
-import ModalTransactionReducer from "reducers/ModalTransactionReducer";
+import ReducerManagerModal from "reducers/ReducerManagerModal";
 
 export type TAppContextProps = {
     user: string;
     accounts: TAccount[];
     transactions: TTransaction[],
-    modalTransaction: {
-        openModalTransaction: (transactionType : TTransactionType) => void
-        closeModalTransaction: () => void,
-        state: TModalTransactionReducerState
+    managerModal: {
+        openModal: (modalType : TManagerModalType) => void
+        closeModal: () => void,
+        state: TManagerModalState
     }
 }
 export const AppContext = createContext<TAppContextProps>({} as TAppContextProps)
 
-export interface IAppContextProviderProps {
-    children: ReactNode
-}
 /**
  * Contexto do App.
  */
-export default function AppContextProvider({ children } : IAppContextProviderProps) {
+export default function AppContextProvider(props : PropsWithChildren) {
     const [user, setUser] = useState('Naceja')
     const [accounts, setAccounts] = useState([]) // Alterar para reducer...
     const [transactions, setTransactions] = useState([]) // Alterar para reducer...
+    const [managerModalState, dispatchManagerModalState] = useReducer(ReducerManagerModal, MANAGER_MODAL_INITIAL_STATE)
 
-    const [modalTransactionState, dispatchModalTransactionState] = useReducer(ModalTransactionReducer, MODAL_TRANSACTION_REDUCER_INITIAL_STATE)
-
-    function openModalTransaction(transactionType : TTransactionType) {
-        dispatchModalTransactionState({
-            action: EModalTransactionReducerActionType.OPEN_MODAL,
-            transactionType
-        })
+    function openModal(modalType : TManagerModalType) {
+        dispatchManagerModalState({ action: EManagerModalActionTypes.OPEN_MODAL, modalType })
     }
-    function closeModalTransaction() {
-        dispatchModalTransactionState({
-            action: EModalTransactionReducerActionType.CLOSE_MODAL
-        })
+
+    function closeModal() {
+        dispatchManagerModalState({ action: EManagerModalActionTypes.CLOSE_MODAL })
     }
 
     return (
@@ -51,16 +46,14 @@ export default function AppContextProvider({ children } : IAppContextProviderPro
                 transactions, 
                 accounts, 
                 user,
-                modalTransaction: {
-                    openModalTransaction,
-                    closeModalTransaction,
-                    state: modalTransactionState
+                managerModal: {
+                    openModal,
+                    closeModal,
+                    state: managerModalState
                 }
                 
             }} 
-        >
-        {/* <ModalNewAccount /> */}
-        {children}
-        </AppContext.Provider>
+            {...props}
+        />
     )
 }
