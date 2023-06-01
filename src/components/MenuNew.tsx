@@ -4,12 +4,14 @@ import { ButtonCircular } from "./ButtonCircular";
 import { Ionicons } from "@expo/vector-icons"
 import { useNavigation, findFocusedRoute } from "@react-navigation/native";
 import { TMainRoutesScreens } from "routes/main.routes";
+import useModalTransaction from "hooks/useModalTransaction";
 
 /**
  * Menu de Interações para novos dados.
  */
 export default function MenuNew() {
     const nav = useNavigation()
+    const { openModalTransaction } = useModalTransaction()
     const routeInFocus = (findFocusedRoute(nav.getState())?.name || "home") as keyof TMainRoutesScreens
 
     return (
@@ -27,11 +29,11 @@ export default function MenuNew() {
                     routeInFocus == "home" 
                     ?
                         <>
-                            <Menu.Item>
+                            <Menu.Item onPress={() => openModalTransaction("gain")}>
                                 <Icon as={Ionicons} name="trending-up" size="8" color="green.500"/>
                                 <Text fontSize="md">Novo Ganho</Text>
                             </Menu.Item>
-                            <Menu.Item >
+                            <Menu.Item onPress={() => openModalTransaction("expense")}>
                                 <Icon as={Ionicons} name="trending-down" size="8" color="red.500"/>
                                 <Text fontSize="md">Nova Despesa</Text>
                             </Menu.Item>

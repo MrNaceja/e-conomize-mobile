@@ -5,7 +5,7 @@ export type TTransaction = {
     value: number,
     description: string,
     type: TTransactionType,
-    createdAt?: string
+    createdAt?: string,
 }
 
 export type TTransactionsByDate = {

@@ -5,6 +5,7 @@ import { IFlatListProps } from "native-base/lib/typescript/components/basic/Flat
 import AccountCard from "components/AccountCard";
 import Screen, { SCREEN_HORIZONTAL_SPACING, SCREEN_CONTAINER_WIDTH } from "components/Screen";
 import TransactionsListView from "components/TransactionsListView";
+import ModalNewTransaction from "components/ModalNewTransaction";
 
 import { EXPENSE, GAIN, TTransactionsByDate } from "utils/interfaces/TransactionDTO";
 
@@ -16,7 +17,7 @@ export default function HomeScreen() {
     const [currentAccount, setCurrentAccount] = useState(0)
     const [gainTransactions, setGainTransactions] = useState<TTransactionsByDate[]>(GAIN)
     const [expenseTransactions, setExpenseTransactions] = useState<TTransactionsByDate[]>(EXPENSE)
-    
+
     return (
         <Screen space="2">
             <Heading pl="5" color="gray.800" fontSize="lg">Suas contas</Heading>
@@ -38,6 +39,7 @@ export default function HomeScreen() {
                     <TransactionsListView title="Suas Despesas" type="expense" transactionsList={expenseTransactions} />
                 </ScrollView>
             </Box>
+            <ModalNewTransaction />
         </Screen>
     )
 }

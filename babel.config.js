@@ -13,6 +13,9 @@ module.exports = function(api) {
             screens   : './src/screens',
             routes    : './src/routes',
             assets    : './src/assets',
+            contexts  : './src/contexts',
+            reducers  : './src/reducers',
+            hooks     : './src/hooks',
             theme     : './src/theme',
             utils     : './src/utils'
           }
