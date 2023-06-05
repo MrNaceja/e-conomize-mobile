@@ -1,5 +1,10 @@
 export type TTransactionType = 'gain' | 'expense'
 
+export enum ETransactionTypes {
+    GAIN    = "gain",
+    EXPENSE = "expense"
+}
+
 export type TTransaction = {
     id: string,
     value: number,

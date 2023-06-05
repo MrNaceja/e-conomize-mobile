@@ -51,7 +51,6 @@ export default function AppContextProvider(props : PropsWithChildren) {
                     closeModal,
                     state: managerModalState
                 }
-                
             }} 
             {...props}
         />
