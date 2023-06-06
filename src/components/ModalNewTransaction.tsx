@@ -10,6 +10,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { TSchemaTransaction, schemaTransaction } from "utils/schemas/Transaction.schemas";
 
 import CampoForm from "./CampoForm";
+import { ETransactionTypes, TTransactionType } from "utils/interfaces/TransactionDTO";
+import { TManagerModalType } from "utils/interfaces/ManagerModalDTO";
 
 /**
  *  Modal de cadastro de Transação.
@@ -26,9 +28,9 @@ export default function ModalNewTransaction() {
 
     const titleByTransaction = useMemo(() => {
         switch (modalType) {
-            case "expense":
+            case ETransactionTypes.EXPENSE:
                 return "Nova Despesa"
-            case "gain":
+            case ETransactionTypes.GAIN:
             default:
                 return "Novo Ganho"
         }
@@ -39,8 +41,10 @@ export default function ModalNewTransaction() {
         closeModal()
     }, [])
 
+    const modalOpen = opened && (['expense', 'gain'] as TManagerModalType[]).includes(modalType)
+
     return (
-        <Modal isOpen={opened} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.900"}}>
+        <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.900"}}>
             <Modal.Content>
                 <Modal.CloseButton _icon={{ color: "gray.400" }} _pressed={{bg: "transparent"}}/>
                 <Modal.Header>
@@ -65,7 +69,7 @@ export default function ModalNewTransaction() {
                                 <CampoForm 
                                     type="text"
                                     label="Descrição da transação"
-                                    placeholder={modalType == "gain" ? "salário" : "fatura cartão"}
+                                    placeholder={modalType == "gain" ? "Ex: salário" : "Ex: fatura cartão"}
                                     onChangeText={onChange}
                                     value={value}
                                 />

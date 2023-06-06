@@ -7,6 +7,7 @@ import AccountCard from "components/AccountCard";
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { ButtonCircular } from "components/ButtonCircular";
+import ModalNewAccount from "components/ModalNewAccount";
 
 export default function AccountsScreen() {
     const { sizes } = useTheme()
@@ -75,6 +76,7 @@ export default function AccountsScreen() {
                 leftActivationValue={SCREEN_CONTAINER_WIDTH / 2}
                 onLeftAction={handleDeleteAccount}
             />
+            <ModalNewAccount />
         </Screen>
     )
 }
