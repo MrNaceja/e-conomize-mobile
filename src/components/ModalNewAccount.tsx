@@ -2,22 +2,23 @@ import useManagerModal from "hooks/useManagerModal"
 import { useCallback } from "react"
 import { Controller, useForm } from "react-hook-form"
 
-import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme } from "native-base"
+import { Dropdown } from "react-native-element-dropdown"
+import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme, useToken } from "native-base"
 import CampoForm from "./CampoForm"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { TSchemaAccount, schemaAccount } from "utils/schemas/Account.schemas"
+import { TManagerModalType } from "utils/interfaces/ManagerModalDTO"
+import { INSTITUITIONS } from "utils/interfaces/AccountDTO"
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { TManagerModalType } from "utils/interfaces/ManagerModalDTO"
-import { Dropdown } from "react-native-element-dropdown"
-import { TAccountInstituition } from "utils/interfaces/AccountDTO"
 
 export default function ModalNewAccount() {
     const { opened, modalType, closeModal} = useManagerModal()
-    const { colors, sizes } = useTheme()
-    const { control, handleSubmit, reset } = useForm<TSchemaAccount>({
+    const { colors, fontSizes, radii, sizes } = useTheme()
+    
+    const { control, handleSubmit, reset, watch } = useForm<TSchemaAccount>({
         defaultValues:{
             name: "",
             instituition: ""
@@ -32,21 +33,11 @@ export default function ModalNewAccount() {
 
     const modalOpen = opened && (['account'] as TManagerModalType[]).includes(modalType)
 
-    const instituitions : TAccountInstituition[] = [
-       {
-        name: "Nubank",
-        logo: "https://nubank.com.br/images/nu-icon.png?v=2",
-        color: colors.purple["500"]
-       },
-       {
-        name: "Mercado Pago",
-        logo: "https://bucket.utua.com.br/img/2020/02/c46a4003-design-sem-nome-38-1.png",
-        color: colors.lightBlue["500"]
-       }
-    ]
+    const instituitionSelected = INSTITUITIONS.find(item => item.name == watch('instituition'))
+    const [instituitionSelectedColor] = useToken('colors', [instituitionSelected ? instituitionSelected.color : "gray.400"])
 
     return (
-        <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.900"}}>
+        <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.900"}} avoidKeyboard>
             <Modal.Content>
                 <Modal.CloseButton _icon={{ color: "gray.400" }} _pressed={{bg: "transparent"}}/>
                 <Modal.Header>
@@ -80,25 +71,61 @@ export default function ModalNewAccount() {
                         <Controller 
                             control={control}
                             name="instituition"
-                            render={({ field: { onChange, value} }) => (
+                            render={({ field: { onChange, value: instituitionSelectedName} }) => (
                                 <Dropdown
-                                    data={instituitions}
+                                    mode="modal"
+                                    search
+                                    data={INSTITUITIONS}
                                     labelField="name"
                                     valueField="name"
-                                    renderItem={account => (
+                                    searchField="name"
+                                    placeholder="Selecione a Instituição"
+                                    placeholderStyle={{
+                                        color: instituitionSelectedColor, 
+                                        textTransform: "uppercase", 
+                                        fontSize: fontSizes.sm, 
+                                        fontWeight: "500"
+                                    }}
+                                    selectedTextStyle={{color: instituitionSelectedColor, textTransform: "uppercase", fontSize: fontSizes.sm, fontWeight: "500"}}
+                                    containerStyle={{backgroundColor: colors.white, borderRadius:radii.lg, marginTop: sizes[0.5], marginBottom: sizes[5]}}
+                                    style={{
+                                        backgroundColor: instituitionSelected ? instituitionSelectedColor+"30" : colors.gray[100], 
+                                        padding: sizes[5], 
+                                        borderRadius: radii.lg
+                                    }}
+                                    iconColor={colors.gray[400]}
+                                    searchPlaceholder="Buscar..."
+                                    inputSearchStyle={{borderRadius: radii.sm}}
+                                    renderLeftIcon={() => 
+                                        !instituitionSelected 
+                                        ? <Icon as={MaterialCommunityIcons} name="bank" mr="1" color="gray.400" size="lg" />
+                                        : (
+                                        <Image 
+                                            src={instituitionSelected.logo}
+                                            resizeMode="cover"
+                                            size="xs"
+                                            mr="1"
+                                            bg={instituitionSelected.color}
+                                            rounded="lg"
+                                            alt={`Logo ${instituitionSelected.name}`}
+                                        />
+                                    )}
+                                    renderRightIcon={visible => <Icon as={MaterialCommunityIcons} name={visible ? "chevron-up" : "chevron-down"} size="lg" color={instituitionSelectedColor} />}
+                                    renderItem={instituition => (
                                         <HStack space="2" alignItems="center" p="2">
                                             <Image 
-                                                src={account.logo}
+                                                src={instituition.logo}
                                                 resizeMode="cover"
-                                                size="sm"
-                                                bg={account.color}
+                                                size="xs"
+                                                bg={instituition.color}
                                                 rounded="lg"
                                                 alt="Logo da instituição"
                                             />
-                                            <Text color={account.color} fontSize="lg">{account.name}</Text>
+                                            <Text color={instituition.color} fontSize="lg">{instituition.name}</Text>
                                         </HStack>
                                     )}
-                                    {...{onChange, value}}
+                                    onChange={instituitionSelected => onChange(instituitionSelected.name)}
+                                    value={instituitionSelectedName}
                                 />
                             )}  
                         />

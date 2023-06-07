@@ -23,6 +23,7 @@ export default function MenuNew() {
             placement="top"
             shadow="10"
             rounded="2xl"
+            overflow="hidden"
             _backdrop={{bg:"gray.500"}}
         >
             <Menu.Group title={routeInFocus == "home" ? "Transações" : "Contas"}>

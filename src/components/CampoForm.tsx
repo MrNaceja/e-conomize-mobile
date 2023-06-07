@@ -24,6 +24,7 @@ export default function CampoForm({ label, type, onChangeText, value = '0', keyb
                 borderColor="transparent"
                 color="gray.500"
                 p="5"
+                borderRadius="lg"
                 fontSize={type == "monetary" ? "5xl" : "xl"}
                 _focus={{
                     bg:"gray.100",
