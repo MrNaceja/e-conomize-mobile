@@ -3,6 +3,7 @@ import { IColors } from "native-base/lib/typescript/theme/base/colors"
 export type TAccount = {
     id: string,
     name: string,
+    total: number,
     instituition: TAccountInstituition,
 }
 

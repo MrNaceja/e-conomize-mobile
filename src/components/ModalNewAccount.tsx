@@ -21,7 +21,8 @@ export default function ModalNewAccount() {
     const { control, handleSubmit, reset, watch } = useForm<TSchemaAccount>({
         defaultValues:{
             name: "",
-            instituition: ""
+            instituition: "",
+            total: 0
         },
         resolver: zodResolver(schemaAccount)
     })
@@ -72,62 +73,84 @@ export default function ModalNewAccount() {
                             control={control}
                             name="instituition"
                             render={({ field: { onChange, value: instituitionSelectedName} }) => (
-                                <Dropdown
-                                    mode="modal"
-                                    search
-                                    data={INSTITUITIONS}
-                                    labelField="name"
-                                    valueField="name"
-                                    searchField="name"
-                                    placeholder="Selecione a Instituição"
-                                    placeholderStyle={{
-                                        color: instituitionSelectedColor, 
-                                        textTransform: "uppercase", 
-                                        fontSize: fontSizes.sm, 
-                                        fontWeight: "500"
-                                    }}
-                                    selectedTextStyle={{color: instituitionSelectedColor, textTransform: "uppercase", fontSize: fontSizes.sm, fontWeight: "500"}}
-                                    containerStyle={{backgroundColor: colors.white, borderRadius:radii.lg, marginTop: sizes[0.5], marginBottom: sizes[5]}}
-                                    style={{
-                                        backgroundColor: instituitionSelected ? instituitionSelectedColor+"30" : colors.gray[100], 
-                                        padding: sizes[5], 
-                                        borderRadius: radii.lg
-                                    }}
-                                    iconColor={colors.gray[400]}
-                                    searchPlaceholder="Buscar..."
-                                    inputSearchStyle={{borderRadius: radii.sm}}
-                                    renderLeftIcon={() => 
-                                        !instituitionSelected 
-                                        ? <Icon as={MaterialCommunityIcons} name="bank" mr="1" color="gray.400" size="lg" />
-                                        : (
-                                        <Image 
-                                            src={instituitionSelected.logo}
-                                            resizeMode="cover"
-                                            size="xs"
-                                            mr="1"
-                                            bg={instituitionSelected.color}
-                                            rounded="lg"
-                                            alt={`Logo ${instituitionSelected.name}`}
+                                <CampoForm 
+                                    label="Instituição"
+                                    _renderComponent={() => (
+                                        <Dropdown
+                                            mode="modal"
+                                            search
+                                            data={INSTITUITIONS}
+                                            labelField="name"
+                                            valueField="name"
+                                            searchField="name"
+                                            placeholder="Selecione..."
+                                            placeholderStyle={{
+                                                color: instituitionSelectedColor, 
+                                                textTransform: "uppercase", 
+                                                fontSize: fontSizes.sm, 
+                                                fontWeight: "500"
+                                            }}
+                                            selectedTextStyle={{color: instituitionSelectedColor, textTransform: "uppercase", fontSize: fontSizes.sm, fontWeight: "500"}}
+                                            containerStyle={{
+                                                backgroundColor: colors.white, 
+                                                borderRadius:radii.lg, 
+                                                marginTop: sizes[0.5], 
+                                                marginBottom: sizes[5],
+                                            }}  
+                                            style={{
+                                                backgroundColor: instituitionSelected ? instituitionSelectedColor+"30" : colors.gray[100], 
+                                                padding: sizes[5], 
+                                                borderRadius: radii.lg
+                                            }}
+                                            iconColor={colors.gray[400]}
+                                            searchPlaceholder="Buscar..."
+                                            inputSearchStyle={{borderRadius: radii.sm}}
+                                            renderLeftIcon={() => 
+                                                !instituitionSelected 
+                                                ? <Icon as={MaterialCommunityIcons} name="bank" mr="2" color="gray.400" size="lg" />
+                                                : (
+                                                <Image 
+                                                    src={instituitionSelected.logo}
+                                                    resizeMode="cover"
+                                                    size="xs"
+                                                    mr="2"
+                                                    bg={instituitionSelected.color}
+                                                    rounded="lg"
+                                                    alt={`Logo ${instituitionSelected.name}`}
+                                                />
+                                            )}
+                                            renderRightIcon={() => null}
+                                            renderItem={instituition => (
+                                                <HStack space="2" alignItems="center" p="2">
+                                                    <Image 
+                                                        src={instituition.logo}
+                                                        resizeMode="cover"
+                                                        size="xs"
+                                                        bg={instituition.color}
+                                                        rounded="lg"
+                                                        alt="Logo da instituição"
+                                                    />
+                                                    <Text color={instituition.color} fontSize="lg">{instituition.name}</Text>
+                                                </HStack>
+                                            )}
+                                            onChange={instituitionSelected => onChange(instituitionSelected.name)}
+                                            value={instituitionSelectedName}
                                         />
                                     )}
-                                    renderRightIcon={visible => <Icon as={MaterialCommunityIcons} name={visible ? "chevron-up" : "chevron-down"} size="lg" color={instituitionSelectedColor} />}
-                                    renderItem={instituition => (
-                                        <HStack space="2" alignItems="center" p="2">
-                                            <Image 
-                                                src={instituition.logo}
-                                                resizeMode="cover"
-                                                size="xs"
-                                                bg={instituition.color}
-                                                rounded="lg"
-                                                alt="Logo da instituição"
-                                            />
-                                            <Text color={instituition.color} fontSize="lg">{instituition.name}</Text>
-                                        </HStack>
-                                    )}
-                                    onChange={instituitionSelected => onChange(instituitionSelected.name)}
-                                    value={instituitionSelectedName}
                                 />
                             )}  
+                        />
+                        <Controller 
+                            control={control}
+                            name="total"
+                            render={({ field: { onChange, value} }) => (
+                                <CampoForm 
+                                    type="monetary"
+                                    label="Valor Inicial"
+                                    onChangeText={onChange}
+                                    value={value.toString()}
+                                />
+                            )}
                         />
                         <Pressable bg="green.500" p="5" alignItems="center" rounded="md" shadow="10">
                             <Text color="white" fontSize="2xl">Adicionar</Text>
