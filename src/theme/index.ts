@@ -1,4 +1,4 @@
-import { extendTheme, theme, Menu } from 'native-base';
+import { extendTheme, theme } from 'native-base';
 const { colors } = theme
 
 export const THEME = extendTheme({

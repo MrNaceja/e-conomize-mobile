@@ -37,7 +37,7 @@ export default function TransactionsListView({ transactionsList, title, type }: 
     }
 
     return (
-        <VStack space="1" w={SCREEN_CONTAINER_WIDTH}>
+        <VStack space="1" w={SCREEN_CONTAINER_WIDTH} >
             <HStack justifyContent="space-between" alignItems="center" h="10">
                 <Heading color="white" fontSize="lg" bg={(type == "gain") ? "green.500" : "red.500"} p="1.5" rounded="md">{title}</Heading>
                 <HStack space="3" alignItems="center" display={isSelection ? "flex" : "none"}>

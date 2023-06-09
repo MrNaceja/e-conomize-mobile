@@ -19,7 +19,7 @@ export default function HomeScreen() {
     const [expenseTransactions, setExpenseTransactions] = useState<TTransactionsByDate[]>(EXPENSE)
 
     return (
-        <Screen space="2">
+        <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg">Suas contas</Heading>
             <FlatList
                 _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING} as Partial<IFlatListProps<number>>}
@@ -34,7 +34,7 @@ export default function HomeScreen() {
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
             />
             <Box px={SCREEN_HORIZONTAL_SPACING} mt="2" flex={1}>
-                <ScrollView horizontal snapToInterval={320} decelerationRate="fast" showsHorizontalScrollIndicator={false}>
+                <ScrollView horizontal snapToInterval={SCREEN_CONTAINER_WIDTH} decelerationRate="fast" showsHorizontalScrollIndicator={false}>
                     <TransactionsListView title="Seus Ganhos" type="gain" transactionsList={gainTransactions} />
                     <TransactionsListView title="Suas Despesas" type="expense" transactionsList={expenseTransactions} />
                 </ScrollView>
