@@ -34,7 +34,7 @@ export default function PickerSelect<DataType>({data, placeholderStyle, selected
             }}  
             style={StyleSheet.flatten([{
                 backgroundColor: colors.gray[100], 
-                padding: sizes[5], 
+                padding: sizes[3], 
                 borderRadius: radii.lg
             }, style])}
             iconColor={colors.gray[400]}

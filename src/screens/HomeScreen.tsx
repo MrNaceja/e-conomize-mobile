@@ -20,7 +20,7 @@ export default function HomeScreen() {
 
     return (
         <Screen>
-            <Heading pl="5" color="gray.800" fontSize="lg">Suas contas</Heading>
+            <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
             <FlatList
                 _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING} as Partial<IFlatListProps<number>>}
                 showsHorizontalScrollIndicator={false} 

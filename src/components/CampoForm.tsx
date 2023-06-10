@@ -3,6 +3,7 @@ import { formatMonetary } from "utils/scripts/formatMonetary";
 
 interface ICampoFormProps extends Omit<IInputProps, 'type'> {
     label?: string,
+    errorMsg?: string,
     type?: 'text' | 'password' | 'monetary',
     onChangeText?: (value: string) => void,
     _renderComponent?: () => JSX.Element
@@ -10,9 +11,10 @@ interface ICampoFormProps extends Omit<IInputProps, 'type'> {
 /*
  * Componente de Campo de Formulário
  */
-export default function CampoForm({ label, type, onChangeText = text => text, value = '0', keyboardType, _renderComponent,...inputProps } : ICampoFormProps) {
+export default function CampoForm({ label, errorMsg, type, onChangeText = text => text, value = '0', keyboardType, _renderComponent, isRequired, isInvalid, ...inputProps } : ICampoFormProps) {
+    const invalidState = !!errorMsg || isInvalid
     return (
-        <FormControl>
+        <FormControl isRequired={isRequired} isInvalid={invalidState}>
             <FormControl.Label _text={{
                 fontSize: "sm",
                 color: "gray.400",
@@ -27,8 +29,8 @@ export default function CampoForm({ label, type, onChangeText = text => text, va
                     <Input 
                         bg="gray.100"
                         borderColor="transparent"
-                        color="gray.500"
-                        p="5"
+                        color="gray.400"
+                        p="3"
                         borderRadius="lg"
                         fontSize={type == "monetary" ? "5xl" : "xl"}
                         _focus={{
@@ -48,8 +50,7 @@ export default function CampoForm({ label, type, onChangeText = text => text, va
                     />
                 )
             }
-            
-        <FormControl.ErrorMessage></FormControl.ErrorMessage>
-    </FormControl>
+            <FormControl.ErrorMessage color="red.500">{errorMsg}</FormControl.ErrorMessage>
+        </FormControl>
     )
 }

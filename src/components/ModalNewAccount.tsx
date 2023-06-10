@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 import { TSchemaAccount, schemaAccount } from "utils/schemas/Account.schemas"
 import { TManagerModalType } from "utils/interfaces/ManagerModalDTO"
-import { INSTITUITIONS, TAccountColorHighlight } from "utils/interfaces/AccountDTO"
+import { ACCOUNT_COLORS_HIGHLIGHT, INSTITUITIONS, TAccountColorHighlight } from "utils/interfaces/AccountDTO"
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -28,12 +28,14 @@ export default function ModalNewAccount() {
         resolver: zodResolver(schemaAccount)
     })
 
+    const handleAddNewAccount = useCallback((accountFormData : TSchemaAccount) => {
+        console.log(accountFormData)
+    }, [])
+
     const handleCloseModal = useCallback(() => {
         reset()
         closeModal()
-    }, [])
-
-    console.log('render')
+    }, [closeModal, reset])
 
     const modalOpen = opened && (['account'] as TManagerModalType[]).includes(modalType)
 
@@ -41,14 +43,8 @@ export default function ModalNewAccount() {
         INSTITUITIONS.find(item => item.name == watch('instituition'))
     ), [watch('instituition')])
 
-    const ACCOUNT_COLORS_HIGHLIGHT = useMemo(() => (
-        Object
-            .keys(colors)
-            .filter(highLightColor => {
-                let currentHighLightColor = colors[highLightColor as keyof typeof colors]
-                return currentHighLightColor instanceof Object
-            })
-            .map(color => ({color} as {color: TAccountColorHighlight}))
+    const highlightColors = useMemo(() => (
+        ACCOUNT_COLORS_HIGHLIGHT.map(color => ({color} as {color: TAccountColorHighlight}))
     ), [])
 
     return (
@@ -70,26 +66,30 @@ export default function ModalNewAccount() {
                         </HStack>
                     </Modal.Header>
                     <Modal.Body>
-                        <VStack space="4">
+                        <VStack space="2">
                             <Controller 
                                 control={control}
                                 name="name"
-                                render={({ field: { onChange, value} }) => (
+                                render={({ field: { onChange, value }, fieldState: {error} }) => (
                                     <CampoForm 
                                         type="text"
+                                        isRequired
                                         label="Nome da Conta"
                                         placeholder="Ex: Conta Salário"
                                         onChangeText={onChange}
                                         value={value}
+                                        errorMsg={error?.message}
                                     />
                                 )}  
                             />
                             <Controller 
                                 control={control}
                                 name="instituition"
-                                render={({ field: { onChange, value: instituitionSelectedName} }) => (
+                                render={({ field: { onChange, value: instituitionSelectedName}, fieldState: { error } }) => (
                                     <CampoForm  
                                         label="Instituição"
+                                        isRequired
+                                        errorMsg={error?.message}
                                         _renderComponent={() => (
                                             <PickerSelect 
                                                 mode="modal"
@@ -142,7 +142,7 @@ export default function ModalNewAccount() {
                                             <PickerSelect 
                                                 search={false}
                                                 mode="modal"
-                                                data={ACCOUNT_COLORS_HIGHLIGHT}
+                                                data={highlightColors}
                                                 labelField="color"
                                                 valueField="color"
                                                 style={{backgroundColor: colors[highLightColor][100]}}
@@ -150,7 +150,7 @@ export default function ModalNewAccount() {
                                                 renderLeftIcon={() => <Box p="5" bg={`${highLightColor}.500`} rounded="lg" mr="2" />}
                                                 renderItem={({ color }) => (
                                                     <HStack space="2" alignItems="center" p="2">
-                                                    <Box rounded="lg" bg={`${color}.500`} p="5" />
+                                                        <Box rounded="lg" bg={`${color}.500`} p="5" />
                                                         <Text color={`${color}.500`} fontSize="lg">{color}</Text>
                                                     </HStack>
                                                 )}
@@ -173,7 +173,14 @@ export default function ModalNewAccount() {
                                     />
                                 )}
                             />
-                            <Pressable bg="green.500" p="5" alignItems="center" rounded="md" shadow="10">
+                            <Pressable 
+                                bg="green.500" 
+                                p="3" 
+                                alignItems="center" 
+                                rounded="md" 
+                                shadow="10"
+                                onPress={handleSubmit(handleAddNewAccount)}
+                            >
                                 <Text color="white" fontSize="2xl">Adicionar</Text>
                             </Pressable>
                         </VStack>

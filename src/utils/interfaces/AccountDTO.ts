@@ -1,4 +1,5 @@
 import colors from "native-base/lib/typescript/theme/base/colors"
+import { THEME } from "theme"
 
 export type TAccount = {
     id: string,
@@ -15,6 +16,13 @@ export type TAccountInstituition = {
 
 type JustObjectColors<O> = {[K in keyof O as Exclude<K, O[K] extends string | number ? K : never>]: string}
 export type TAccountColorHighlight = keyof JustObjectColors<typeof colors>
+
+export const ACCOUNT_COLORS_HIGHLIGHT = Object
+                                        .keys(THEME.colors)
+                                        .filter(highLightColor => {
+                                            let currentHighLightColor = THEME.colors[highLightColor as keyof typeof THEME.colors]
+                                            return currentHighLightColor instanceof Object
+                                        }) as [TAccountColorHighlight]
 
 export const INSTITUITIONS : TAccountInstituition[] = [
     {
