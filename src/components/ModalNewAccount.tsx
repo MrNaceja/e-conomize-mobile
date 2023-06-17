@@ -2,7 +2,7 @@ import useManagerModal from "hooks/useManagerModal"
 import { useCallback, useMemo } from "react"
 import { Controller, useForm } from "react-hook-form"
 
-import { v4 as IdGenerator } from 'uuid'
+// import { v4 as IdGenerator } from 'uuid'
 
 import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme, Box, KeyboardAvoidingView } from "native-base"
 import CampoForm from "./CampoForm"
@@ -32,8 +32,8 @@ export default function ModalNewAccount() {
 
     const handleAddNewAccount = useCallback((accountFormData : TSchemaAccount) => {
         // {"color": "violet", "instituition": "Nubank", "name": "Teste", "total": 0}
-        const id = IdGenerator()
-        const newAccount : TAccount = { id, ...accountFormData }
+        // const id = IdGenerator()
+        // const newAccount : TAccount = { id, ...accountFormData }
     }, [])
 
     const handleCloseModal = useCallback(() => {

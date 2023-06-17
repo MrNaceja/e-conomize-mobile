@@ -12,7 +12,7 @@ export type TTransaction = {
     value: number,
     description: string,
     type: TTransactionType,
-    createdAt?: string,
+    createdAt: string,
     accountId?: TAccount['id']
 }
 
@@ -20,96 +20,3 @@ export type TTransactionsByDate = {
     title: string,
     data: TTransaction[]
 }
- 
-export const GAIN : TTransactionsByDate[] = [
-    {
-        title: 'Há duas semanas',
-        data: [
-            {
-                id: '1',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '2',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '3',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '4',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '5',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '6',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '7',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            },
-        ]
-    },
-    {
-        title: 'Há um mês',
-        data: [
-            {
-                id: '1',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '2',
-                type: 'gain',
-                value: 0,
-                description: 'teste'
-            }
-        ]
-    }
-]
-
-export const EXPENSE : TTransactionsByDate[] = [
-    {
-        title: 'Há um dia',
-        data: [
-            {
-                id: '1',
-                type: 'expense',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '2',
-                type: 'expense',
-                value: 0,
-                description: 'teste'
-            },
-            {
-                id: '3',
-                type: 'expense',
-                value: 0,
-                description: 'teste'
-            }
-        ]
-    }
-]

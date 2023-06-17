@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { HStack, Heading, Icon, Pressable, SectionList, VStack, Text, useTheme } from "native-base";
 
@@ -9,15 +9,27 @@ import { SCREEN_CONTAINER_WIDTH } from "./Screen";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface ITransactionsListViewProps {
-    transactionsList: TTransactionsByDate[],
+    transactions: TTransaction[],
     type: TTransactionType,
     title: string
 }
-export default function TransactionsListView({ transactionsList, title, type }: ITransactionsListViewProps) {
+export default function TransactionsListView({ transactions, title, type }: ITransactionsListViewProps) {
     const { sizes } = useTheme()
     const [selectionedTransactions, setSelectionedTransactions] = useState<TTransaction[]>([])
-
     const isSelection = selectionedTransactions.length > 0
+
+    const transactionsByDate = useMemo(() => (
+        transactions.reduce((sections, item) => {
+            const dateCreated = item.createdAt
+            let section = sections.find(section => section.title == dateCreated)
+            if (!section) {
+                section = { title: dateCreated, data: []}
+                sections.push(section)
+            }
+            section.data.push(item)
+            return sections;
+        }, [] as TTransactionsByDate[])
+    ), [transactions])
 
     function handlePressTransaction(transactionPressed: TTransaction, transactions: TTransaction[]) {
         setSelectionedTransactions(transactionsSelectedState => {
@@ -66,7 +78,7 @@ export default function TransactionsListView({ transactionsList, title, type }: 
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ gap: sizes["3"], paddingBottom: sizes["20"], paddingTop: sizes["2"] }}
                     keyExtractor={item => item.id}
-                    sections={transactionsList}
+                    sections={transactionsByDate}
                     renderSectionHeader={({ section: { title } }) => <Heading fontSize="sm" color="gray.400">{title}</Heading>}
                     renderItem={({ item, section }) => {
                         const selected = selectionedTransactions.find(selectioned => selectioned.id == item.id)

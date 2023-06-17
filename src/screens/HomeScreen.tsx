@@ -2,23 +2,22 @@ import { useState } from "react";
 import { Box, FlatList, Heading, ScrollView, useTheme } from "native-base";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList/types";
 
-import AccountCard from "components/AccountCard";
+import AccountCard                                                   from "components/AccountCard";
 import Screen, { SCREEN_HORIZONTAL_SPACING, SCREEN_CONTAINER_WIDTH } from "components/Screen";
-import TransactionsListView from "components/TransactionsListView";
-import ModalNewTransaction from "components/ModalNewTransaction";
+import TransactionsListView                                          from "components/TransactionsListView";
+import ModalNewTransaction                                           from "components/ModalNewTransaction";
 
-import { EXPENSE, GAIN, TTransactionsByDate } from "utils/interfaces/TransactionDTO";
-import useAccount from "hooks/useAccount";
+import useAccount     from "hooks/useAccount";
+import useTransaction from "hooks/useTransaction";
 
 /**
  * Tela de Inicio do App.
  */
 export default function HomeScreen() {
-    const { sizes } = useTheme()
-    const { accounts } = useAccount()
-    const [currentAccount, setCurrentAccount] = useState(0)
-    const [gainTransactions, setGainTransactions] = useState<TTransactionsByDate[]>(GAIN)
-    const [expenseTransactions, setExpenseTransactions] = useState<TTransactionsByDate[]>(EXPENSE)
+    const { sizes }                                 = useTheme()
+    const { accounts }                              = useAccount()
+    const { transactionsGain, transactionsExpense } = useTransaction()
+    const [currentAccount, setCurrentAccount]       = useState(0)
 
     return (
         <Screen>
@@ -37,8 +36,8 @@ export default function HomeScreen() {
             />
             <Box px={SCREEN_HORIZONTAL_SPACING} mt="2" flex={1}>
                 <ScrollView horizontal snapToInterval={SCREEN_CONTAINER_WIDTH} decelerationRate="fast" showsHorizontalScrollIndicator={false}>
-                    <TransactionsListView title="Seus Ganhos" type="gain" transactionsList={gainTransactions} />
-                    <TransactionsListView title="Suas Despesas" type="expense" transactionsList={expenseTransactions} />
+                    <TransactionsListView title="Seus Ganhos"   type="gain"    transactions={transactionsGain} />
+                    <TransactionsListView title="Suas Despesas" type="expense" transactions={transactionsExpense} />
                 </ScrollView>
             </Box>
             <ModalNewTransaction />
