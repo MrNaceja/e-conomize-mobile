@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, FlatList, Heading, ScrollView, useTheme } from "native-base";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList/types";
 
@@ -9,17 +9,27 @@ import ModalNewTransaction                                           from "compo
 
 import useAccount     from "hooks/useAccount";
 import useTransaction from "hooks/useTransaction";
+
 import { TAccount } from "utils/interfaces/AccountDTO";
+import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 
 /**
  * Tela de Inicio do App.
  */
 export default function HomeScreen() {
-    const { sizes }                                 = useTheme()
-    const { accounts }                              = useAccount()
-    const { transactionsGain, transactionsExpense } = useTransaction()
-    const [currentAccount, setCurrentAccount]       = useState(0)
+    const { sizes }                                       = useTheme()
+    const { accounts, changeActiveAccount, activeAccount} = useAccount()
+    const { transactionsGain, transactionsExpense }       = useTransaction()
 
+    function handleSwipeChangeActiveAccount(e : NativeSyntheticEvent<NativeScrollEvent>) {
+        const indexSwiped = parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0))
+        if (activeAccount && accounts[indexSwiped].id != activeAccount.id) {
+            const accountSwiped = accounts.find((account, index) => index == indexSwiped)
+            if (accountSwiped) {
+                changeActiveAccount(accountSwiped)
+            }
+        }
+    }
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
@@ -31,7 +41,7 @@ export default function HomeScreen() {
                 data={accounts}
                 keyExtractor={item => item.id}
                 renderItem={({ item: account }) => <AccountCard account={account}/>}
-                onScroll={e => setCurrentAccount(parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0)))}
+                onScroll={handleSwipeChangeActiveAccount}
                 decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
             />

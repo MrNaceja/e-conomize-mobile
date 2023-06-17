@@ -4,19 +4,20 @@ import { ETransactionTypes, TTransaction } from "utils/interfaces/TransactionDTO
 
 export default function useTransaction() {
     const { managerTransactions, managerAccount: { activeAccount } } = useContext(AppContext)
-    if (activeAccount) {
-        managerTransactions.transactions.filter(transaction => transaction.accountId == activeAccount.id)
+    if (!activeAccount) {
+        return {...managerTransactions, transactions: [], transactionsGain: [], transactionsExpense: []}
     }
-    const [transactionsGain, transactionsExpense] = managerTransactions.transactions.reduce((state, item) => {
+    const transactions = managerTransactions.transactions.filter(transaction => transaction.accountId == activeAccount.id)
+    const [transactionsGain, transactionsExpense] = transactions.reduce((state, transaction) => {
         const [ gain, expense ] = state
-        switch (item.type) {
+        switch (transaction.type) {
             case ETransactionTypes.GAIN:
-                return [[item, ...gain], [...expense]]
+                return [[transaction, ...gain], [...expense]]
             case ETransactionTypes.EXPENSE:
-                return [[...gain], [item, ...expense]]
+                return [[...gain], [transaction, ...expense]]
             default:
                 return [gain, expense]
         }
     }, [[], []] as [TTransaction[], TTransaction[]])
-    return { transactionsGain, transactionsExpense, ...managerTransactions }
+    return { transactionsGain, transactionsExpense, ...managerTransactions, transactions }
 }

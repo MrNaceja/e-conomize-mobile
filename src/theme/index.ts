@@ -1,4 +1,4 @@
-import { extendTheme, theme } from 'native-base';
+import { extendTheme, theme, Skeleton } from 'native-base';
 const { colors } = theme
 
 export const THEME = extendTheme({
@@ -14,6 +14,12 @@ export const THEME = extendTheme({
         _pressed: {
           bg: "gray.100"
         }
+      }
+    },
+    Skeleton: {
+      baseStyle: {
+        startColor: "gray.200",
+        endColor: "gray.300"
       }
     }
   }

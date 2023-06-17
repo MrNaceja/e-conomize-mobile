@@ -6,9 +6,10 @@ export type TAccountState = {
 }
 
 export enum EAccountActionTypes {
-    CREATE = "CREATE_ACCOUNT",
-    EDIT   = "EDIT_ACCOUNT",
-    DELETE = "DELETE_ACCOUNT"
+    CREATE        = "CREATE_ACCOUNT",
+    EDIT          = "EDIT_ACCOUNT",
+    DELETE        = "DELETE_ACCOUNT",
+    CHANGE_ACTIVE = "CHANGE_ACTIVE_ACCOUNT"
 }
 
 export type TAccountAction = {

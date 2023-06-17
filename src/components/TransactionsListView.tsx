@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { HStack, Heading, Icon, Pressable, SectionList, VStack, Text, useTheme } from "native-base";
+import { HStack, Heading, Icon, Pressable, SectionList, VStack, Text, useTheme, Center, Skeleton, Box } from "native-base";
 
 import { TTransaction, TTransactionType, TTransactionsByDate } from "utils/interfaces/TransactionDTO";
 
@@ -22,7 +22,7 @@ export default function TransactionsListView({ transactions, title, type }: ITra
     const { sizes } = useTheme()
     const [selectionedTransactions, setSelectionedTransactions] = useState<TTransaction[]>([])
     const isSelection = selectionedTransactions.length > 0
-
+    const isLoading = false
     const transactionsByDate = useMemo(() => (
         transactions.reduce((sections, item) => {
             const dateCreated = item.createdAt
@@ -78,61 +78,93 @@ export default function TransactionsListView({ transactions, title, type }: ITra
                     </Pressable>
                 </HStack>
             </HStack>
-            <Pressable onPress={clearSelectionedTransactions}>
-                <SectionList
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ gap: sizes["3"], paddingBottom: sizes["20"], paddingTop: sizes["2"] }}
-                    keyExtractor={item => item.id}
-                    sections={transactionsByDate}
-                    renderSectionHeader={({ section: { title } }) => <Heading fontSize="sm" color="gray.400">{moment(title, "DD/MM/AAAA").format('dddd, D [de] MMMM [de] YYYY')}</Heading>}
-                    renderItem={({ item, section }) => {
-                        const selected = selectionedTransactions.find(selectioned => selectioned.id == item.id)
-                        return (
-                           <HStack alignItems="center" space="1">
-                                <Icon
-                                    as={MaterialCommunityIcons}
-                                    name={selected ? "check-circle" : "circle-outline"}
-                                    color={selected ? "green.500" : "gray.300"}
-                                    size="2xl"
-                                    display={isSelection ? "flex" : "none"}
-                                />
-                                <TouchableOpacity
-                                    style={{ flex: 1 }}
-                                    onLongPress={() => handlePressTransaction(item, section.data)} 
-                                    onPress={() => isSelection && handlePressTransaction(item, section.data)}>
-                                    <HStack
-                                        bg="white"
-                                        h="16"
-                                        p="3"
-                                        rounded="lg"
-                                        alignItems="center"
-                                        space="5"
-                                    >
+            {
+                isLoading
+                ?(
+                    <VStack space="5">
+                       <VStack space="1">
+                        <Skeleton.Text lines={1} w="32" />
+                            <Skeleton h="16" rounded="md"/>
+                            <Skeleton h="16" rounded="md"/>
+                       </VStack>
+                        <VStack space="1">
+                            <Skeleton.Text lines={1} w="32"/>
+                            <Skeleton h="16" rounded="md"/>
+                            <Skeleton h="16" rounded="md"/>
+                        </VStack>
+                    </VStack>
+                )
+                :(
+                    <Pressable onPress={clearSelectionedTransactions} flex={1}>
+                        <SectionList
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{ gap: sizes["3"], paddingBottom: sizes["20"], paddingTop: sizes["2"] }}
+                            keyExtractor={item => item.id}
+                            sections={transactionsByDate}
+                            renderSectionHeader={({ section: { title } }) => <Heading fontSize="sm" color="gray.400">{moment(title, "DD/MM/AAAA").format('dddd, D [de] MMMM [de] YYYY')}</Heading>}
+                            renderItem={({ item, section }) => {
+                                const selected = selectionedTransactions.find(selectioned => selectioned.id == item.id)
+                                return (
+                                    <HStack alignItems="center" space="1">
                                         <Icon
                                             as={MaterialCommunityIcons}
-                                            name={type == 'gain' ? 'trending-up' : 'trending-down'}
-                                            color={type == 'gain' ? 'green.500' : 'red.500'}
+                                            name={selected ? "check-circle" : "circle-outline"}
+                                            color={selected ? "green.500" : "gray.300"}
                                             size="2xl"
+                                            display={isSelection ? "flex" : "none"}
                                         />
-                                        <VStack flex={1}>
-                                            <Heading color="gray.800" fontSize="lg">R$ {item.value.toFixed(2)}</Heading>
-                                            <Text color="gray.500" fontSize="md">{item.description}</Text>
-                                        </VStack>
-                                        <Pressable onPress={() => !isSelection && handlePressToEdit()}>
-                                            <Icon
-                                                as={MaterialCommunityIcons}
-                                                name="dots-vertical"
-                                                color="gray.400"
-                                                size="lg"
-                                            />
-                                    </Pressable>
+                                        <TouchableOpacity
+                                            style={{ flex: 1 }}
+                                            onLongPress={() => handlePressTransaction(item, section.data)} 
+                                            onPress={() => isSelection && handlePressTransaction(item, section.data)}>
+                                            <HStack
+                                                bg="white"
+                                                h="16"
+                                                p="3"
+                                                rounded="lg"
+                                                alignItems="center"
+                                                space="5"
+                                            >
+                                                <Icon
+                                                    as={MaterialCommunityIcons}
+                                                    name={type == 'gain' ? 'trending-up' : 'trending-down'}
+                                                    color={type == 'gain' ? 'green.500' : 'red.500'}
+                                                    size="2xl"
+                                                />
+                                                <VStack flex={1}>
+                                                    <Heading color="gray.800" fontSize="lg">R$ {item.value.toFixed(2)}</Heading>
+                                                    <Text color="gray.500" fontSize="md">{item.description}</Text>
+                                                </VStack>
+                                                <Pressable onPress={() => !isSelection && handlePressToEdit()}>
+                                                    <Icon
+                                                        as={MaterialCommunityIcons}
+                                                        name="dots-vertical"
+                                                        color="gray.400"
+                                                        size="lg"
+                                                    />
+                                            </Pressable>
+                                            </HStack>
+                                        </TouchableOpacity>
                                     </HStack>
-                                </TouchableOpacity>
-                           </HStack>
-                        )
-                    }}
-                />
-            </Pressable>
+                                )
+                            }}
+                            ListEmptyComponent={
+                                <Center mt="20">
+                                    <Icon 
+                                        as={MaterialCommunityIcons}
+                                        name='block-helper'
+                                        size='6xl'
+                                        color="gray.300"
+                                        mb="5"
+                                        key={type + "_empty_icon"}
+                                    />
+                                    <Text color="gray.400" fontSize="lg" key={type + "_empty_text"}>Nenhuma transação encontrada</Text>
+                                </Center>
+                            }
+                        />
+                    </Pressable>
+                )
+            }
         </VStack>
     )
 }

@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useReducer, useState } from "react";
+import { PropsWithChildren, createContext, useCallback, useEffect, useReducer, useState } from "react";
 
 import { 
     EManagerModalActionTypes, 
@@ -18,23 +18,24 @@ import ReducerTransaction  from "reducers/ReducerTransaction";
 
 export type TAppContextProps = {
     user: string,
-    managerAccount: {
-        accounts: TAccountState['accounts'],
-        activeAccount: TAccountState['activeAccount']
-        createAccount: (account : TAccount) => void,
-        editAccount  : (account : TAccount) => void,
-        deleteAccount: (account : TAccount) => void,
+    managerAccount: {     
+        accounts           : TAccountState['accounts'],
+        activeAccount      : TAccountState['activeAccount'],
+        changeActiveAccount: (account : TAccount) => void
+        createAccount      : (account : TAccount) => void,
+        editAccount        : (account : TAccount) => void,
+        deleteAccount      : (account : TAccount) => void,
     },
     managerTransactions: {
-        transactions: TTransactionState['transactions'],
+        transactions     : TTransactionState['transactions'],
         createTransaction: (transaction : TTransaction) => void,
         editTransaction  : (transaction : TTransaction) => void,
         deleteTransaction: (transaction : TTransaction) => void,
     },
     managerModal: {
-        openModal: (modalType : TManagerModalType) => void
+        openModal : (modalType : TManagerModalType) => void
         closeModal: () => void,
-        state: TManagerModalState
+        state     : TManagerModalState
     }
 }
 export const AppContext = createContext<TAppContextProps>({} as TAppContextProps)
@@ -43,43 +44,52 @@ export const AppContext = createContext<TAppContextProps>({} as TAppContextProps
  * Contexto do App.
  */
 export default function AppContextProvider(props : PropsWithChildren) {
-    const [user, setUser]                                = useState('Naceja')
-    const [accountsState, dispatchAccountState]          = useReducer(ReducerAccount, ACCOUNT_INITIAL_STATE)
-    const [transactionsState, dispatchTransactionsState] = useReducer(ReducerTransaction, TRANSACTION_INITIAL_STATE)
+    const [user, setUser]                                             = useState('Naceja')
+    const [accountsState, dispatchAccountState]          = useReducer(ReducerAccount     , ACCOUNT_INITIAL_STATE)
+    const [transactionsState, dispatchTransactionsState] = useReducer(ReducerTransaction , TRANSACTION_INITIAL_STATE)
     const [managerModalState, dispatchManagerModalState] = useReducer(ReducerManagerModal, MANAGER_MODAL_INITIAL_STATE)
 
-    function openModal(modalType : TManagerModalType) {
+    const openModal = useCallback((modalType : TManagerModalType) => {
         dispatchManagerModalState({ action: EManagerModalActionTypes.OPEN_MODAL, modalType })
-    }
+    }, [])
 
-    function closeModal() {
+    const closeModal = useCallback(() => {
         dispatchManagerModalState({ action: EManagerModalActionTypes.CLOSE_MODAL })
-    }
+    }, [])
 
-    function createAccount(account : TAccount) {
+    const createAccount = useCallback((account : TAccount) => {
         dispatchAccountState({ action: EAccountActionTypes.CREATE, account });
-    }
+    }, [])
 
-    function deleteAccount(account : TAccount) {
+    const deleteAccount = useCallback((account : TAccount) => {
         dispatchAccountState({ action: EAccountActionTypes.DELETE, account })
-    }
+    }, [])
 
-    function editAccount(account : TAccount) {
+    const editAccount = useCallback((account : TAccount) => {
         dispatchAccountState({ action: EAccountActionTypes.EDIT, account })
-    }
+    }, [])
 
-    function createTransaction(transaction : TTransaction) {
+    const createTransaction = useCallback((transaction : TTransaction) => {
         dispatchTransactionsState({ action: ETransactionActionTypes.CREATE, transaction })
-    }
+    }, [])
 
-    function editTransaction(transaction : TTransaction) {
+    const editTransaction = useCallback((transaction : TTransaction) => {
         dispatchTransactionsState({ action: ETransactionActionTypes.EDIT, transaction })
-    }
+    }, [])
 
-    function deleteTransaction(transaction : TTransaction) {
+    const deleteTransaction = useCallback((transaction : TTransaction) => {
         dispatchTransactionsState({ action: ETransactionActionTypes.DELETE, transaction })
-    }
+    }, [])
 
+    const changeActiveAccount = useCallback((account : TAccount) => {
+        dispatchAccountState({ action: EAccountActionTypes.CHANGE_ACTIVE, account })
+    }, [])
+    
+    useEffect(() => {
+        if (accountsState.activeAccount == null) {
+            changeActiveAccount(accountsState.accounts[0])
+        }
+    },[])
     return (
         <AppContext.Provider 
             value={{
@@ -87,6 +97,7 @@ export default function AppContextProvider(props : PropsWithChildren) {
                 managerAccount : {
                     accounts: accountsState.accounts,
                     activeAccount: accountsState.activeAccount,
+                    changeActiveAccount,
                     createAccount,
                     deleteAccount,
                     editAccount
