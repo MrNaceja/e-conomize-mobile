@@ -2,6 +2,8 @@ import useManagerModal from "hooks/useManagerModal"
 import { useCallback, useMemo } from "react"
 import { Controller, useForm } from "react-hook-form"
 
+import { v4 as IdGenerator } from 'uuid'
+
 import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme, Box, KeyboardAvoidingView } from "native-base"
 import CampoForm from "./CampoForm"
 import PickerSelect from "./PickerSelect"
@@ -9,8 +11,8 @@ import PickerSelect from "./PickerSelect"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { TSchemaAccount, schemaAccount } from "utils/schemas/Account.schemas"
-import { TManagerModalType } from "utils/interfaces/ManagerModalDTO"
-import { ACCOUNT_COLORS_HIGHLIGHT, INSTITUITIONS, TAccountColorHighlight } from "utils/interfaces/AccountDTO"
+import { TManagerModalType } from "utils/interfaces/ReducerManagerModalDTO"
+import { ACCOUNT_COLORS_HIGHLIGHT, INSTITUITIONS, TAccount, TAccountColorHighlight } from "utils/interfaces/AccountDTO"
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -29,7 +31,9 @@ export default function ModalNewAccount() {
     })
 
     const handleAddNewAccount = useCallback((accountFormData : TSchemaAccount) => {
-        console.log(accountFormData)
+        // {"color": "violet", "instituition": "Nubank", "name": "Teste", "total": 0}
+        const id = IdGenerator()
+        const newAccount : TAccount = { id, ...accountFormData }
     }, [])
 
     const handleCloseModal = useCallback(() => {

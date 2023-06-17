@@ -5,7 +5,7 @@ export type TAccount = {
     id: string,
     name: string,
     total: number,
-    instituition: TAccountInstituition,
+    instituition: TAccountInstituition['name'],
     color: TAccountColorHighlight
 }
 

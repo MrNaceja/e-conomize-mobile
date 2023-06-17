@@ -1,4 +1,4 @@
-import { EManagerModalActionTypes, TManagerModalAction, TManagerModalState } from "utils/interfaces/ManagerModalDTO"
+import { EManagerModalActionTypes, TManagerModalAction, TManagerModalState } from "utils/interfaces/ReducerManagerModalDTO"
 
 /**
  *  Reducer para gerenciamento e controle dos modais abertos.

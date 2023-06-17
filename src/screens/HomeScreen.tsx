@@ -8,12 +8,14 @@ import TransactionsListView from "components/TransactionsListView";
 import ModalNewTransaction from "components/ModalNewTransaction";
 
 import { EXPENSE, GAIN, TTransactionsByDate } from "utils/interfaces/TransactionDTO";
+import useAccount from "hooks/useAccount";
 
 /**
  * Tela de Inicio do App.
  */
 export default function HomeScreen() {
     const { sizes } = useTheme()
+    const { accounts } = useAccount()
     const [currentAccount, setCurrentAccount] = useState(0)
     const [gainTransactions, setGainTransactions] = useState<TTransactionsByDate[]>(GAIN)
     const [expenseTransactions, setExpenseTransactions] = useState<TTransactionsByDate[]>(EXPENSE)
