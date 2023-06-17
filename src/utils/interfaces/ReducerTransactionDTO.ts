@@ -20,42 +20,42 @@ export const TRANSACTION_INITIAL_STATE : TTransactionState = {
         {
             createdAt: '17/06/2023',
             description: 'Teste1',
-            value: 0,
+            value: 10,
             type: 'expense',
             id: '1k23hi23bgk2jh232fdsfvretgrn23',
-            accountId: 'ejfdhwosafhuioenrfdnfod'
+            accountId: 'mercadopago'
         },
         {
             createdAt: '17/06/2023',
             description: 'Teste2',
-            value: 0,
+            value: 100,
             type: 'gain',
             id: '1k23hi23bg56565623',
-            accountId: 'ejfdhwosafhuioenrfdnfod'
+            accountId: 'nubank'
         },
         {
             createdAt: '17/06/2023',
             description: 'Teste3',
-            value: 0,
+            value: 10.50,
             type: 'gain',
             id: '1k23hi23bgk32452343456n23',
-            accountId: 'ejfdhwosafhuioenrfdnfod'
+            accountId: 'nubank'
         },
         {
             createdAt: '17/06/2023',
             description: 'Teste4',
-            value: 0,
-            type: 'gain',
+            value: 100,
+            type: 'expense',
             id: '1k23hi23bg3454356jn23',
-            accountId: 'ejfdhwosafhuioenrfdnfod'
+            accountId: 'nubank'
         },
         {
             createdAt: '16/06/2023',
             description: 'Teste5',
-            value: 0,
+            value: 50,
             type: 'gain',
             id: '1k23hi454534jh3bjn23',
-            accountId: 'ejfdhwosafhuioenrfdnfod'
+            accountId: 'nubank'
         },
     ]
 }

@@ -1,6 +1,13 @@
 import { formatNumber } from "react-native-currency-input";
 
-export const formatMonetary = (value : string) => {
+const Formatador = new Intl.NumberFormat('pt-br', {
+    style: 'currency',
+    currency: 'BRL',
+})
+export const formatMonetary = (value : string | number) => {
+    if (typeof value == 'number') {
+        return Formatador.format(value)
+    }
 
     const textNumericValue = value.replace(/\D+/g, '');
     

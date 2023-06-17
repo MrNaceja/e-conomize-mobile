@@ -8,11 +8,16 @@ import { SCREEN_CONTAINER_WIDTH } from "./Screen";
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import moment from 'moment';
+import 'moment/locale/pt-br';
+moment.locale('pt-br');
+
 interface ITransactionsListViewProps {
     transactions: TTransaction[],
     type: TTransactionType,
     title: string
 }
+
 export default function TransactionsListView({ transactions, title, type }: ITransactionsListViewProps) {
     const { sizes } = useTheme()
     const [selectionedTransactions, setSelectionedTransactions] = useState<TTransaction[]>([])
@@ -79,7 +84,7 @@ export default function TransactionsListView({ transactions, title, type }: ITra
                     contentContainerStyle={{ gap: sizes["3"], paddingBottom: sizes["20"], paddingTop: sizes["2"] }}
                     keyExtractor={item => item.id}
                     sections={transactionsByDate}
-                    renderSectionHeader={({ section: { title } }) => <Heading fontSize="sm" color="gray.400">{title}</Heading>}
+                    renderSectionHeader={({ section: { title } }) => <Heading fontSize="sm" color="gray.400">{moment(title, "DD/MM/AAAA").format('dddd, D [de] MMMM [de] YYYY')}</Heading>}
                     renderItem={({ item, section }) => {
                         const selected = selectionedTransactions.find(selectioned => selectioned.id == item.id)
                         return (

@@ -17,6 +17,21 @@ export type TAccountAction = {
 }
 
 export const ACCOUNT_INITIAL_STATE : TAccountState = {
-    accounts: [],
+    accounts: [
+        {
+            color: 'violet',
+            id: 'nubank',
+            instituition: 'Nubank',
+            name: 'Principal',
+            total: 0
+        },
+        {
+            color: 'red',
+            id: 'mercadopago',
+            instituition: 'Mercado Pago',
+            name: 'Investimentos',
+            total: 0
+        }
+    ],
     activeAccount: null
 }

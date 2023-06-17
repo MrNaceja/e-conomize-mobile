@@ -9,6 +9,7 @@ import ModalNewTransaction                                           from "compo
 
 import useAccount     from "hooks/useAccount";
 import useTransaction from "hooks/useTransaction";
+import { TAccount } from "utils/interfaces/AccountDTO";
 
 /**
  * Tela de Inicio do App.
@@ -23,13 +24,13 @@ export default function HomeScreen() {
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
             <FlatList
-                _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING} as Partial<IFlatListProps<number>>}
+                _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING} as Partial<IFlatListProps<TAccount>>}
                 showsHorizontalScrollIndicator={false} 
                 horizontal
                 maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]}
-                data={[1,2,3,4, 5, 6]}
-                keyExtractor={item => item.toString()}
-                renderItem={() => <AccountCard />}
+                data={accounts}
+                keyExtractor={item => item.id}
+                renderItem={({ item: account }) => <AccountCard account={account}/>}
                 onScroll={e => setCurrentAccount(parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0)))}
                 decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}

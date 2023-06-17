@@ -3,7 +3,10 @@ import { useContext } from "react";
 import { ETransactionTypes, TTransaction } from "utils/interfaces/TransactionDTO";
 
 export default function useTransaction() {
-    const { managerTransactions } = useContext(AppContext)
+    const { managerTransactions, managerAccount: { activeAccount } } = useContext(AppContext)
+    if (activeAccount) {
+        managerTransactions.transactions.filter(transaction => transaction.accountId == activeAccount.id)
+    }
     const [transactionsGain, transactionsExpense] = managerTransactions.transactions.reduce((state, item) => {
         const [ gain, expense ] = state
         switch (item.type) {
@@ -15,6 +18,5 @@ export default function useTransaction() {
                 return [gain, expense]
         }
     }, [[], []] as [TTransaction[], TTransaction[]])
-    
-    return {transactionsGain, transactionsExpense, ...managerTransactions}
+    return { transactionsGain, transactionsExpense, ...managerTransactions }
 }
