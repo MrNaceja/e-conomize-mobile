@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Box, FlatList, Heading, ScrollView, useTheme } from "native-base";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList/types";
 
@@ -8,28 +7,29 @@ import TransactionsListView                                          from "compo
 import ModalNewTransaction                                           from "components/ModalNewTransaction";
 
 import useAccount     from "hooks/useAccount";
-import useTransaction from "hooks/useTransaction";
 
 import { TAccount } from "utils/interfaces/AccountDTO";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import { useMemo } from "react";
 
 /**
  * Tela de Inicio do App.
  */
 export default function HomeScreen() {
-    const { sizes }                                       = useTheme()
-    const { accounts, changeActiveAccount, activeAccount} = useAccount()
-    const { transactionsGain, transactionsExpense }       = useTransaction()
+    const { sizes }                                                                 = useTheme()
+    const { accounts, changeAccountSelected, accountSelected, getTransactionsByAccount} = useAccount()
+    const [activeAccountGains, activeAccountExpenses] = useMemo(() => accountSelected ? getTransactionsByAccount(accountSelected) : [[],[]], [accountSelected])
 
     function handleSwipeChangeActiveAccount(e : NativeSyntheticEvent<NativeScrollEvent>) {
         const indexSwiped = parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0))
-        if (activeAccount && accounts[indexSwiped].id != activeAccount.id) {
+        if (accountSelected && accounts[indexSwiped].id != accountSelected) {
             const accountSwiped = accounts.find((account, index) => index == indexSwiped)
             if (accountSwiped) {
-                changeActiveAccount(accountSwiped)
+                changeAccountSelected(accountSwiped.id)
             }
         }
     }
+    
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
@@ -39,16 +39,18 @@ export default function HomeScreen() {
                 horizontal
                 maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]}
                 data={accounts}
-                keyExtractor={item => item.id}
-                renderItem={({ item: account }) => <AccountCard account={account}/>}
+                keyExtractor={account => account.id}
+                renderItem={({ item: account }) => {
+                    return <AccountCard account={ account } active={ accountSelected ? account.id == accountSelected : false }/>
+                }}
                 onScroll={handleSwipeChangeActiveAccount}
                 decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
             />
             <Box px={SCREEN_HORIZONTAL_SPACING} mt="2" flex={1}>
                 <ScrollView horizontal snapToInterval={SCREEN_CONTAINER_WIDTH} decelerationRate="fast" showsHorizontalScrollIndicator={false}>
-                    <TransactionsListView title="Seus Ganhos"   type="gain"    transactions={transactionsGain} />
-                    <TransactionsListView title="Suas Despesas" type="expense" transactions={transactionsExpense} />
+                    <TransactionsListView title="Seus Ganhos"   type="gain"    transactions={activeAccountGains} />
+                    <TransactionsListView title="Suas Despesas" type="expense" transactions={activeAccountExpenses} />
                 </ScrollView>
             </Box>
             <ModalNewTransaction />

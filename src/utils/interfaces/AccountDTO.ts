@@ -4,9 +4,9 @@ import { THEME } from "theme"
 export type TAccount = {
     id: string,
     name: string,
-    total: number,
     instituition: TAccountInstituition['name'],
-    color: TAccountColorHighlight
+    color: TAccountColorHighlight,
+    total: number
 }
 
 export type TAccountInstituition = {

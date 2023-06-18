@@ -1,11 +1,11 @@
-import { useNavigation, findFocusedRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Icon, Menu, Text } from "native-base";
 import { Ionicons } from "@expo/vector-icons"
 
 import { ButtonCircular } from "./ButtonCircular";
 
-import { TMainRoutesScreens } from "routes/main.routes";
 import useManagerModal from "hooks/useManagerModal";
+import useMainScreens from "hooks/useMainScreens";
 
 /**
  * Menu de Interações para novos dados.
@@ -13,8 +13,7 @@ import useManagerModal from "hooks/useManagerModal";
 export default function MenuNew() {
     const nav = useNavigation()
     const { openModal } = useManagerModal()
-    const routeInFocus = (findFocusedRoute(nav.getState())?.name || "home") as keyof TMainRoutesScreens
-
+    const { displayedScreen } = useMainScreens()
     return (
         <Menu 
             trigger={triggerProps => (
@@ -26,9 +25,9 @@ export default function MenuNew() {
             overflow="hidden"
             _backdrop={{bg:"gray.500"}}
         >
-            <Menu.Group title={routeInFocus == "home" ? "Transações" : "Contas"}>
+            <Menu.Group title={displayedScreen == "home" ? "Transações" : "Contas"}>
                 {
-                    routeInFocus == "home" 
+                    displayedScreen == "home" 
                     ?
                         <>
                             <Menu.Item onPress={() => openModal("gain")}>

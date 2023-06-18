@@ -1,29 +1,32 @@
 import { Box, HStack, Heading, Icon, Skeleton, Text, VStack, useTheme, ISkeletonProps } from "native-base";
-
 import { Ionicons } from "@expo/vector-icons"
 
 import { SCREEN_CONTAINER_WIDTH } from "./Screen";
 import { TAccount } from "utils/interfaces/AccountDTO";
 import { formatMonetary } from "utils/scripts/formatMonetary";
-import useTransaction from "hooks/useTransaction";
-import { TTransaction } from 'utils/interfaces/TransactionDTO';
-import { useMemo } from "react";
 import { ISkeletonTextProps } from "native-base/lib/typescript/components/composites";
-
+import useAccount from "hooks/useAccount";
+import { TTransaction } from "utils/interfaces/TransactionDTO";
 
 interface IAccountCardProps {
-    account: TAccount
+    account: TAccount,
+    active?: boolean
 }
-export default function AccountCard({ account } : IAccountCardProps) {
-    const { sizes } = useTheme()
-    const { transactionsGain, transactionsExpense } = useTransaction()
+export default function AccountCard({ account, active = true } : IAccountCardProps) {
+    const { sizes }                    = useTheme()
+    const { getTransactionsByAccount } = useAccount()
+    let accountGains    : TTransaction[] = []
+    let accountExpenses : TTransaction[] = []
+    let totalGain    = 0;
+    let totalExpense = 0;
+    let { total } = account
 
-    const getTotalByTransactionsOnAccount = (transactions : TTransaction[]) => transactions.reduce((state, transaction) => (transaction.accountId == account.id) ? state += transaction.value : state, 0)
-
-    const totalGain    = useMemo(() => getTotalByTransactionsOnAccount(transactionsGain)   , [transactionsGain])
-    const totalExpense = useMemo(() => getTotalByTransactionsOnAccount(transactionsExpense), [transactionsExpense])
-
-    const total = (account.total + totalGain) - totalExpense
+    if (active) {
+        [accountGains, accountExpenses] = getTransactionsByAccount(account.id)
+        totalGain    = accountGains   .reduce((total, gain)    => total += gain.value   , 0)
+        totalExpense = accountExpenses.reduce((total, expense) => total += expense.value, 0)
+        total += totalGain - totalExpense
+    }
 
     const hardlightColor        = account.color + ".500"
     const hardlightColorOpacity = account.color + ".600"
@@ -31,7 +34,7 @@ export default function AccountCard({ account } : IAccountCardProps) {
     const skeletonDefinition : Partial<ISkeletonProps & ISkeletonTextProps> = {
         startColor: hardlightColor,
         endColor: hardlightColorOpacity,
-        isLoaded: true,
+        isLoaded: active,
     }
 
     return (

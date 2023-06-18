@@ -11,7 +11,7 @@ import { TSchemaTransaction, schemaTransaction } from "utils/schemas/Transaction
 
 import CampoForm from "./CampoForm";
 import { ETransactionTypes, TTransactionType } from "utils/interfaces/TransactionDTO";
-import { TManagerModalType } from "utils/interfaces/ReducerManagerModalDTO";
+import { TManagerModalType } from "utils/interfaces/ManagerModalDTO";
 
 /**
  *  Modal de cadastro de Transação.

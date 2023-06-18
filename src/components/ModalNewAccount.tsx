@@ -2,23 +2,26 @@ import useManagerModal from "hooks/useManagerModal"
 import { useCallback, useMemo } from "react"
 import { Controller, useForm } from "react-hook-form"
 
-// import { v4 as IdGenerator } from 'uuid'
-
 import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme, Box, KeyboardAvoidingView } from "native-base"
 import CampoForm from "./CampoForm"
 import PickerSelect from "./PickerSelect"
 
+import uuid from 'react-native-uuid'
+
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { TSchemaAccount, schemaAccount } from "utils/schemas/Account.schemas"
-import { TManagerModalType } from "utils/interfaces/ReducerManagerModalDTO"
+
+import { TManagerModalType }                                                         from "utils/interfaces/ReducerManagerModalDTO"
 import { ACCOUNT_COLORS_HIGHLIGHT, INSTITUITIONS, TAccount, TAccountColorHighlight } from "utils/interfaces/AccountDTO"
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import useAccount from "hooks/useAccount"
 
 export default function ModalNewAccount() {
     const { opened, modalType, closeModal} = useManagerModal()
-    const { colors } = useTheme()
+    const { createAccount }                = useAccount()
+    const { colors }                       = useTheme()
     
     const { control, handleSubmit, reset, watch } = useForm<TSchemaAccount>({
         defaultValues:{
@@ -30,11 +33,12 @@ export default function ModalNewAccount() {
         resolver: zodResolver(schemaAccount)
     })
 
+
     const handleAddNewAccount = useCallback((accountFormData : TSchemaAccount) => {
-        // {"color": "violet", "instituition": "Nubank", "name": "Teste", "total": 0}
-        // const id = IdGenerator()
-        // const newAccount : TAccount = { id, ...accountFormData }
-    }, [])
+        const newAccount : TAccount = { ...accountFormData, id: uuid.v4() as string }
+        createAccount(newAccount)
+        handleCloseModal()
+    }, [createAccount])
 
     const handleCloseModal = useCallback(() => {
         reset()

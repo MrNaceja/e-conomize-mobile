@@ -1,20 +1,30 @@
 import { TAccount } from "./AccountDTO"
+import { TTransaction } from "./TransactionDTO"
 
 export type TAccountState = {
     accounts: TAccount[],
-    activeAccount: TAccount | null
+    transactions: TTransaction[]
+    accountSelected: TAccount['id'] | null
 }
 
 export enum EAccountActionTypes {
-    CREATE        = "CREATE_ACCOUNT",
-    EDIT          = "EDIT_ACCOUNT",
-    DELETE        = "DELETE_ACCOUNT",
-    CHANGE_ACTIVE = "CHANGE_ACTIVE_ACCOUNT"
+    LOAD_STATE = "LOAD_STATE_ACCOUNT",
+
+    ACCOUNT_CREATE          = "CREATE_ACCOUNT",
+    ACCOUNT_EDIT            = "EDIT_ACCOUNT",
+    ACCOUNT_DELETE          = "DELETE_ACCOUNT",
+    ACCOUNT_CHANGE_SELECTED = "CHANGE_SELECTED_ACCOUNT",
+
+    TRANSACTION_CREATE = 'CREATE_TRANSACTION',
+    TRANSACTION_EDIT   = "EDIT_TRANSACTION",
+    TRANSACTION_DELETE = "DELETE_TRANSACTION",
 }
 
 export type TAccountAction = {
     action: EAccountActionTypes,
-    account: TAccount
+    payload: TAccountState | 
+            TAccount       | TAccount['id']   |
+            TTransaction   | TTransaction['id']
 }
 
 export const ACCOUNT_INITIAL_STATE : TAccountState = {
@@ -27,12 +37,54 @@ export const ACCOUNT_INITIAL_STATE : TAccountState = {
             total: 0
         },
         {
-            color: 'red',
-            id: 'mercadopago',
-            instituition: 'Mercado Pago',
-            name: 'Investimentos',
-            total: 0
+            color: 'rose',
+            id: 'teste',
+            instituition: 'Nubank',
+            name: 'Teste',
+            total: 2
         }
     ],
-    activeAccount: null
+    transactions: [
+        {
+            createdAt: '17/06/2023',
+            description: 'Teste1',
+            value: 10,
+            type: 'expense',
+            id: '1k23hi23bgk2jh232fdsfvretgrn23',
+            accountId: 'mercadopago'
+        },
+        {
+            createdAt: '17/06/2023',
+            description: 'Teste2',
+            value: 100,
+            type: 'gain',
+            id: '1k23hi23bg56565623',
+            accountId: 'nubank'
+        },
+        {
+            createdAt: '17/06/2023',
+            description: 'Teste3',
+            value: 10.50,
+            type: 'gain',
+            id: '1k23hi23bgk32452343456n23',
+            accountId: 'nubank'
+        },
+        {
+            createdAt: '17/06/2023',
+            description: 'Teste4',
+            value: 100,
+            type: 'expense',
+            id: '1k23hi23bg3454356jn23',
+            accountId: 'nubank'
+        },
+        {
+            createdAt: '16/06/2023',
+            description: 'Teste5',
+            value: 50,
+            type: 'gain',
+            id: '1k23hi454534jh3bjn23',
+            accountId: 'nubank'
+        },
+    ],
+    accountSelected: 'nubank'
 }
