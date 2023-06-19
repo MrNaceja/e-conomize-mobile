@@ -9,7 +9,7 @@ export default function ReducerAccount(state : TAccountState, { action, payload 
   switch (action) {
     case EAccountActionTypes.ACCOUNT_CREATE:
       const accountCreated = payload as TAccount
-      return {...state, accounts: [accountCreated, ...state.accounts]}
+      return {...state, accounts: [...state.accounts, accountCreated]}
     case EAccountActionTypes.ACCOUNT_EDIT:
       const accountEdited = payload as TAccount
       return {...state, accounts: state.accounts.map( account => account.id == accountEdited.id ? accountEdited : account  )}
@@ -22,7 +22,7 @@ export default function ReducerAccount(state : TAccountState, { action, payload 
 
     case EAccountActionTypes.TRANSACTION_CREATE:
       const transactionCreated = payload as TTransaction
-      return {...state, transactions: [transactionCreated, ...state.transactions]}
+      return {...state, transactions: [...state.transactions, transactionCreated]}
     case EAccountActionTypes.TRANSACTION_EDIT:
       const transactionEdited = payload as TTransaction
       return {...state, transactions: state.transactions.map( account => account.id == transactionEdited.id ? transactionEdited : account  )}

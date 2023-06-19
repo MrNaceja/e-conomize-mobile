@@ -1,4 +1,4 @@
-import { HStack, Heading, Icon, Modal, Pressable, Text, VStack} from "native-base";
+import { HStack, Heading, Icon, Modal, Pressable, Text, VStack, useToast} from "native-base";
 import { useForm, Controller } from "react-hook-form";
 import { useCallback, useMemo } from "react";
 
@@ -10,14 +10,19 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { TSchemaTransaction, schemaTransaction } from "utils/schemas/Transaction.schemas";
 
 import CampoForm from "./CampoForm";
-import { ETransactionTypes, TTransactionType } from "utils/interfaces/TransactionDTO";
-import { TManagerModalType } from "utils/interfaces/ManagerModalDTO";
+import { ETransactionTypes, TTransaction } from "utils/interfaces/TransactionDTO";
+import { TManagerModalType } from "utils/interfaces/ReducerManagerModalDTO";
+import useAccount from "hooks/useAccount";
+import moment from "moment";
+import uuid from 'react-native-uuid';
 
 /**
  *  Modal de cadastro de Transação.
  */
 export default function ModalNewTransaction() {
     const { opened, modalType, closeModal} = useManagerModal()
+    const { createTransaction, accountSelected } = useAccount()
+    const Message = useToast()
     const { control, handleSubmit, reset } = useForm<TSchemaTransaction>({
         defaultValues:{
             description: "",
@@ -40,6 +45,21 @@ export default function ModalNewTransaction() {
         reset()
         closeModal()
     }, [])
+
+    const handleCreateNewTransaction = async (transactionFormData : TSchemaTransaction) => {
+        const transactionNew : TTransaction = {
+            ...transactionFormData,
+            createdAt: moment().format('DD/MM/YYYY'),
+            id: uuid.v4() as string,
+            accountId: accountSelected as string
+        }
+        await createTransaction(transactionNew)
+        Message.show({
+            title: 'Transação criada com sucesso',
+            bg: "green.500"
+        })
+        handleCloseModal()
+    }
 
     const modalOpen = opened && (['expense', 'gain'] as TManagerModalType[]).includes(modalType)
 
@@ -87,7 +107,7 @@ export default function ModalNewTransaction() {
                                 />
                             )}  
                         />
-                        <Pressable bg="green.500" p="5" alignItems="center" rounded="md" shadow="10">
+                        <Pressable bg="green.500" p="5" alignItems="center" rounded="md" shadow="10" onPress={handleSubmit(handleCreateNewTransaction)}>
                             <Text color="white" fontSize="2xl">Adicionar</Text>
                         </Pressable>
                     </VStack>

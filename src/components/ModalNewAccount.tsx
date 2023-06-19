@@ -2,7 +2,7 @@ import useManagerModal from "hooks/useManagerModal"
 import { useCallback, useMemo } from "react"
 import { Controller, useForm } from "react-hook-form"
 
-import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme, Box, KeyboardAvoidingView } from "native-base"
+import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme, Box, KeyboardAvoidingView, useToast } from "native-base"
 import CampoForm from "./CampoForm"
 import PickerSelect from "./PickerSelect"
 
@@ -22,6 +22,7 @@ export default function ModalNewAccount() {
     const { opened, modalType, closeModal} = useManagerModal()
     const { createAccount }                = useAccount()
     const { colors }                       = useTheme()
+    const Message                          = useToast()
     
     const { control, handleSubmit, reset, watch } = useForm<TSchemaAccount>({
         defaultValues:{
@@ -33,10 +34,13 @@ export default function ModalNewAccount() {
         resolver: zodResolver(schemaAccount)
     })
 
-
-    const handleAddNewAccount = useCallback((accountFormData : TSchemaAccount) => {
+    const handleAddNewAccount = useCallback(async (accountFormData : TSchemaAccount) => {
         const newAccount : TAccount = { ...accountFormData, id: uuid.v4() as string }
-        createAccount(newAccount)
+        await createAccount(newAccount)
+        Message.show({
+            title: "Conta criada com sucesso",
+            bg: "green.500"
+        })
         handleCloseModal()
     }, [createAccount])
 
@@ -172,7 +176,7 @@ export default function ModalNewAccount() {
                             <Controller 
                                 control={control}
                                 name="total"
-                                render={({ field: { onChange, value} }) => (
+                                render={({ field: { onChange, value } }) => (
                                     <CampoForm 
                                         type="monetary"
                                         label="Valor Inicial"

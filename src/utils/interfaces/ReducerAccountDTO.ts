@@ -42,6 +42,13 @@ export const ACCOUNT_INITIAL_STATE : TAccountState = {
             instituition: 'Nubank',
             name: 'Teste',
             total: 2
+        },
+        {
+            color: 'pink',
+            id: 'ret',
+            instituition: 'Guero',
+            name: 'Olá',
+            total: 0
         }
     ],
     transactions: [

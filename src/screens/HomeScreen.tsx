@@ -44,7 +44,6 @@ export default function HomeScreen() {
                     return <AccountCard account={ account } active={ accountSelected ? account.id == accountSelected : false }/>
                 }}
                 onScroll={handleSwipeChangeActiveAccount}
-                decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
             />
             <Box px={SCREEN_HORIZONTAL_SPACING} mt="2" flex={1}>
