@@ -1,31 +1,37 @@
+import { useEffect, useState } from "react";
 import { Box, HStack, Heading, Icon, Skeleton, Text, VStack, useTheme, ISkeletonProps } from "native-base";
 import { Ionicons } from "@expo/vector-icons"
+import { ISkeletonTextProps } from "native-base/lib/typescript/components/composites";
 
 import { SCREEN_CONTAINER_WIDTH } from "./Screen";
-import { TAccount } from "utils/interfaces/AccountDTO";
-import { formatMonetary } from "utils/scripts/formatMonetary";
-import { ISkeletonTextProps } from "native-base/lib/typescript/components/composites";
+
 import useAccount from "hooks/useAccount";
+import useMainScreens from "hooks/useMainScreens";
+
+import { TAccount } from "utils/interfaces/AccountDTO";
 import { TTransaction } from "utils/interfaces/TransactionDTO";
 
+import { formatMonetary } from "utils/scripts/formatMonetary";
+
 interface IAccountCardProps {
-    account: TAccount,
-    active?: boolean
+    account: TAccount
 }
-export default function AccountCard({ account, active = true } : IAccountCardProps) {
-    const { sizes }                    = useTheme()
-    const { getTransactionsByAccount } = useAccount()
-    let accountGains    : TTransaction[] = []
-    let accountExpenses : TTransaction[] = []
+export default function AccountCard({ account } : IAccountCardProps) {
+    const { sizes }                                     = useTheme()
+    const { getTransactionsByAccount, accountSelected } = useAccount()
+    const { displayedScreen }                           = useMainScreens()
+    const [ loading, setLoading ]                 = useState(true)
+    const [ accountGains, setAccountGains ]       = useState<TTransaction[]>([])
+    const [ accountExpenses, setAccountExpenses ] = useState<TTransaction[]>([])
+
+    let { total }    = account
     let totalGain    = 0;
     let totalExpense = 0;
-    let { total } = account
 
-    if (active) {
-        [accountGains, accountExpenses] = getTransactionsByAccount(account.id)
+    if (!loading) {
         totalGain    = accountGains   .reduce((total, gain)    => total += gain.value   , 0)
         totalExpense = accountExpenses.reduce((total, expense) => total += expense.value, 0)
-        total += totalGain - totalExpense
+        total       += totalGain - totalExpense
     }
 
     const hardlightColor        = account.color + ".500"
@@ -34,9 +40,25 @@ export default function AccountCard({ account, active = true } : IAccountCardPro
     const skeletonDefinition : Partial<ISkeletonProps & ISkeletonTextProps> = {
         startColor: hardlightColor,
         endColor: hardlightColorOpacity,
-        isLoaded: active,
+        isLoaded: !loading,
     }
 
+    
+    async function loadTransactions() {
+        const isAccountSelected = account.id == accountSelected
+        const isAccountsScreen  = displayedScreen == "accounts"
+        if (isAccountSelected || isAccountsScreen) {
+            setLoading(true)
+                const [accountGains, accountExpenses] = await getTransactionsByAccount(account.id)
+                setAccountGains(accountGains)
+                setAccountExpenses(accountExpenses)
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        loadTransactions()
+    }, [ accountSelected ])
     return (
         <VStack bg={hardlightColor} maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]} rounded="2xl" w={SCREEN_CONTAINER_WIDTH} p="3" space="2">
             <Skeleton.Text lines={2} w="1/3" {...skeletonDefinition}>

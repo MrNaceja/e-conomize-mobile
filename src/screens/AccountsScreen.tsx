@@ -1,6 +1,5 @@
 import { HStack, Heading, Icon, Pressable, Popover, useTheme, Text, useToast } from "native-base";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { Alert } from 'react-native'
 
 import Screen, { SCREEN_CONTAINER_WIDTH, SCREEN_HORIZONTAL_SPACING } from "components/Screen";
 import AccountCard from "components/AccountCard";
