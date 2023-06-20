@@ -20,9 +20,9 @@ export default function AccountCard({ account } : IAccountCardProps) {
     const { sizes }                                     = useTheme()
     const { getTransactionsByAccount, accountSelected } = useAccount()
     const { displayedScreen }                           = useMainScreens()
-    const [ loading, setLoading ]                 = useState(true)
-    const [ accountGains, setAccountGains ]       = useState<TTransaction[]>([])
-    const [ accountExpenses, setAccountExpenses ] = useState<TTransaction[]>([])
+    const [ loading, setLoading ]                       = useState(true)
+    const [ accountGains, setAccountGains ]             = useState<TTransaction[]>([])
+    const [ accountExpenses, setAccountExpenses ]       = useState<TTransaction[]>([])
 
     let { total }    = account
     let totalGain    = 0;
@@ -45,13 +45,13 @@ export default function AccountCard({ account } : IAccountCardProps) {
 
     
     async function loadTransactions() {
+        setLoading(true)
         const isAccountSelected = account.id == accountSelected
         const isAccountsScreen  = displayedScreen == "accounts"
         if (isAccountSelected || isAccountsScreen) {
-            setLoading(true)
-                const [accountGains, accountExpenses] = await getTransactionsByAccount(account.id)
-                setAccountGains(accountGains)
-                setAccountExpenses(accountExpenses)
+            const [accountGains, accountExpenses] = await getTransactionsByAccount(account.id)
+            setAccountGains(accountGains)
+            setAccountExpenses(accountExpenses)
             setLoading(false)
         }
     }

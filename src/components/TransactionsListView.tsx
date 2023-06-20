@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { HStack, Heading, Icon, Pressable, SectionList, VStack, Text, useTheme, Center, Skeleton, Box } from "native-base";
 
@@ -15,14 +15,14 @@ moment.locale('pt-br');
 interface ITransactionsListViewProps {
     transactions: TTransaction[],
     type: TTransactionType,
-    title: string
+    title: string,
+    loading: boolean
 }
 
-export default function TransactionsListView({ transactions, title, type }: ITransactionsListViewProps) {
+function TransactionsListView({ transactions, title, type, loading }: ITransactionsListViewProps) {
     const { sizes } = useTheme()
     const [selectionedTransactions, setSelectionedTransactions] = useState<TTransaction[]>([])
     const isSelection = selectionedTransactions.length > 0
-    const isLoading = false
     const transactionsByDate = useMemo(() => (
         transactions.reduce((sections, item) => {
             const dateCreated = item.createdAt
@@ -79,7 +79,7 @@ export default function TransactionsListView({ transactions, title, type }: ITra
                 </HStack>
             </HStack>
             {
-                isLoading
+                loading
                 ?(
                     <VStack space="5">
                        <VStack space="1">
@@ -168,3 +168,5 @@ export default function TransactionsListView({ transactions, title, type }: ITra
         </VStack>
     )
 }
+
+export default memo(TransactionsListView)

@@ -23,7 +23,7 @@ export default function MainRoutes() {
     const { colors, sizes } = useTheme()
     return (
         <TabNavigation.Navigator 
-            initialRouteName='accounts'
+            initialRouteName='home'
             screenOptions={{
                 header: () => <Header />,
                 tabBarActiveTintColor: colors.green["500"],
