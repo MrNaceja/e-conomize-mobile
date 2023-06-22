@@ -1,6 +1,6 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { HStack, Heading, Icon, Pressable, SectionList, VStack, Text, useTheme, Center, Skeleton, Box } from "native-base";
+import { HStack, Heading, Icon, Pressable, SectionList, VStack, Text, useTheme, Center, Skeleton } from "native-base";
 
 import { TTransaction, TTransactionType, TTransactionsByDate } from "utils/interfaces/TransactionDTO";
 
@@ -18,11 +18,11 @@ interface ITransactionsListViewProps {
     title: string,
     loading: boolean
 }
-
 function TransactionsListView({ transactions, title, type, loading }: ITransactionsListViewProps) {
     const { sizes } = useTheme()
     const [selectionedTransactions, setSelectionedTransactions] = useState<TTransaction[]>([])
     const isSelection = selectionedTransactions.length > 0
+
     const transactionsByDate = useMemo(() => (
         transactions.reduce((sections, item) => {
             const dateCreated = item.createdAt
@@ -53,6 +53,9 @@ function TransactionsListView({ transactions, title, type, loading }: ITransacti
         setSelectionedTransactions([])
     }
 
+    useEffect(() => {
+        clearSelectionedTransactions()
+    }, [ loading ])
     return (
         <VStack space="1" w={SCREEN_CONTAINER_WIDTH} >
             <HStack justifyContent="space-between" alignItems="center" h="10">

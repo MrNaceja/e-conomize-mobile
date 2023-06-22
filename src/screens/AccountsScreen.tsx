@@ -1,4 +1,4 @@
-import { HStack, Heading, Icon, Pressable, Popover, useTheme, Text, useToast } from "native-base";
+import { HStack, Heading, Icon, Pressable, Popover, useTheme, Text, useToast, Spinner, VStack } from "native-base";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 import Screen, { SCREEN_CONTAINER_WIDTH, SCREEN_HORIZONTAL_SPACING } from "components/Screen";
@@ -9,11 +9,15 @@ import { ButtonCircular } from "components/ButtonCircular";
 import ModalNewAccount from "components/ModalNewAccount";
 import useAccount from "hooks/useAccount";
 import { TAccount } from "utils/interfaces/AccountDTO";
+import useTransaction from "hooks/useTransaction";
+import { useEffect, useState } from "react";
 
 export default function AccountsScreen() {
-    const { sizes } = useTheme()
-    const Message   = useToast()
-    const { accounts, editAccount, deleteAccount } = useAccount()
+    const { sizes }                  = useTheme()
+    const Message                    = useToast()
+    const [accounts, setAccounts]    = useState<TAccount[]>([])
+    const { read: readAccounts, delete: deleteAccount, update: updateAccount } = useAccount()
+    const { read: readTransactions } = useTransaction()
 
     async function handleDeleteAccount(accountId : TAccount['id']) {
         if (accounts.length == 1) {
@@ -33,7 +37,15 @@ export default function AccountsScreen() {
     function handleEditAccount() {
 
     }
+
+    async function loadAccounts() {
+        const accounts = await readAccounts()
+        setAccounts(accounts)
+    }
     
+    useEffect(() => {
+        loadAccounts()
+    }, [])
     return (
         <Screen space="2">
             <HStack px={SCREEN_HORIZONTAL_SPACING} alignItems="center" space="2">
@@ -60,7 +72,7 @@ export default function AccountsScreen() {
                 useFlatList
                 data={accounts}
                 keyExtractor={account => account.id}
-                renderItem={({ item: account }) => <AccountCard account={account} />}
+                renderItem={({ item: account }) => <AccountCard account={ account } />}
                 renderHiddenItem={() => (
                     <HStack justifyContent="space-between" h="full">
                         <Pressable p="5" justifyContent="center">
@@ -84,13 +96,19 @@ export default function AccountsScreen() {
                 contentContainerStyle={{
                     gap: sizes["3"],
                     paddingBottom: sizes["10"],
-                    paddingHorizontal: sizes[SCREEN_HORIZONTAL_SPACING]
+                    paddingHorizontal: sizes[SCREEN_HORIZONTAL_SPACING],
+                    justifyContent: accounts.length == 0 ? "center" : "flex-start"
                 }}
                 showsVerticalScrollIndicator={false}
                 leftActivationValue={SCREEN_CONTAINER_WIDTH / 2}
                 onLeftAction={handleDeleteAccount}
+                ListEmptyComponent={
+                    <VStack flex={1} space="3">
+                        {[...Array(3)].map((__, i) => <AccountCard account={ null } key={i}/>)}
+                    </VStack>
+                }
             />
-            <ModalNewAccount />
+            {/* <ModalNewAccount /> */}
         </Screen>
     )
 }

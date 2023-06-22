@@ -1,70 +1,64 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Box, HStack, Heading, Icon, Skeleton, Text, VStack, useTheme, ISkeletonProps } from "native-base";
 import { Ionicons } from "@expo/vector-icons"
 import { ISkeletonTextProps } from "native-base/lib/typescript/components/composites";
 
 import { SCREEN_CONTAINER_WIDTH } from "./Screen";
 
-import useAccount from "hooks/useAccount";
-import useMainScreens from "hooks/useMainScreens";
-
 import { TAccount } from "utils/interfaces/AccountDTO";
 import { TTransaction } from "utils/interfaces/TransactionDTO";
 
 import { formatMonetary } from "utils/scripts/formatMonetary";
+import useTransaction from "hooks/useTransaction";
 
 interface IAccountCardProps {
-    account: TAccount
+    account: TAccount | null
 }
-export default function AccountCard({ account } : IAccountCardProps) {
-    const { sizes }                                     = useTheme()
-    const { getTransactionsByAccount, accountSelected } = useAccount()
-    const { displayedScreen }                           = useMainScreens()
-    const [ loading, setLoading ]                       = useState(true)
-    const [ accountGains, setAccountGains ]             = useState<TTransaction[]>([])
-    const [ accountExpenses, setAccountExpenses ]       = useState<TTransaction[]>([])
+function AccountCard({ account } : IAccountCardProps) {
+    const { sizes }                               = useTheme()
+    const { read: readTransactions }              = useTransaction()
+    const [ loading, setLoading ]                 = useState(true)
+    const [ accountGains, setAccountGains ]       = useState<TTransaction[]>([])
+    const [ accountExpenses, setAccountExpenses ] = useState<TTransaction[]>([])
 
-    let { total }    = account
+    let total    = account ? account.total : 0
     let totalGain    = 0;
     let totalExpense = 0;
 
-    if (!loading) {
+    if (!loading && account) {
         totalGain    = accountGains   .reduce((total, gain)    => total += gain.value   , 0)
         totalExpense = accountExpenses.reduce((total, expense) => total += expense.value, 0)
         total       += totalGain - totalExpense
     }
 
-    const hardlightColor        = account.color + ".500"
-    const hardlightColorOpacity = account.color + ".600"
+    const hardlightColor        = (account ? account.color + ".500" : "gray.300") 
+    const hardlightColorOpacity = (account ? account.color + ".600" : "gray.200") 
 
     const skeletonDefinition : Partial<ISkeletonProps & ISkeletonTextProps> = {
         startColor: hardlightColor,
         endColor: hardlightColorOpacity,
-        isLoaded: !loading,
+        isLoaded: !loading && !!account,
     }
-
     
     async function loadTransactions() {
         setLoading(true)
-        const isAccountSelected = account.id == accountSelected
-        const isAccountsScreen  = displayedScreen == "accounts"
-        if (isAccountSelected || isAccountsScreen) {
-            const [accountGains, accountExpenses] = await getTransactionsByAccount(account.id)
-            setAccountGains(accountGains)
-            setAccountExpenses(accountExpenses)
-            setLoading(false)
-        }
+            if (account) {
+                const [accountGains, accountExpenses] = await readTransactions(account.id)
+                setAccountGains(accountGains)
+                setAccountExpenses(accountExpenses)
+            }
+        setLoading(false)
     }
 
     useEffect(() => {
         loadTransactions()
-    }, [ accountSelected ])
+    }, [account])
     return (
         <VStack bg={hardlightColor} maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]} rounded="2xl" w={SCREEN_CONTAINER_WIDTH} p="3" space="2">
             <Skeleton.Text lines={2} w="1/3" {...skeletonDefinition}>
                 <VStack>
-                    <Text textTransform="uppercase" color="white" fontSize="2xs">{account.instituition}</Text>
-                    <Heading color="white" fontSize="md">{account.name}</Heading>
+                    <Text textTransform="uppercase" color="white" fontSize="2xs">{account?.instituition}</Text>
+                    <Heading color="white" fontSize="md">{account?.name}</Heading>
                 </VStack>
             </Skeleton.Text>
             <Skeleton h="16" rounded="md"  {...skeletonDefinition}>
@@ -104,3 +98,5 @@ export default function AccountCard({ account } : IAccountCardProps) {
         </VStack>
     )
 }
+
+export default memo(AccountCard)

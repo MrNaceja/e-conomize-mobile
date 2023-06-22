@@ -1,4 +1,4 @@
-import { Box, FlatList, Heading, ScrollView, useTheme, Text } from "native-base";
+import { Box, FlatList, Heading, ScrollView, useTheme, Text, Spinner, HStack } from "native-base";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList/types";
 
 import AccountCard                                                   from "components/AccountCard";
@@ -26,59 +26,72 @@ export default function HomeScreen() {
     const [accountGains, setAccountGains]                 = useState<TTransaction[]>([])
     const [accountExpenses, setAccountExpenses]           = useState<TTransaction[]>([])
     const [loading, setLoading]                           = useState(true)
-    const [loadingBySwipe, setLoadingBySwipe]             = useState(false)
     
     const accountSelected = accounts[indexAccountSelected]
 
     function handleSwipeAccount(e : NativeSyntheticEvent<NativeScrollEvent>) {
-        const indexSwiped   = parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0))
-        const accountSwiped = accounts[indexSwiped]
-        if ((accountSelected && accountSwiped) && accountSelected.id != accountSwiped.id) {
-            setIndexAccountSelected(indexSwiped)
+        const indexSwiped = parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0))
+        if (indexSwiped != indexAccountSelected) {
+            console.log(indexSwiped)
+            if (accounts[indexSwiped]) {
+                setIndexAccountSelected(indexSwiped)
+            }
         }
     }
 
     async function loadTransactions() {
-       const [gains, expenses] = await readTransactions(accountSelected.id)
-       setAccountGains(gains)
-       setAccountExpenses(expenses)
+        if (accountSelected) {
+            const [gains, expenses] = await readTransactions(accountSelected.id)
+            setAccountGains(gains)
+            setAccountExpenses(expenses)
+            setLoading(false)
+        }
     }
 
     async function loadAccounts() {
-        setLoading(true)
-            const accounts = await readAccounts()
-            setAccounts(accounts)
+        const accounts = await readAccounts()
+        setAccounts(accounts)
         setLoading(false)
     }
 
     useEffect(() => {
-        setLoadingBySwipe(true)
         loadTransactions()
-    }, [ indexAccountSelected ])
+    }, [ loading ])
     useEffect(() => {
         loadAccounts()
     }, [])
+    useEffect(() => {
+        setLoading(true)
+    }, [ indexAccountSelected ])
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
             <FlatList
-                _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING} as Partial<IFlatListProps<TAccount>>}
+                _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING } as Partial<IFlatListProps<TAccount>>}
                 showsHorizontalScrollIndicator={false} 
                 horizontal
-                scrollEnabled={!loadingBySwipe}
+                scrollEnabled={!loading}
                 maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]}
                 data={accounts}
                 keyExtractor={account => account.id}
-                renderItem={({ item: account }) => (
-                    <AccountCard account={ account } />
-                )}
-                onScroll={handleSwipeAccount}
+                renderItem={({ item: account }) => {
+                    const isAccountSelected = accountSelected && accountSelected.id == account.id && !loading
+                    return <AccountCard account={ isAccountSelected ? account : null } />
+                }}
+                onMomentumScrollEnd={handleSwipeAccount}
+                decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
+                // ListEmptyComponent={<Spinner color="gray.300" size="lg" width={SCREEN_CONTAINER_WIDTH} />}
+                ListEmptyComponent={
+                    <HStack flex={1} space="2">
+                        {[...Array(2)].map((__, i) => <AccountCard account={ null } key={i}/>)}
+                    </HStack>
+                }
             />
             <Box px={SCREEN_HORIZONTAL_SPACING} mt="2" flex={1}>
                 <ScrollView horizontal snapToInterval={SCREEN_CONTAINER_WIDTH} decelerationRate="fast" showsHorizontalScrollIndicator={false}>
-                    <TransactionsListView title="Seus Ganhos"   type="gain"    transactions={accountGains}    loading={loadingBySwipe}/>
-                    <TransactionsListView title="Suas Despesas" type="expense" transactions={accountExpenses} loading={loadingBySwipe}/>
+                    <TransactionsListView title="Seus Ganhos"   type="gain"    transactions={accountGains}    loading={loading} />
+                    <TransactionsListView title="Suas Despesas" type="expense" transactions={accountExpenses} loading={loading} />
                 </ScrollView>
             </Box>
             <ModalNewTransaction />

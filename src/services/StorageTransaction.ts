@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { TAccount } from "utils/interfaces/AccountDTO"
-import { ETransactionTypes, TTransaction } from "utils/interfaces/TransactionDTO"
+import { ETransactionTypes, TRANSACTIONS, TTransaction } from "utils/interfaces/TransactionDTO"
 import { TRANSACTION_STORAGE_KEY } from "utils/keys/storageKeys"
 
 export class StorageTransaction {
@@ -27,7 +27,7 @@ export class StorageTransaction {
         }
         this.read = async function (accountId) {
             const storedTransactions = await AsyncStorage.getItem(TRANSACTION_STORAGE_KEY)
-            const transactions : TTransaction[] = storedTransactions ? JSON.parse(storedTransactions) : []
+            const transactions : TTransaction[] = storedTransactions ? JSON.parse(storedTransactions) : TRANSACTIONS
             return transactions.filter(transaction => transaction.account == accountId)
         }
     }
