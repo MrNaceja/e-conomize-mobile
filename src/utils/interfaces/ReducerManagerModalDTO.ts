@@ -1,11 +1,17 @@
-import { TTransactionType } from "./TransactionDTO"
+import { TAccount } from "./AccountDTO"
+import { TTransaction, TTransactionType } from "./TransactionDTO"
 
 export type TManagerModalType = TTransactionType | 'account'
 
-export type TManagerModalState = {
-    modalType: TManagerModalType,
-    opened: boolean
+export type TManagerModalPayloadParam = {
+    modalType: TManagerModalType
+    param?: TAccount | TTransaction
 }
+
+export type TManagerModalState = {
+    opened: boolean,
+} & TManagerModalPayloadParam
+
 
 export enum EManagerModalActionTypes {
     OPEN_MODAL  = "OPEN_MODAL",
@@ -14,10 +20,11 @@ export enum EManagerModalActionTypes {
 
 export type TManagerModalAction = {
     action: EManagerModalActionTypes,
-    modalType?: TManagerModalType
+    payload?: TManagerModalPayloadParam
 }
 
 export const MANAGER_MODAL_INITIAL_STATE : TManagerModalState = {
     modalType: "account",
-    opened: false
+    opened: false,
+    param: undefined 
 }

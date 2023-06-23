@@ -4,18 +4,21 @@ import {
     EManagerModalActionTypes, 
     TManagerModalType,
     MANAGER_MODAL_INITIAL_STATE,
-    TManagerModalState
+    TManagerModalState,
+    TManagerModalPayloadParam
 } from "utils/interfaces/ReducerManagerModalDTO";
 import ReducerManagerModal from "reducers/ReducerManagerModal";
 import { StorageAccount } from "services/StorageAccount";
 import { StorageTransaction } from "services/StorageTransaction";
+import { TAccount } from "utils/interfaces/AccountDTO";
+import { TTransaction } from "utils/interfaces/TransactionDTO";
 
 export type TAppContextProps = {
     user: string,
     storageAccount: StorageAccount
     storageTransaction : StorageTransaction
     managerModal: {
-        openModal : (modalType : TManagerModalType) => void
+        openModal : <T extends TManagerModalType>(modalType : T, param?: T extends 'account' ? TAccount : TTransaction) => void
         closeModal: () => void,
         state     : TManagerModalState
     }
@@ -31,11 +34,11 @@ export default function AppContextProvider(props : PropsWithChildren) {
     const [storageTransaction]                           = useState(new StorageTransaction())
     const [managerModalState, dispatchManagerModalState] = useReducer(ReducerManagerModal, MANAGER_MODAL_INITIAL_STATE)
 
-    const openModal = useCallback((modalType : TManagerModalType) => {
-        dispatchManagerModalState({ action: EManagerModalActionTypes.OPEN_MODAL, modalType })
+    const openModal : TAppContextProps['managerModal']['openModal'] = useCallback((modalType, param) => {
+        dispatchManagerModalState({ action: EManagerModalActionTypes.OPEN_MODAL, payload: { modalType, param } })
     }, [])
 
-    const closeModal = useCallback(() => {
+    const closeModal : TAppContextProps['managerModal']['closeModal'] = useCallback(() => {
         dispatchManagerModalState({ action: EManagerModalActionTypes.CLOSE_MODAL })
     }, [])
 

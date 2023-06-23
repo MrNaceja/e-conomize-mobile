@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import { Icon, Menu, Text } from "native-base";
 import { Ionicons } from "@expo/vector-icons"
 
@@ -11,7 +10,6 @@ import useMainScreens from "hooks/useMainScreens";
  * Menu de Interações para novos dados.
  */
 export default function MenuNew() {
-    const nav = useNavigation()
     const { openModal } = useManagerModal()
     const { displayedScreen } = useMainScreens()
     return (

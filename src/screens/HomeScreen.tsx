@@ -4,7 +4,7 @@ import { IFlatListProps } from "native-base/lib/typescript/components/basic/Flat
 import AccountCard                                                   from "components/AccountCard";
 import Screen, { SCREEN_HORIZONTAL_SPACING, SCREEN_CONTAINER_WIDTH } from "components/Screen";
 import TransactionsListView                                          from "components/TransactionsListView";
-import ModalNewTransaction                                           from "components/ModalNewTransaction";
+import ModalNewTransaction                                           from "components/ModalTransaction";
 
 import useAccount  from "hooks/useAccount";
 
@@ -32,7 +32,6 @@ export default function HomeScreen() {
     function handleSwipeAccount(e : NativeSyntheticEvent<NativeScrollEvent>) {
         const indexSwiped = parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0))
         if (indexSwiped != indexAccountSelected) {
-            console.log(indexSwiped)
             if (accounts[indexSwiped]) {
                 setIndexAccountSelected(indexSwiped)
             }
@@ -56,7 +55,7 @@ export default function HomeScreen() {
 
     useEffect(() => {
         loadTransactions()
-    }, [ loading ])
+    }, [ loading, accounts ])
     useEffect(() => {
         loadAccounts()
     }, [])
@@ -75,13 +74,11 @@ export default function HomeScreen() {
                 data={accounts}
                 keyExtractor={account => account.id}
                 renderItem={({ item: account }) => {
-                    const isAccountSelected = accountSelected && accountSelected.id == account.id && !loading
-                    return <AccountCard account={ isAccountSelected ? account : null } />
+                    return <AccountCard account={ !loading ? account : null } />
                 }}
                 onMomentumScrollEnd={handleSwipeAccount}
                 decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
-                // ListEmptyComponent={<Spinner color="gray.300" size="lg" width={SCREEN_CONTAINER_WIDTH} />}
                 ListEmptyComponent={
                     <HStack flex={1} space="2">
                         {[...Array(2)].map((__, i) => <AccountCard account={ null } key={i}/>)}
@@ -94,7 +91,7 @@ export default function HomeScreen() {
                     <TransactionsListView title="Suas Despesas" type="expense" transactions={accountExpenses} loading={loading} />
                 </ScrollView>
             </Box>
-            <ModalNewTransaction />
+            <ModalNewTransaction accountSelected={accountSelected} refreshTrigger={setLoading}/>
         </Screen>
     )
 }

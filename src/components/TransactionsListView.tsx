@@ -10,6 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import moment from 'moment';
 import 'moment/locale/pt-br';
+import useManagerModal from "hooks/useManagerModal";
 moment.locale('pt-br');
 
 interface ITransactionsListViewProps {
@@ -20,6 +21,7 @@ interface ITransactionsListViewProps {
 }
 function TransactionsListView({ transactions, title, type, loading }: ITransactionsListViewProps) {
     const { sizes } = useTheme()
+    const { openModal } = useManagerModal()
     const [selectionedTransactions, setSelectionedTransactions] = useState<TTransaction[]>([])
     const isSelection = selectionedTransactions.length > 0
 
@@ -45,8 +47,8 @@ function TransactionsListView({ transactions, title, type, loading }: ITransacti
         })
     }
 
-    function handlePressToEdit() {
-
+    function handlePressToEdit(transactionPressed : TTransaction) {
+        openModal(transactionPressed.type, transactionPressed)
     }
 
     function clearSelectionedTransactions() {
@@ -105,8 +107,8 @@ function TransactionsListView({ transactions, title, type, loading }: ITransacti
                             keyExtractor={item => item.id}
                             sections={transactionsByDate}
                             renderSectionHeader={({ section: { title } }) => <Heading fontSize="sm" color="gray.400">{moment(title, "DD/MM/AAAA").format('dddd, D [de] MMMM [de] YYYY')}</Heading>}
-                            renderItem={({ item, section }) => {
-                                const selected = selectionedTransactions.find(selectioned => selectioned.id == item.id)
+                            renderItem={({ item: transaction, section }) => {
+                                const selected = selectionedTransactions.find(selectioned => selectioned.id == transaction.id)
                                 return (
                                     <HStack alignItems="center" space="1">
                                         <Icon
@@ -118,8 +120,8 @@ function TransactionsListView({ transactions, title, type, loading }: ITransacti
                                         />
                                         <TouchableOpacity
                                             style={{ flex: 1 }}
-                                            onLongPress={() => handlePressTransaction(item, section.data)} 
-                                            onPress={() => isSelection && handlePressTransaction(item, section.data)}>
+                                            onLongPress={() => handlePressTransaction(transaction, section.data)} 
+                                            onPress={() => isSelection && handlePressTransaction(transaction, section.data)}>
                                             <HStack
                                                 bg="white"
                                                 h="16"
@@ -135,10 +137,10 @@ function TransactionsListView({ transactions, title, type, loading }: ITransacti
                                                     size="2xl"
                                                 />
                                                 <VStack flex={1}>
-                                                    <Heading color="gray.800" fontSize="lg">R$ {item.value.toFixed(2)}</Heading>
-                                                    <Text color="gray.500" fontSize="md">{item.description}</Text>
+                                                    <Heading color="gray.800" fontSize="lg">R$ {transaction.value.toFixed(2)}</Heading>
+                                                    <Text color="gray.500" fontSize="md">{transaction.description}</Text>
                                                 </VStack>
-                                                <Pressable onPress={() => !isSelection && handlePressToEdit()}>
+                                                <Pressable onPress={() => !isSelection && handlePressToEdit(transaction)}>
                                                     <Icon
                                                         as={MaterialCommunityIcons}
                                                         name="dots-vertical"
