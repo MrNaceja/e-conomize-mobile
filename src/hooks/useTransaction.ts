@@ -1,15 +1,21 @@
 import { AppContext } from "contexts/AppContextProvider";
-import { useContext } from "react";
-import { TAccount } from "utils/interfaces/AccountDTO";
+import { useCallback, useContext, useState } from "react";
 import { ETransactionTypes, TTransaction } from "utils/interfaces/TransactionDTO";
 
 export default function useTransaction() {
-    const { storageTransaction } = useContext(AppContext)
-    const { read } = storageTransaction
+    const [transactions, setTransactions] = useState<TTransaction[]>([])
+    const [reading, setReading]           = useState(true)
+    const { storageTransaction }          = useContext(AppContext)
 
-    const readTransactionsByType = async (accountId : TAccount['id']) => {
-        const transactionsReaded = await read(accountId)
-        return transactionsReaded.reduce((state, transaction) => {
+    const read = useCallback(async (accountId : string) => {
+        setReading(true)
+            const transactions = await storageTransaction.read(accountId)
+            setTransactions(transactions)
+        setReading(false)
+    }, [transactions, reading])
+
+    const reduceType = useCallback(() => {
+        return transactions.reduce((state, transaction) => {
             const [gains, expenses] = state
             switch (transaction.type) {
                 case ETransactionTypes.GAIN:
@@ -20,7 +26,8 @@ export default function useTransaction() {
                     return state
             }
         }, [[], []] as TTransaction[][])
-    }
-    
-    return { ...storageTransaction, read: readTransactionsByType }
+    }, [ transactions ])
+
+
+    return { ...storageTransaction, read, reduceType, reading, transactions}
 }

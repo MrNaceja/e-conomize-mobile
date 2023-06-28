@@ -1,4 +1,4 @@
-import { EManagerModalActionTypes, TManagerModalAction, TManagerModalPayloadParam, TManagerModalState } from "utils/interfaces/ReducerManagerModalDTO"
+import { EManagerModalActionTypes, MANAGER_MODAL_INITIAL_STATE, TManagerModalAction, TManagerModalState } from "utils/interfaces/ReducerManagerModalDTO"
 
 /**
  *  Reducer para gerenciamento e controle dos modais abertos.
@@ -9,7 +9,7 @@ export default function ReducerManagerModal(state : TManagerModalState, {action,
             const { modalType, param } = payload ? payload : state
             return {opened: true, modalType, param}
         case EManagerModalActionTypes.CLOSE_MODAL:
-            return {...state, opened: false}
+            return MANAGER_MODAL_INITIAL_STATE
         default: 
             return state
     }

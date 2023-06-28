@@ -1,4 +1,4 @@
-import { HStack, Heading, Icon, Pressable, Popover, useTheme, Text, useToast, Spinner, VStack } from "native-base";
+import { HStack, Heading, Icon, Pressable, Popover, useTheme, Text, useToast, VStack } from "native-base";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 import Screen, { SCREEN_CONTAINER_WIDTH, SCREEN_HORIZONTAL_SPACING } from "components/Screen";
@@ -9,15 +9,18 @@ import { ButtonCircular } from "components/ButtonCircular";
 import ModalNewAccount from "components/ModalNewAccount";
 import useAccount from "hooks/useAccount";
 import { TAccount } from "utils/interfaces/AccountDTO";
-import useTransaction from "hooks/useTransaction";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useEffect } from "react";
 
 export default function AccountsScreen() {
-    const { sizes }                  = useTheme()
-    const Message                    = useToast()
-    const [accounts, setAccounts]    = useState<TAccount[]>([])
-    const { read: readAccounts, delete: deleteAccount, update: updateAccount } = useAccount()
-    const { read: readTransactions } = useTransaction()
+    const { sizes } = useTheme()
+    const Message   = useToast()
+    const { 
+        read: readAccounts, 
+        remove: deleteAccount, 
+        update: updateAccount,
+        accounts  
+    } = useAccount()
 
     async function handleDeleteAccount(accountId : TAccount['id']) {
         if (accounts.length == 1) {
@@ -38,14 +41,9 @@ export default function AccountsScreen() {
 
     }
 
-    async function loadAccounts() {
-        const accounts = await readAccounts()
-        setAccounts(accounts)
-    }
-    
-    useEffect(() => {
-        loadAccounts()
-    }, [])
+    useFocusEffect(useCallback(() => {
+        readAccounts()
+    }, []))
     return (
         <Screen space="2">
             <HStack px={SCREEN_HORIZONTAL_SPACING} alignItems="center" space="2">

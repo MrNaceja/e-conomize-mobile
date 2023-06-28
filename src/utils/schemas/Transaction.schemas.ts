@@ -3,7 +3,7 @@ import { ETransactionTypes } from 'utils/interfaces/TransactionDTO';
 
 export const schemaTransaction = z.object({
     value: z.number().nonnegative(),
-    description: z.string(),
+    description: z.string().nonempty('Ops, precisamos identificar esta transação'),
     type: z.nativeEnum(ETransactionTypes)
 })
 

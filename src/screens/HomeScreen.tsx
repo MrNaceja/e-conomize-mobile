@@ -1,4 +1,4 @@
-import { Box, FlatList, Heading, ScrollView, useTheme, Text, Spinner, HStack } from "native-base";
+import { Box, FlatList, Heading, ScrollView, useTheme, HStack } from "native-base";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList/types";
 
 import AccountCard                                                   from "components/AccountCard";
@@ -10,8 +10,7 @@ import useAccount  from "hooks/useAccount";
 
 import { TAccount } from "utils/interfaces/AccountDTO";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { useEffect, useState } from "react";
-import { TTransaction } from "utils/interfaces/TransactionDTO";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useTransaction from "hooks/useTransaction";
 
 /**
@@ -19,16 +18,21 @@ import useTransaction from "hooks/useTransaction";
  */
 export default function HomeScreen() {
     const { sizes }                                       = useTheme()
-    const { read: readAccounts }                          = useAccount()
-    const { read: readTransactions }                      = useTransaction()
-    const [accounts, setAccounts]                         = useState<TAccount[]>([])
     const [indexAccountSelected, setIndexAccountSelected] = useState<number>(0)
-    const [accountGains, setAccountGains]                 = useState<TTransaction[]>([])
-    const [accountExpenses, setAccountExpenses]           = useState<TTransaction[]>([])
     const [loading, setLoading]                           = useState(true)
-    
-    const accountSelected = accounts[indexAccountSelected]
+    const { 
+        read: readAccounts,
+        accounts
+    } = useAccount()
+    const { 
+        read: readTransactions,
+        reading: readingTransactions,
+        reduceType 
+    } = useTransaction()
 
+    const accountSelected = accounts[indexAccountSelected]
+    const [accountGains, accountExpenses] = useMemo(reduceType, [readingTransactions])
+    
     function handleSwipeAccount(e : NativeSyntheticEvent<NativeScrollEvent>) {
         const indexSwiped = parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0))
         if (indexSwiped != indexAccountSelected) {
@@ -38,30 +42,26 @@ export default function HomeScreen() {
         }
     }
 
-    async function loadTransactions() {
-        if (accountSelected) {
-            const [gains, expenses] = await readTransactions(accountSelected.id)
-            setAccountGains(gains)
-            setAccountExpenses(expenses)
-            setLoading(false)
-        }
-    }
-
-    async function loadAccounts() {
-        const accounts = await readAccounts()
-        setAccounts(accounts)
-        setLoading(false)
-    }
-
-    useEffect(() => {
-        loadTransactions()
-    }, [ loading, accounts ])
-    useEffect(() => {
-        loadAccounts()
-    }, [])
-    useEffect(() => {
+    const load = useCallback(async () => {
         setLoading(true)
-    }, [ indexAccountSelected ])
+        try {
+            if (accounts.length == 0) {
+                console.log('buscando contas')
+                await readAccounts()
+            }
+            if (accountSelected) {
+                console.log('buscando transações')
+                await readTransactions(accountSelected.id)
+                console.log('tudo pronto')
+                setLoading(false)
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }, [ indexAccountSelected, accounts ])
+
+    useEffect(() => { load() }, [ indexAccountSelected, accounts ])
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
@@ -74,24 +74,25 @@ export default function HomeScreen() {
                 data={accounts}
                 keyExtractor={account => account.id}
                 renderItem={({ item: account }) => {
-                    return <AccountCard account={ !loading ? account : null } />
+                    const shouldRender = accountSelected.id == account.id && !loading
+                    return <AccountCard account={ shouldRender ? account : null } />
                 }}
                 onMomentumScrollEnd={handleSwipeAccount}
                 decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
                 ListEmptyComponent={
                     <HStack flex={1} space="2">
-                        {[...Array(2)].map((__, i) => <AccountCard account={ null } key={i}/>)}
+                        {[...Array(2)].map((__, i) => <AccountCard account={ null } key={i} />)}
                     </HStack>
                 }
             />
             <Box px={SCREEN_HORIZONTAL_SPACING} mt="2" flex={1}>
                 <ScrollView horizontal snapToInterval={SCREEN_CONTAINER_WIDTH} decelerationRate="fast" showsHorizontalScrollIndicator={false}>
-                    <TransactionsListView title="Seus Ganhos"   type="gain"    transactions={accountGains}    loading={loading} />
-                    <TransactionsListView title="Suas Despesas" type="expense" transactions={accountExpenses} loading={loading} />
+                    <TransactionsListView title="Seus Ganhos"   type="gain"    transactions={accountGains}    loading={loading} accountSelected={accountSelected} onMutation={load}/>
+                    <TransactionsListView title="Suas Despesas" type="expense" transactions={accountExpenses} loading={loading} accountSelected={accountSelected} onMutation={load}/>
                 </ScrollView>
             </Box>
-            <ModalNewTransaction accountSelected={accountSelected} refreshTrigger={setLoading}/>
+            <ModalNewTransaction accountSelected={accountSelected} onMutation={load}/>
         </Screen>
     )
 }

@@ -1,6 +1,6 @@
 import { Box, Button, Center, HStack, Heading, Icon, Modal, Pressable, Spinner, Text, VStack, useToast} from "native-base";
 import { useForm, Controller } from "react-hook-form";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 
 import useManagerModal from "hooks/useManagerModal";
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,7 +12,6 @@ import { TSchemaTransaction, schemaTransaction } from "utils/schemas/Transaction
 import CampoForm from "./CampoForm";
 import { ETransactionTypes, TTransaction } from "utils/interfaces/TransactionDTO";
 import { TManagerModalType } from "utils/interfaces/ReducerManagerModalDTO";
-import useAccount from "hooks/useAccount";
 import moment from "moment";
 import uuid from 'react-native-uuid';
 import { TAccount } from "utils/interfaces/AccountDTO";
@@ -23,26 +22,28 @@ import useTransaction from "hooks/useTransaction";
  */
 interface IModalTransactionProps {
     accountSelected: TAccount
-    refreshTrigger: React.Dispatch<React.SetStateAction<boolean>>
+    onMutation: () => Promise<void>
 }
 export default memo(
-    function ModalTransaction({accountSelected, refreshTrigger} : IModalTransactionProps) {
+    function ModalTransaction({accountSelected, onMutation} : IModalTransactionProps) {
         const { opened, modalType, closeModal, param : transactionToEdit}   = useManagerModal<TTransaction>()
         const { create, update }                                            = useTransaction()
         const Message                                                       = useToast()
 
         const typeTransaction = transactionToEdit ? transactionToEdit.type : modalType
+        const modalOpen = opened && ([ETransactionTypes.GAIN, ETransactionTypes.EXPENSE] as TManagerModalType[]).includes(typeTransaction)
+
+        const defaultValues : TSchemaTransaction = {
+            description: transactionToEdit ? transactionToEdit.description : "",
+            value      : transactionToEdit ? transactionToEdit.value       : 0,
+            type       : typeTransaction == "gain" ? ETransactionTypes.GAIN : ETransactionTypes.EXPENSE
+        }
 
         const { control, handleSubmit, reset, formState: { isSubmitting } } = useForm<TSchemaTransaction>({
-            defaultValues: {
-                description: transactionToEdit ? transactionToEdit.description : "",
-                value      : transactionToEdit ? transactionToEdit.value       : 0,
-                type       : typeTransaction == 'gain' ? ETransactionTypes.GAIN : ETransactionTypes.EXPENSE //TA DANDO PAU NO TIPO DEVE SER PQ NAO TEM NENHUM CAMPO PARA ELE, VERIFICAR NA DOCUMENTACAO.
-            },
+            defaultValues,
             resolver: zodResolver(schemaTransaction)
         })
-
-    
+        
         const titleByTypeTransaction = useMemo(() => {
             switch (typeTransaction) {
                 case ETransactionTypes.EXPENSE:
@@ -51,12 +52,15 @@ export default memo(
                 default:
                     return `${transactionToEdit ? "Editar" : "Novo"} Ganho`
             }
-        }, [])
+        }, [transactionToEdit, typeTransaction])
     
         const handleCloseModal = useCallback(() => {
+            if (isSubmitting) {
+                return 
+            }
             reset()
             closeModal()
-        }, [])
+        }, [isSubmitting])
     
         const handleConfirmTransaction = async (transactionFormData : TSchemaTransaction) => {
             const transactionToSave : TTransaction = transactionToEdit 
@@ -68,7 +72,6 @@ export default memo(
                                         account: accountSelected.id
                                     }
            try {
-            console.log('aqui')
                 if (transactionToEdit) {
                     await update(transactionToSave)
                 } else {
@@ -78,21 +81,21 @@ export default memo(
                     title: `Transação ${transactionToEdit ? 'alterada' : 'criada'} com sucesso`,
                     bg: "green.500"
                 })
+                onMutation()
            } catch (error) {
-                console.log(error)
                 Message.show({
                     title: `Não foi possível ${transactionToEdit ? 'editar' : 'criar'} a transação`,
                     bg: "red.500"
                 })
            }
            finally {
-                refreshTrigger(true)
                 handleCloseModal()
            }
         }
-    
-        const modalOpen = opened && (['expense', 'gain'] as TManagerModalType[]).includes(typeTransaction)
-        
+
+        useEffect(() => {
+            reset(defaultValues)
+        }, [ transactionToEdit ])
         return (
             <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.900"}}>
                 <Modal.Content>
@@ -112,17 +115,19 @@ export default memo(
                     </Modal.Header>
                     <Modal.Body>
                         <VStack space="4">
-                            <Box position="absolute" zIndex={1} w="full" h="full" bg="white" opacity=".6" display={isSubmitting ? "flex" : "none"} />
                             <Controller 
                                 control={control}
                                 name="description"
-                                render={({ field: { onChange, value} }) => (
+                                render={({ field: { onChange, value}, fieldState: { error } }) => (
                                     <CampoForm 
+                                        isReadOnly={isSubmitting}
+                                        isRequired
                                         type="text"
                                         label="Descrição da transação"
                                         placeholder={typeTransaction == "gain" ? "Ex: salário" : "Ex: fatura cartão"}
                                         onChangeText={onChange}
                                         value={value}
+                                        errorMsg={error?.message}
                                     />
                                 )}  
                             />
@@ -130,7 +135,8 @@ export default memo(
                                 control={control}
                                 name="value"
                                 render={({ field: { onChange, value} }) => (
-                                    <CampoForm 
+                                    <CampoForm
+                                        isReadOnly={isSubmitting}
                                         type="monetary"
                                         label="Valor da transação"
                                         onChangeText={onChange}
@@ -144,9 +150,10 @@ export default memo(
                                 alignItems="center" 
                                 rounded="md" 
                                 shadow="10" 
-                                onPress={handleSubmit(handleConfirmTransaction, e => console.log(e))} 
+                                onPress={handleSubmit(handleConfirmTransaction)} 
                                 isLoading={isSubmitting} 
-                                _loading={{ bg:"gray.500:alpha.100", _spinner: { color: 'gray.600', size:"lg" } }}
+                                _pressed={{ bg: "green.600" }}
+                                _loading={{ bg:"gray.400:alpha.100", _spinner: { color: 'gray.600', size:"lg" } }}
                             >
                                 <Text color="white" fontSize="2xl">Confirmar</Text>
                             </Button>
