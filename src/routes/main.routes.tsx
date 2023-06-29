@@ -41,21 +41,18 @@ export default function MainRoutes() {
                 name='home'
                 component={HomeScreen}
                 options={{
-                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="view-dashboard" color={color} size={size}/>
+                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="view-dashboard" color={color} size={size} />
                 }}
             />
             <TabNavigation.Screen 
                 name='new'
                 component={HomeScreen}
                 options={({ route }) => ({
-                    tabBarIcon: () => (
-                        <MenuNew />
-                    )
+                    tabBarIcon: () => <MenuNew />
                 })}
                 listeners={({ navigation }) => ({
                     tabPress: (e) => {
-                      e.preventDefault(); // Impede a mudança de tela
-                    //   openModal(); // Abre o modal
+                      e.preventDefault();
                     },
                 })}
             />
@@ -63,7 +60,7 @@ export default function MainRoutes() {
                 name='accounts'
                 component={AccountsScreen}
                 options={{
-                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="wallet" color={color} size={size}/>
+                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="wallet" color={color} size={size} />
                 }}
             />
         </TabNavigation.Navigator>

@@ -27,7 +27,7 @@ export default function HomeScreen() {
     const { 
         read: readTransactions,
         reading: readingTransactions,
-        reduceType 
+        reduceType
     } = useTransaction()
 
     const accountSelected = accounts[indexAccountSelected]
@@ -61,7 +61,7 @@ export default function HomeScreen() {
         }
     }, [ indexAccountSelected, accounts ])
 
-    useEffect(() => { load() }, [ indexAccountSelected, accounts ])
+    useEffect(() => { load() } , [ indexAccountSelected, accounts ])
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
@@ -75,7 +75,7 @@ export default function HomeScreen() {
                 keyExtractor={account => account.id}
                 renderItem={({ item: account }) => {
                     const shouldRender = accountSelected.id == account.id && !loading
-                    return <AccountCard account={ shouldRender ? account : null } />
+                    return <AccountCard account={ shouldRender ? accountSelected : null } />
                 }}
                 onMomentumScrollEnd={handleSwipeAccount}
                 decelerationRate="fast"
@@ -92,7 +92,7 @@ export default function HomeScreen() {
                     <TransactionsListView title="Suas Despesas" type="expense" transactions={accountExpenses} loading={loading} accountSelected={accountSelected} onMutation={load}/>
                 </ScrollView>
             </Box>
-            <ModalNewTransaction accountSelected={accountSelected} onMutation={load}/>
+            <ModalNewTransaction accountSelected={accountSelected} onMutation={load} />
         </Screen>
     )
 }

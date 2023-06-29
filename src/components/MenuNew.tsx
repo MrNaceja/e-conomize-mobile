@@ -10,7 +10,7 @@ import useMainScreens from "hooks/useMainScreens";
  * Menu de Interações para novos dados.
  */
 export default function MenuNew() {
-    const { openModal } = useManagerModal()
+    const { openModal }       = useManagerModal()
     const { displayedScreen } = useMainScreens()
     return (
         <Menu 

@@ -17,7 +17,6 @@ export default memo(
     function AccountCard({ account } : IAccountCardProps) {
         const { sizes } = useTheme()
         const { read: readTransactions, reading: readingTransactions, reduceType } = useTransaction()
-        console.log('accountcard')
         let total        = account ? account.total : 0
         let totalGain    = 0;
         let totalExpense = 0;

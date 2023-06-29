@@ -30,27 +30,30 @@ export default memo(
         const { create, update }                                            = useTransaction()
         const Message                                                       = useToast()
 
-        const typeTransaction = transactionToEdit ? transactionToEdit.type : modalType
+        const isEdition = !!transactionToEdit
+        const typeTransaction = isEdition ? transactionToEdit.type : modalType
         const modalOpen = opened && ([ETransactionTypes.GAIN, ETransactionTypes.EXPENSE] as TManagerModalType[]).includes(typeTransaction)
 
         const defaultValues : TSchemaTransaction = {
-            description: transactionToEdit ? transactionToEdit.description : "",
-            value      : transactionToEdit ? transactionToEdit.value       : 0,
+            description: isEdition ? transactionToEdit.description : "",
+            value      : isEdition ? transactionToEdit.value       : 0,
             type       : typeTransaction == "gain" ? ETransactionTypes.GAIN : ETransactionTypes.EXPENSE
         }
 
-        const { control, handleSubmit, reset, formState: { isSubmitting } } = useForm<TSchemaTransaction>({
-            defaultValues,
-            resolver: zodResolver(schemaTransaction)
-        })
+        const { 
+            control, 
+            handleSubmit, 
+            reset, 
+            formState: { isSubmitting } 
+        } = useForm<TSchemaTransaction>({ defaultValues, resolver: zodResolver(schemaTransaction) })
         
         const titleByTypeTransaction = useMemo(() => {
             switch (typeTransaction) {
                 case ETransactionTypes.EXPENSE:
-                    return `${transactionToEdit ? "Editar" : "Nova"} Despesa`
+                    return `${isEdition ? "Editar" : "Nova"} Despesa`
                 case ETransactionTypes.GAIN:
                 default:
-                    return `${transactionToEdit ? "Editar" : "Novo"} Ganho`
+                    return `${isEdition ? "Editar" : "Novo"} Ganho`
             }
         }, [transactionToEdit, typeTransaction])
     
@@ -63,7 +66,7 @@ export default memo(
         }, [isSubmitting])
     
         const handleConfirmTransaction = async (transactionFormData : TSchemaTransaction) => {
-            const transactionToSave : TTransaction = transactionToEdit 
+            const transactionToSave : TTransaction = isEdition 
                                     ? { ...transactionToEdit, ...transactionFormData}
                                     : {
                                         ...transactionFormData,
@@ -72,19 +75,19 @@ export default memo(
                                         account: accountSelected.id
                                     }
            try {
-                if (transactionToEdit) {
+                if (isEdition) {
                     await update(transactionToSave)
                 } else {
                     await create(transactionToSave)
                 }
                 Message.show({
-                    title: `Transação ${transactionToEdit ? 'alterada' : 'criada'} com sucesso`,
+                    title: `Transação ${isEdition ? 'alterada' : 'criada'} com sucesso`,
                     bg: "green.500"
                 })
                 onMutation()
            } catch (error) {
                 Message.show({
-                    title: `Não foi possível ${transactionToEdit ? 'editar' : 'criar'} a transação`,
+                    title: `Não foi possível ${isEdition ? 'editar' : 'criar'} a transação`,
                     bg: "red.500"
                 })
            }
@@ -95,7 +98,7 @@ export default memo(
 
         useEffect(() => {
             reset(defaultValues)
-        }, [ transactionToEdit ])
+        }, [ transactionToEdit, typeTransaction ])
         return (
             <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.900"}}>
                 <Modal.Content>

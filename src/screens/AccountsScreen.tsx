@@ -6,15 +6,20 @@ import AccountCard from "components/AccountCard";
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { ButtonCircular } from "components/ButtonCircular";
-import ModalNewAccount from "components/ModalNewAccount";
 import useAccount from "hooks/useAccount";
 import { TAccount } from "utils/interfaces/AccountDTO";
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
+import ModalAccount from "components/ModalAccount";
+import useManagerModal from "hooks/useManagerModal";
 
+/**
+ * Tela de gerenciamento de contas.
+ */
 export default function AccountsScreen() {
-    const { sizes } = useTheme()
-    const Message   = useToast()
+    const { sizes }     = useTheme()
+    const { openModal } = useManagerModal()
+    const Message       = useToast()
     const { 
         read: readAccounts, 
         remove: deleteAccount, 
@@ -22,7 +27,7 @@ export default function AccountsScreen() {
         accounts  
     } = useAccount()
 
-    async function handleDeleteAccount(accountId : TAccount['id']) {
+    async function handleSwipeDeleteAccount(accountId : TAccount['id']) {
         if (accounts.length == 1) {
             return Message.show({
                 title: 'Ao menos uma conta deve estar criada',
@@ -37,13 +42,20 @@ export default function AccountsScreen() {
         })
     }
 
-    function handleEditAccount() {
-
+    function handleSwipeEditAccount(accountId : TAccount['id']) {
+        openModal('account', accounts.find(account => account.id == accountId))
     }
 
-    useFocusEffect(useCallback(() => {
-        readAccounts()
-    }, []))
+    const load = useCallback(async () => {
+        try {
+            await readAccounts()
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }, [])
+
+    useFocusEffect(useCallback(() => { load() }, []))
     return (
         <Screen space="2">
             <HStack px={SCREEN_HORIZONTAL_SPACING} alignItems="center" space="2">
@@ -99,14 +111,16 @@ export default function AccountsScreen() {
                 }}
                 showsVerticalScrollIndicator={false}
                 leftActivationValue={SCREEN_CONTAINER_WIDTH / 2}
-                onLeftAction={handleDeleteAccount}
+                rightActivationValue={SCREEN_CONTAINER_WIDTH / 2}
+                onLeftAction={handleSwipeDeleteAccount}
+                onRightAction={handleSwipeEditAccount}
                 ListEmptyComponent={
                     <VStack flex={1} space="3">
                         {[...Array(3)].map((__, i) => <AccountCard account={ null } key={i}/>)}
                     </VStack>
                 }
             />
-            {/* <ModalNewAccount /> */}
+            <ModalAccount onMutation={ load }/>
         </Screen>
     )
 }
