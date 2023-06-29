@@ -8,12 +8,19 @@ import Screen from "components/Screen";
 
 import { TStartRoutesScreens } from "routes/start.routes";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import useUser from "hooks/useUser";
 
 /**
  * Tela de Boas Vindas do App.
  */
 export default function HelloScreen({ navigation } : NativeStackScreenProps<TStartRoutesScreens>) {
     const [userName, setUserName] = useState('')
+    const { setUser } = useUser()
+
+    function handleGrantUser() {
+        setUser(userName)
+        navigation.navigate("main")
+    }
 
     return (
         <Screen justifyContent="center">
@@ -49,7 +56,7 @@ export default function HelloScreen({ navigation } : NativeStackScreenProps<TSta
                     shadow="10"
                     mt="10"
                     isDisabled={userName == ''}
-                    onPress={() => navigation.navigate("main")}
+                    onPress={handleGrantUser}
                 />
             </VStack>
         </Screen>

@@ -12,9 +12,11 @@ import StorageAccount, { IStorageAccountActions }      from "services/StorageAcc
 import StorageTransaction, { IStorageTransactionActions }  from "services/StorageTransaction";
 import { TAccount } from "utils/interfaces/AccountDTO";
 import { TTransaction } from "utils/interfaces/TransactionDTO";
+import StorageUser from "services/StorageUser";
 
 export type TAppContextProps = {
-    user: string,
+    user: string | null,
+    setUser: (user : string) => void,
     storageAccount: IStorageAccountActions
     storageTransaction : IStorageTransactionActions
     managerModal: {
@@ -25,11 +27,13 @@ export type TAppContextProps = {
 }
 export const AppContext = createContext<TAppContextProps>({} as TAppContextProps)
 
+const storageUser = StorageUser()
+
 /**
  * Contexto do App.
  */
 export default function AppContextProvider(props : PropsWithChildren) {
-    const [user, setUser]                                = useState('Naceja')
+    const [user, setUser]                                = useState<string | null>(null)
     const [storageAccount]                               = useState(StorageAccount())
     const [storageTransaction]                           = useState(StorageTransaction())
     const [managerModalState, dispatchManagerModalState] = useReducer(ReducerManagerModal, MANAGER_MODAL_INITIAL_STATE)
@@ -42,10 +46,30 @@ export default function AppContextProvider(props : PropsWithChildren) {
         dispatchManagerModalState({ action: EManagerModalActionTypes.CLOSE_MODAL })
     }, [])
 
+    const storeUser = async () => {
+        if (user) {
+            await storageUser.create(user)
+        }
+    }
+
+    async function loadStoredUser() {
+        const userStored = await storageUser.read()
+        if (userStored) {
+            setUser(userStored)
+        }
+    }
+
+    useEffect(() => {
+        loadStoredUser()
+    }, [])
+    useEffect(() => {
+        storeUser()
+    }, [ user ])
     return (
         <AppContext.Provider 
             value={{
                 user,
+                setUser,
                 storageAccount,
                 storageTransaction,
                 managerModal: {

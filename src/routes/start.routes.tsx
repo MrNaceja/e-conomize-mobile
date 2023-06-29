@@ -16,8 +16,8 @@ export default function StartRoutes() {
     const Stack = createNativeStackNavigator<TStartRoutesScreens>()
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="hello" component={HelloScreen}/>
-            <Stack.Screen name="main" component={MainRoutes}/>
+            <Stack.Screen name="hello" component={HelloScreen} />
+            <Stack.Screen name="main" component={MainRoutes} />
         </Stack.Navigator>
     )
 }

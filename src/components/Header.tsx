@@ -6,7 +6,7 @@ import moment from "moment";
 import { useMemo } from "react";
 
 export default function Header() {
-    const user = useUser()
+    const { user } = useUser()
 
     const greeting = useMemo(() => {
         const currentDate = moment().locale('pt-br');
