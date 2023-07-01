@@ -4,7 +4,7 @@ import { IFlatListProps } from "native-base/lib/typescript/components/basic/Flat
 import AccountCard                                                   from "components/AccountCard";
 import Screen, { SCREEN_HORIZONTAL_SPACING, SCREEN_CONTAINER_WIDTH } from "components/Screen";
 import TransactionsListView                                          from "components/TransactionsListView";
-import ModalNewTransaction                                           from "components/ModalTransaction";
+import ModalTransaction                                              from "components/ModalTransaction";
 
 import useAccount  from "hooks/useAccount";
 
@@ -25,6 +25,7 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
     const [loading, setLoading]                           = useState(true)
     const { 
         read: readAccounts,
+        reading: readingAccounts,
         accounts
     } = useAccount()
     const { 
@@ -47,16 +48,22 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
 
     const load = useCallback(async () => {
         setLoading(true)
+        console.log('carregando')
         try {
-            const accountsReaded = await readAccounts()
-            setIndexAccountSelected(0)
-            if (accountsReaded.length == 0) {
-                return navigation.navigate('accounts')
+            const accountsNotLoaded = !readingAccounts && accounts.length == 0
+            if (accountsNotLoaded) {
+                console.log('buscando contas...')
+                const accountsReaded = await readAccounts()
+                console.log(accountsReaded.length + ' contas encontradas')
+                if (accountsReaded.length == 0) {
+                    return navigation.navigate('accounts')
+                }
+                setLoading(false)
             }
             if (accountSelected) {
-                console.log('buscando transações')
+                console.log('buscando transacoes para a conta ' + accountSelected.name)
                 await readTransactions(accountSelected.id)
-                console.log('tudo pronto')
+                console.log('transações carregadas')
                 setLoading(false)
             }
         }
@@ -65,7 +72,7 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
         }
     }, [ indexAccountSelected, accounts ])
 
-    useFocusEffect(useCallback(() => { load() } , [ indexAccountSelected ]))
+    useFocusEffect(useCallback(() => { load() }, [ indexAccountSelected, accounts ]))
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
@@ -96,7 +103,7 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
                     <TransactionsListView title="Suas Despesas" type="expense" transactions={accountExpenses} loading={loading} accountSelected={accountSelected} onMutation={load}/>
                 </ScrollView>
             </Box>
-            <ModalNewTransaction accountSelected={accountSelected} onMutation={load} />
+            <ModalTransaction accountSelected={accountSelected} onMutation={load} />
         </Screen>
     )
 }
