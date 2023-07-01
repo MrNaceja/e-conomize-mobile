@@ -24,13 +24,14 @@ import { INSTITUITIONS } from "utils/interfaces/InstituitionDTO"
  */
 interface IModalAccountProps {
     onMutation: () => Promise<void>
+    onClose: () => Promise<void>
 }
 export default memo(
-    function ModalAccount({ onMutation } : IModalAccountProps) {
+    function ModalAccount({ onMutation, onClose } : IModalAccountProps) {
         const { opened, modalType, closeModal, param: accountToEdit} = useManagerModal<TAccount>()
-        const { create, update }                = useAccount()
-        const { colors }                       = useTheme()
-        const Message                          = useToast()
+        const { create, update }                                     = useAccount()
+        const { colors }                                             = useTheme()
+        const Message                                                = useToast()
         
         const isEdition = !!accountToEdit
         const modalOpen = opened && (['account'] as TManagerModalType[]).includes(modalType)
@@ -56,6 +57,7 @@ export default memo(
             }
             reset()
             closeModal()
+            onClose()
         }, [ isSubmitting ])
     
         const handleConfirmAccount = async (accountFormData : TSchemaAccount) => {

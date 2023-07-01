@@ -23,7 +23,7 @@ export default function MainRoutes() {
     const { colors, sizes } = useTheme()
     return (
         <TabNavigation.Navigator 
-            initialRouteName='home'
+            initialRouteName="home"
             screenOptions={{
                 header: () => <Header />,
                 tabBarActiveTintColor: colors.green["500"],
@@ -38,14 +38,14 @@ export default function MainRoutes() {
             }}
         >
             <TabNavigation.Screen 
-                name='home'
+                name="home"
                 component={HomeScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="view-dashboard" color={color} size={size} />
                 }}
             />
             <TabNavigation.Screen 
-                name='new'
+                name="new"
                 component={HomeScreen}
                 options={({ route }) => ({
                     tabBarIcon: () => <MenuNew />
@@ -57,7 +57,7 @@ export default function MainRoutes() {
                 })}
             />
             <TabNavigation.Screen 
-                name='accounts'
+                name="accounts"
                 component={AccountsScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="wallet" color={color} size={size} />

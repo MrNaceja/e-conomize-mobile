@@ -9,7 +9,7 @@ export type TManagerModalPayloadParam = {
 }
 
 export type TManagerModalState = {
-    opened: boolean,
+    opened: boolean
 } & TManagerModalPayloadParam
 
 

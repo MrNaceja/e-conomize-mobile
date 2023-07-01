@@ -15,8 +15,9 @@ import { TTransaction } from "utils/interfaces/TransactionDTO";
 import StorageUser from "services/StorageUser";
 
 export type TAppContextProps = {
-    user: string | null,
-    setUser: (user : string) => void,
+    user: string | null
+    setUser: (user : string) => void
+    loadingUser: boolean
     storageAccount: IStorageAccountActions
     storageTransaction : IStorageTransactionActions
     managerModal: {
@@ -34,6 +35,7 @@ const storageUser = StorageUser()
  */
 export default function AppContextProvider(props : PropsWithChildren) {
     const [user, setUser]                                = useState<string | null>(null)
+    const [loadingUser, setLoadingUser]                  = useState(true)
     const [storageAccount]                               = useState(StorageAccount())
     const [storageTransaction]                           = useState(StorageTransaction())
     const [managerModalState, dispatchManagerModalState] = useReducer(ReducerManagerModal, MANAGER_MODAL_INITIAL_STATE)
@@ -48,15 +50,19 @@ export default function AppContextProvider(props : PropsWithChildren) {
 
     const storeUser = async () => {
         if (user) {
+            setLoadingUser(true)
             await storageUser.create(user)
+            setLoadingUser(false)
         }
     }
 
     async function loadStoredUser() {
-        const userStored = await storageUser.read()
-        if (userStored) {
-            setUser(userStored)
-        }
+        setLoadingUser(true)
+            const userStored = await storageUser.read()
+            if (userStored) {
+                setUser(userStored)
+            }
+        setLoadingUser(false)
     }
 
     useEffect(() => {
@@ -70,6 +76,7 @@ export default function AppContextProvider(props : PropsWithChildren) {
             value={{
                 user,
                 setUser,
+                loadingUser,
                 storageAccount,
                 storageTransaction,
                 managerModal: {

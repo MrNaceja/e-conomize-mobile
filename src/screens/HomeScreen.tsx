@@ -10,13 +10,16 @@ import useAccount  from "hooks/useAccount";
 
 import { TAccount } from "utils/interfaces/AccountDTO";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useTransaction from "hooks/useTransaction";
+import { TMainRoutesScreens } from "routes/main.routes";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useFocusEffect } from "@react-navigation/native";
 
 /**
  * Tela de Inicio do App.
  */
-export default function HomeScreen() {
+export default function HomeScreen({ navigation } : NativeStackScreenProps<TMainRoutesScreens>) {
     const { sizes }                                       = useTheme()
     const [indexAccountSelected, setIndexAccountSelected] = useState<number>(0)
     const [loading, setLoading]                           = useState(true)
@@ -45,9 +48,10 @@ export default function HomeScreen() {
     const load = useCallback(async () => {
         setLoading(true)
         try {
-            if (accounts.length == 0) {
-                console.log('buscando contas')
-                await readAccounts()
+            const accountsReaded = await readAccounts()
+            setIndexAccountSelected(0)
+            if (accountsReaded.length == 0) {
+                return navigation.navigate('accounts')
             }
             if (accountSelected) {
                 console.log('buscando transações')
@@ -61,7 +65,7 @@ export default function HomeScreen() {
         }
     }, [ indexAccountSelected, accounts ])
 
-    useEffect(() => { load() } , [ indexAccountSelected, accounts ])
+    useFocusEffect(useCallback(() => { load() } , [ indexAccountSelected ]))
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>

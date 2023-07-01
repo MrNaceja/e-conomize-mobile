@@ -9,9 +9,10 @@ import { ButtonCircular } from "components/ButtonCircular";
 import useAccount from "hooks/useAccount";
 import { TAccount } from "utils/interfaces/AccountDTO";
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import ModalAccount from "components/ModalAccount";
 import useManagerModal from "hooks/useManagerModal";
+import { Alert } from "react-native";
 
 /**
  * Tela de gerenciamento de contas.
@@ -48,7 +49,15 @@ export default function AccountsScreen() {
 
     const load = useCallback(async () => {
         try {
-            await readAccounts()
+            const accountsReaded = await readAccounts()
+            if (accountsReaded.length == 0) {
+                return Alert.alert('Boas vindas ao e-conomize!', 'Você ainda não tem nenhuma conta, vamos criar uma?', [
+                    {
+                        text: 'Criar',
+                        onPress: () => openModal('account')
+                    }
+                ], { cancelable: false })
+            }
         }
         catch (error) {
             console.log(error)
@@ -120,7 +129,7 @@ export default function AccountsScreen() {
                     </VStack>
                 }
             />
-            <ModalAccount onMutation={ load }/>
+            <ModalAccount onMutation={ load } onClose={ load }/>
         </Screen>
     )
 }

@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { ACCOUNTS, TAccount } from "utils/interfaces/AccountDTO"
+import { TAccount } from "utils/interfaces/AccountDTO"
 import { ACCOUNT_STORAGE_KEY } from "utils/keys/storageKeys"
 
 export interface IStorageAccountActions {
@@ -11,7 +11,7 @@ export interface IStorageAccountActions {
 export default function StorageAccount() : IStorageAccountActions {
     const read : IStorageAccountActions['read'] = async function () {
         const storedAccounts = await AsyncStorage.getItem(ACCOUNT_STORAGE_KEY)
-        const accounts : TAccount[] = storedAccounts ? JSON.parse(storedAccounts) : ACCOUNTS
+        const accounts : TAccount[] = storedAccounts ? JSON.parse(storedAccounts) : []
         return accounts
     }
     const create : IStorageAccountActions['create'] = async function (newAccount) {
