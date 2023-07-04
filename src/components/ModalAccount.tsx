@@ -1,5 +1,5 @@
 import useManagerModal from "hooks/useManagerModal"
-import { memo, useCallback, useEffect, useMemo } from "react"
+import { memo, useCallback, useEffect, useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 
 import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme, Box, KeyboardAvoidingView, useToast, Button } from "native-base"
@@ -17,7 +17,8 @@ import { ACCOUNT_COLORS_HIGHLIGHT, TAccount, TAccountColorHighlight } from "util
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useAccount from "hooks/useAccount"
-import { INSTITUITIONS } from "utils/interfaces/InstituitionDTO"
+import { INSTITUITIONS, TInstituition } from "utils/interfaces/InstituitionDTO"
+import ApiInstituition from "services/ApiInstituition"
 
 /**
  * Modal de Conta.
@@ -87,9 +88,9 @@ export default memo(
         const instituitionSelected = useMemo(() => (
             INSTITUITIONS.find(item => item.name == watch('instituition'))
         ), [watch('instituition')])
-    
+
         const highlightColors = useMemo(() => (
-            ACCOUNT_COLORS_HIGHLIGHT.map(color => ({color} as {color: TAccountColorHighlight}))
+            ACCOUNT_COLORS_HIGHLIGHT.map(color => ({ color } as { color: TAccountColorHighlight }))
         ), [])
     
         useEffect(() => {
@@ -143,7 +144,7 @@ export default memo(
                                             _renderComponent={() => (
                                                 <PickerSelect 
                                                     mode="modal"
-                                                    search
+                                                    search={false}
                                                     data={INSTITUITIONS}
                                                     labelField="name"
                                                     valueField="name"

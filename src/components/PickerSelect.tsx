@@ -11,7 +11,6 @@ export default function PickerSelect<DataType>({data, placeholderStyle, selected
     return (
         <Dropdown
             mode="modal"
-            search
             data={data}
             placeholder="Selecione..."
             placeholderStyle={StyleSheet.flatten([{ 
