@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "44298a3e-6348-4b98-9cd5-86c9cbe46b7f"
+      }
+    },
+    "owner": "naceja"
   }
 }
