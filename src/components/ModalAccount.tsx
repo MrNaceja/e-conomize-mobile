@@ -17,8 +17,7 @@ import { ACCOUNT_COLORS_HIGHLIGHT, TAccount, TAccountColorHighlight } from "util
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useAccount from "hooks/useAccount"
-import { INSTITUITIONS, TInstituition } from "utils/interfaces/InstituitionDTO"
-import ApiInstituition from "services/ApiInstituition"
+import { INSTITUITIONS } from "utils/interfaces/InstituitionDTO"
 
 /**
  * Modal de Conta.

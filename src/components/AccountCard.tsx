@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo } from "react";
-import { Box, HStack, Heading, Icon, Skeleton, Text, VStack, useTheme, ISkeletonProps } from "native-base";
+import { Image, Box, HStack, Heading, Icon, Skeleton, Text, VStack, useTheme, ISkeletonProps } from "native-base";
 import { Ionicons } from "@expo/vector-icons"
 import { ISkeletonTextProps } from "native-base/lib/typescript/components/composites";
 
@@ -9,6 +9,7 @@ import { TAccount } from "utils/interfaces/AccountDTO";
 
 import { formatMonetary } from "utils/scripts/formatMonetary";
 import useTransaction from "hooks/useTransaction";
+import { INSTITUITIONS } from "utils/interfaces/InstituitionDTO";
 
 interface IAccountCardProps {
     account: TAccount | null
@@ -37,6 +38,7 @@ export default memo(
             endColor: hardlightColorOpacity,
             isLoaded: !readingTransactions && !!account,
         }
+        const instituitionLogo = INSTITUITIONS.find(inst => inst.name == account?.instituition)?.logo
     
         useEffect(() => {
             if (account) {
@@ -46,10 +48,22 @@ export default memo(
         return (
             <VStack bg={hardlightColor} maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]} rounded="2xl" w={SCREEN_CONTAINER_WIDTH} p="3" space="2">
                 <Skeleton.Text lines={2} w="1/3" {...skeletonDefinition}>
-                    <VStack>
-                        <Text textTransform="uppercase" color="white" fontSize="2xs">{account?.instituition}</Text>
-                        <Heading color="white" fontSize="md">{account?.name}</Heading>
-                    </VStack>
+                    <HStack justifyContent="space-between">
+                        <VStack>
+                            <Text textTransform="uppercase" color="white" fontSize="2xs">{account?.instituition}</Text>
+                            <Heading color="white" fontSize="md">{account?.name}</Heading>
+                        </VStack>
+                        {
+                            instituitionLogo && 
+                            <Image 
+                                src={instituitionLogo}
+                                resizeMode="cover"
+                                size="2xs"
+                                rounded="sm"
+                                alt="Logo da instituição"
+                            />
+                        }
+                    </HStack>
                 </Skeleton.Text>
                 <Skeleton h="16" rounded="md"  {...skeletonDefinition}>
                     <Box>

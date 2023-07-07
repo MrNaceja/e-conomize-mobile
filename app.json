@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "e-conomize-mobile",
+    "name": "e-conomize",
     "slug": "e-conomize-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
+    "icon": "./src/assets/Icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./src/assets/splash.png",
+      "image": "./src/assets/SplashScreen.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/AdpativeIcon.png",
         "backgroundColor": "#ffffff"
       }
     },

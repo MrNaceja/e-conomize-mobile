@@ -50,8 +50,7 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
         setLoading(true)
         console.log('carregando')
         try {
-            const accountsNotLoaded = !readingAccounts && accounts.length == 0
-            if (accountsNotLoaded) {
+            if (!readingAccounts) {
                 console.log('buscando contas...')
                 const accountsReaded = await readAccounts()
                 console.log(accountsReaded.length + ' contas encontradas')
