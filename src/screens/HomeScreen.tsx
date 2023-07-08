@@ -47,6 +47,7 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
     }
 
     const load = useCallback(async () => {
+        // refactor aqui!!!!
         setLoading(true)
         console.log('carregando')
         try {
@@ -67,9 +68,9 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
             }
         }
         catch (error) {
-            console.log(error)
+            throw error
         }
-    }, [ indexAccountSelected, accounts ])
+    }, [ indexAccountSelected, accounts, readingAccounts ])
 
     useFocusEffect(useCallback(() => { load() }, [ indexAccountSelected, accounts ]))
     return (

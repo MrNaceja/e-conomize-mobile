@@ -1,5 +1,5 @@
 import { Icon, Menu, Text } from "native-base";
-import { Ionicons } from "@expo/vector-icons"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 import { ButtonCircular } from "./ButtonCircular";
 
@@ -29,22 +29,21 @@ export default function MenuNew() {
                     ?
                         <>
                             <Menu.Item onPress={() => openModal("gain")}>
-                                <Icon as={Ionicons} name="trending-up" size="8" color="green.500"/>
+                                <Icon as={MaterialCommunityIcons} name="trending-up" size="8" color="green.500"/>
                                 <Text fontSize="md">Novo Ganho</Text>
                             </Menu.Item>
                             <Menu.Item onPress={() => openModal("expense")}>
-                                <Icon as={Ionicons} name="trending-down" size="8" color="red.500"/>
+                                <Icon as={MaterialCommunityIcons} name="trending-down" size="8" color="red.500"/>
                                 <Text fontSize="md">Nova Despesa</Text>
                             </Menu.Item>
                         </> 
                     :
                         <>
                             <Menu.Item onPress={() => openModal("account")}>
-                                <Icon as={Ionicons} name="wallet" size="8" color="gray.700"/>
+                                <Icon as={MaterialCommunityIcons} name="wallet" size="8" color="gray.700"/>
                                 <Text fontSize="md">Nova Conta</Text>
                             </Menu.Item>
                         </>
-                   
                 }
             </Menu.Group>
         </Menu>
