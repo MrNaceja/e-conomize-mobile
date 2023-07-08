@@ -1,8 +1,8 @@
 import useManagerModal from "hooks/useManagerModal"
-import { memo, useCallback, useEffect, useMemo, useState } from "react"
+import { memo, useCallback, useEffect, useMemo } from "react"
 import { Controller, useForm } from "react-hook-form"
 
-import { Text, HStack, Heading, Icon, Modal, Pressable, VStack, Image, useTheme, Box, KeyboardAvoidingView, useToast, Button } from "native-base"
+import { Text, HStack, Heading, Icon, Modal, VStack, Image, useTheme, Box, useToast, Button } from "native-base"
 import CampoForm from "./CampoForm"
 import PickerSelect from "./PickerSelect"
 
@@ -12,12 +12,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 import { TSchemaAccount, schemaAccount } from "utils/schemas/Account.schemas"
 
-import { TManagerModalType }                                          from "utils/interfaces/ReducerManagerModalDTO"
+import { TManagerModalType } from "utils/interfaces/ReducerManagerModalDTO"
 import { ACCOUNT_COLORS_HIGHLIGHT, TAccount, TAccountColorHighlight } from "utils/interfaces/AccountDTO"
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useAccount from "hooks/useAccount"
 import { INSTITUITIONS } from "utils/interfaces/InstituitionDTO"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 /**
  * Modal de Conta.
@@ -27,28 +28,28 @@ interface IModalAccountProps {
     onClose: () => Promise<void>
 }
 export default memo(
-    function ModalAccount({ onMutation, onClose } : IModalAccountProps) {
-        const { opened, modalType, closeModal, param: accountToEdit} = useManagerModal<TAccount>()
-        const { create, update }                                     = useAccount()
-        const { colors }                                             = useTheme()
-        const Message                                                = useToast()
-        
+    function ModalAccount({ onMutation, onClose }: IModalAccountProps) {
+        const { opened, modalType, closeModal, param: accountToEdit } = useManagerModal<TAccount>()
+        const { create, update } = useAccount()
+        const { colors } = useTheme()
+        const Message = useToast()
+
         const isEdition = !!accountToEdit
         const modalOpen = opened && (['account'] as TManagerModalType[]).includes(modalType)
 
-        const defaultValues : TSchemaAccount = {
-            name        : isEdition ? accountToEdit.name         : "",
+        const defaultValues: TSchemaAccount = {
+            name: isEdition ? accountToEdit.name : "",
             instituition: isEdition ? accountToEdit.instituition : "",
-            total       : isEdition ? accountToEdit.total        : 0,
-            color       : isEdition ? accountToEdit.color        : "green",
+            total: isEdition ? accountToEdit.total : 0,
+            color: isEdition ? accountToEdit.color : "green",
         }
-        
-        const { 
-            control, 
-            handleSubmit, 
-            reset, 
+
+        const {
+            control,
+            handleSubmit,
+            reset,
             watch,
-            formState: { isSubmitting } 
+            formState: { isSubmitting }
         } = useForm<TSchemaAccount>({ defaultValues, resolver: zodResolver(schemaAccount) })
 
         const handleCloseModal = useCallback(() => {
@@ -58,12 +59,12 @@ export default memo(
             reset()
             closeModal()
             onClose()
-        }, [ isSubmitting ])
-    
-        const handleConfirmAccount = async (accountFormData : TSchemaAccount) => {
-            const accountToSave : TAccount = isEdition 
-                                    ? { ...accountToEdit, ...accountFormData}
-                                    : { ...accountFormData, id: uuid.v4() as string }
+        }, [isSubmitting])
+
+        const handleConfirmAccount = async (accountFormData: TSchemaAccount) => {
+            const accountToSave: TAccount = isEdition
+                ? { ...accountToEdit, ...accountFormData }
+                : { ...accountFormData, id: uuid.v4() as string }
             try {
                 if (isEdition) {
                     await update(accountToSave)
@@ -83,43 +84,44 @@ export default memo(
                 handleCloseModal()
             }
         }
-    
+
+        const instituitionSelectedName = watch('instituition');
         const instituitionSelected = useMemo(() => (
-            INSTITUITIONS.find(item => item.name == watch('instituition'))
-        ), [watch('instituition')])
+            INSTITUITIONS.find(item => item.name == instituitionSelectedName)
+        ), [instituitionSelectedName])
 
         const highlightColors = useMemo(() => (
             ACCOUNT_COLORS_HIGHLIGHT.map(color => ({ color } as { color: TAccountColorHighlight }))
         ), [])
-    
+
         useEffect(() => {
             reset(defaultValues)
-        }, [ accountToEdit ])
+        }, [accountToEdit])
         return (
-            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.900"}}>
-                <KeyboardAvoidingView behavior="position" w="full">
-                    <Modal.Content alignSelf="center">
-                        <Modal.CloseButton _icon={{ color: "gray.400" }} _pressed={{bg: "transparent"}}/>
-                        <Modal.Header>
-                            <HStack space="2" alignItems="center">
-                                <Icon 
-                                    as={MaterialCommunityIcons}
-                                    name="wallet"
-                                    color="gray.400"
-                                    size="2xl"
-                                />
-                                <Heading color="gray.500">
-                                    {isEdition ? "Editar Conta" : "Nova Conta"}
-                                </Heading>
-                            </HStack>
-                        </Modal.Header>
-                        <Modal.Body>
+            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{ bg: "gray.900" }}>
+                <Modal.Content alignSelf="center">
+                    <Modal.CloseButton _icon={{ color: "gray.400" }} _pressed={{ bg: "transparent" }} />
+                    <Modal.Header>
+                        <HStack space="2" alignItems="center">
+                            <Icon
+                                as={MaterialCommunityIcons}
+                                name="wallet"
+                                color="gray.400"
+                                size="2xl"
+                            />
+                            <Heading color="gray.500">
+                                {isEdition ? "Editar Conta" : "Nova Conta"}
+                            </Heading>
+                        </HStack>
+                    </Modal.Header>
+                    <KeyboardAwareScrollView style={{ width: '100%', backgroundColor: colors.gray[100]}} enableOnAndroid>
+                        <Modal.Body bg="white">
                             <VStack space="2">
-                                <Controller 
+                                <Controller
                                     control={control}
                                     name="name"
-                                    render={({ field: { onChange, value }, fieldState: {error} }) => (
-                                        <CampoForm 
+                                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                        <CampoForm
                                             type="text"
                                             isRequired
                                             isReadOnly={isSubmitting}
@@ -129,19 +131,19 @@ export default memo(
                                             value={value}
                                             errorMsg={error?.message}
                                         />
-                                    )}  
+                                    )}
                                 />
-                                <Controller 
+                                <Controller
                                     control={control}
                                     name="instituition"
-                                    render={({ field: { onChange, value: instituitionSelectedName}, fieldState: { error } }) => (
-                                        <CampoForm  
+                                    render={({ field: { onChange, value: instituitionSelectedName }, fieldState: { error } }) => (
+                                        <CampoForm
                                             label="Instituição"
                                             isRequired
                                             isReadOnly={isSubmitting}
                                             errorMsg={error?.message}
                                             _renderComponent={() => (
-                                                <PickerSelect 
+                                                <PickerSelect
                                                     mode="modal"
                                                     search={false}
                                                     data={INSTITUITIONS}
@@ -149,23 +151,24 @@ export default memo(
                                                     valueField="name"
                                                     searchField="name"
                                                     searchPlaceholder="Buscar instituição..."
-                                                    renderLeftIcon={() => 
-                                                        !instituitionSelected 
-                                                        ? <Icon as={MaterialCommunityIcons} name="bank" mr="2" color="gray.400" size="lg" />
-                                                        : (
-                                                        <Image 
-                                                            src={instituitionSelected.logo}
-                                                            resizeMode="cover"
-                                                            size="xs"
-                                                            mr="2"
-                                                            rounded="lg"
-                                                            alt={`Logo ${instituitionSelected.name}`}
-                                                        />
-                                                    )}
+                                                    renderLeftIcon={() =>
+                                                        !instituitionSelected
+                                                            ? <Icon as={MaterialCommunityIcons} name="bank" mr="2" color="gray.400" size="lg" />
+                                                            : (
+                                                                <Image
+                                                                    source={instituitionSelected.logo}
+                                                                    key={instituitionSelected.logo}
+                                                                    resizeMode="cover"
+                                                                    size="xs"
+                                                                    mr="2"
+                                                                    rounded="lg"
+                                                                    alt={`Logo ${instituitionSelected.name}`}
+                                                                />
+                                                            )}
                                                     renderItem={instituition => (
                                                         <HStack space="2" alignItems="center" p="2">
-                                                            <Image 
-                                                                src={instituition.logo}
+                                                            <Image
+                                                                source={instituition.logo}
                                                                 resizeMode="cover"
                                                                 size="xs"
                                                                 rounded="lg"
@@ -181,42 +184,43 @@ export default memo(
                                         />
                                     )}
                                 />
-                                <Controller 
-                                    control={control}   
+                                <Controller
+                                    control={control}
                                     name="color"
-                                    render={({ field: { onChange, value: highLightColor} }) => (
-                                        <CampoForm  
+                                    render={({ field: { onChange, value: highLightColor } }) => (
+                                        <CampoForm
                                             label="Cor Destaque"
                                             isReadOnly={isSubmitting}
                                             _renderComponent={() => {
                                                 return (
-                                                <PickerSelect 
-                                                    search={false}
-                                                    mode="modal"
-                                                    data={highlightColors}
-                                                    labelField="color"
-                                                    valueField="color"
-                                                    style={{backgroundColor: colors[highLightColor][100]}}
-                                                    selectedTextStyle={{ color: colors[highLightColor][500] }}
-                                                    renderLeftIcon={() => <Box p="5" bg={`${highLightColor}.500`} rounded="lg" mr="2" />}
-                                                    renderItem={({ color }) => (
-                                                        <HStack space="2" alignItems="center" p="2">
-                                                            <Box rounded="lg" bg={`${color}.500`} p="5" />
-                                                            <Text color={`${color}.500`} fontSize="lg">{color}</Text>
-                                                        </HStack>
-                                                    )}
-                                                    value={highLightColor}
-                                                    onChange={colorsSelected => onChange(colorsSelected.color)}
-                                                />
-                                            )}}
+                                                    <PickerSelect
+                                                        search={false}
+                                                        mode="modal"
+                                                        data={highlightColors}
+                                                        labelField="color"
+                                                        valueField="color"
+                                                        style={{ backgroundColor: colors[highLightColor][100] }}
+                                                        selectedTextStyle={{ color: colors[highLightColor][500] }}
+                                                        renderLeftIcon={() => <Box p="5" bg={`${highLightColor}.500`} rounded="lg" mr="2" />}
+                                                        renderItem={({ color }) => (
+                                                            <HStack space="2" alignItems="center" p="2">
+                                                                <Box rounded="lg" bg={`${color}.500`} p="5" />
+                                                                <Text color={`${color}.500`} fontSize="lg">{color}</Text>
+                                                            </HStack>
+                                                        )}
+                                                        value={highLightColor}
+                                                        onChange={colorsSelected => onChange(colorsSelected.color)}
+                                                    />
+                                                )
+                                            }}
                                         />
                                     )}
                                 />
-                                <Controller 
+                                <Controller
                                     control={control}
                                     name="total"
                                     render={({ field: { onChange, value } }) => (
-                                        <CampoForm 
+                                        <CampoForm
                                             isReadOnly={isSubmitting}
                                             type="monetary"
                                             label="Valor Inicial"
@@ -225,23 +229,23 @@ export default memo(
                                         />
                                     )}
                                 />
-                                <Button 
-                                    bg="green.500" 
-                                    p="5" 
-                                    alignItems="center" 
-                                    rounded="md" 
-                                    shadow="10" 
-                                    onPress={handleSubmit(handleConfirmAccount)} 
-                                    isLoading={isSubmitting} 
+                                <Button
+                                    bg="green.500"
+                                    p="5"
+                                    alignItems="center"
+                                    rounded="md"
+                                    shadow="10"
+                                    onPress={handleSubmit(handleConfirmAccount)}
+                                    isLoading={isSubmitting}
                                     _pressed={{ bg: "green.600" }}
-                                    _loading={{ bg:"gray.400:alpha.100", _spinner: { color: 'gray.600', size:"lg" } }}
+                                    _loading={{ bg: "gray.400:alpha.100", _spinner: { color: 'gray.600', size: "lg" } }}
                                 >
                                     <Text color="white" fontSize="2xl">Confirmar</Text>
                                 </Button>
                             </VStack>
                         </Modal.Body>
-                    </Modal.Content>
-                </KeyboardAvoidingView>
+                    </KeyboardAwareScrollView>
+                </Modal.Content>
             </Modal>
         )
     }

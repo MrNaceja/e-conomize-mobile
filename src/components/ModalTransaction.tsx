@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Heading, Icon, Modal, Pressable, Spinner, Text, VStack, useToast} from "native-base";
+import { Box, Button, Center, HStack, Heading, Icon, Modal, Pressable, Spinner, Text, VStack, useTheme, useToast} from "native-base";
 import { useForm, Controller } from "react-hook-form";
 import { memo, useCallback, useEffect, useMemo } from "react";
 
@@ -16,6 +16,7 @@ import moment from "moment";
 import uuid from 'react-native-uuid';
 import { TAccount } from "utils/interfaces/AccountDTO";
 import useTransaction from "hooks/useTransaction";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 /**
  *  Modal de Transação.
@@ -28,6 +29,7 @@ export default memo(
     function ModalTransaction({accountSelected, onMutation} : IModalTransactionProps) {
         const { opened, modalType, closeModal, param : transactionToEdit}   = useManagerModal<TTransaction>()
         const { create, update }                                            = useTransaction()
+        const { colors }                                                    = useTheme()
         const Message                                                       = useToast()
 
         const isEdition = !!transactionToEdit
@@ -116,52 +118,54 @@ export default memo(
                             </Heading>
                         </HStack>
                     </Modal.Header>
-                    <Modal.Body>
-                        <VStack space="4">
-                            <Controller 
-                                control={control}
-                                name="description"
-                                render={({ field: { onChange, value}, fieldState: { error } }) => (
-                                    <CampoForm 
-                                        isReadOnly={isSubmitting}
-                                        isRequired
-                                        type="text"
-                                        label="Descrição da transação"
-                                        placeholder={typeTransaction == "gain" ? "Ex: salário" : "Ex: fatura cartão"}
-                                        onChangeText={onChange}
-                                        value={value}
-                                        errorMsg={error?.message}
-                                    />
-                                )}  
-                            />
-                            <Controller 
-                                control={control}
-                                name="value"
-                                render={({ field: { onChange, value} }) => (
-                                    <CampoForm
-                                        isReadOnly={isSubmitting}
-                                        type="monetary"
-                                        label="Valor da transação"
-                                        onChangeText={onChange}
-                                        value={value.toString()}
-                                    />
-                                )}  
-                            />
-                            <Button 
-                                bg="green.500" 
-                                p="5" 
-                                alignItems="center" 
-                                rounded="md" 
-                                shadow="10" 
-                                onPress={handleSubmit(handleConfirmTransaction)} 
-                                isLoading={isSubmitting} 
-                                _pressed={{ bg: "green.600" }}
-                                _loading={{ bg:"gray.400:alpha.100", _spinner: { color: 'gray.600', size:"lg" } }}
-                            >
-                                <Text color="white" fontSize="2xl">Confirmar</Text>
-                            </Button>
-                        </VStack>
-                    </Modal.Body>
+                    <KeyboardAwareScrollView style={{ width: '100%', backgroundColor: colors.gray[100]}} enableOnAndroid>
+                        <Modal.Body bg="white">
+                            <VStack space="4">
+                                <Controller 
+                                    control={control}
+                                    name="description"
+                                    render={({ field: { onChange, value}, fieldState: { error } }) => (
+                                        <CampoForm 
+                                            isReadOnly={isSubmitting}
+                                            isRequired
+                                            type="text"
+                                            label="Descrição da transação"
+                                            placeholder={typeTransaction == "gain" ? "Ex: salário" : "Ex: fatura cartão"}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            errorMsg={error?.message}
+                                        />
+                                    )}  
+                                />
+                                <Controller 
+                                    control={control}
+                                    name="value"
+                                    render={({ field: { onChange, value} }) => (
+                                        <CampoForm
+                                            isReadOnly={isSubmitting}
+                                            type="monetary"
+                                            label="Valor da transação"
+                                            onChangeText={onChange}
+                                            value={value.toString()}
+                                        />
+                                    )}  
+                                />
+                                <Button 
+                                    bg="green.500" 
+                                    p="5" 
+                                    alignItems="center" 
+                                    rounded="md" 
+                                    shadow="10" 
+                                    onPress={handleSubmit(handleConfirmTransaction)} 
+                                    isLoading={isSubmitting} 
+                                    _pressed={{ bg: "green.600" }}
+                                    _loading={{ bg:"gray.400:alpha.100", _spinner: { color: 'gray.600', size:"lg" } }}
+                                >
+                                    <Text color="white" fontSize="2xl">Confirmar</Text>
+                                </Button>
+                            </VStack>
+                        </Modal.Body>
+                    </KeyboardAwareScrollView>
                 </Modal.Content>
             </Modal>
         )

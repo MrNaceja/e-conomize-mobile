@@ -1,51 +1,57 @@
+import { ImageRequireSource } from "react-native"
+
 export type TInstituition = {
     name: string,
-    logo: string
+    logo: ImageRequireSource
 }
 
 export const INSTITUITIONS : TInstituition[] = [
     {
      name: "Nubank",
-     logo: "https://logo.clearbit.com/nubank.com.br"
+     logo: require("assets/InstituitionsLogos/nubank.jpeg")
     },
     {
      name: "Mercado Pago",
-     logo: "https://logo.clearbit.com/mercadopago.com"
+     logo: require("assets/InstituitionsLogos/mercadopago.jpeg")
     },
     {
      name: "Bradesco",
-     logo: "https://logo.clearbit.com/bradesco.com.br"
+     logo: require("assets/InstituitionsLogos/bradesco.jpeg")
     },
     {
      name: "Itaú",
-     logo: "https://logo.clearbit.com/itau.com.br"
+     logo: require("assets/InstituitionsLogos/itau.jpg")
+    },
+    {
+     name: "Iti Itaú",
+     logo: require("assets/InstituitionsLogos/itiitau.jpeg")
     },
     {
      name: "Banco do Brasil",
-     logo: "https://logo.clearbit.com/circuitobancodobrasil.com.br"
+     logo: require("assets/InstituitionsLogos/bancobrasil.jpeg")
     },
     {
      name: "Santander",
-     logo: "https://logo.clearbit.com/santanderbank.com"
+     logo: require("assets/InstituitionsLogos/santander.jpeg")
     },
     {
      name: "Banco Pan",
-     logo: "https://logo.clearbit.com/bancopan.com.br"
+     logo: require("assets/InstituitionsLogos/bancopan.jpeg")
     },
     {
      name: "C6 Bank",
-     logo: "https://logo.clearbit.com/c6bank.com.br"
+     logo: require("assets/InstituitionsLogos/c6bank.jpeg")
     },
     {
      name: "Ailos",
-     logo: "https://logo.clearbit.com/ailos.coop.br"
+     logo: require("assets/InstituitionsLogos/ailos.jpeg")
     },
     {
      name: "Caju",
-     logo: "https://logo.clearbit.com/caju.com.br"
+     logo: require("assets/InstituitionsLogos/caju.jpeg")
     },
     {
      name: "Alelo",
-     logo: "https://logo.clearbit.com/alelo.com.br"
+     logo: require("assets/InstituitionsLogos/alelo.jpeg")
     },
  ]

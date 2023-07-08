@@ -17,7 +17,6 @@ export const SCREEN_HORIZONTAL_SPACING = 5
 export const SCREEN_CONTAINER_WIDTH = SCREEN_WIDTH - (theme.sizes[SCREEN_HORIZONTAL_SPACING] * 2)
 
 interface IScreenProps extends IVStackProps {
-    showHeader?: boolean
 }
 export default function Screen(props : IScreenProps) {
     return (

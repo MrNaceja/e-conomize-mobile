@@ -56,7 +56,7 @@ export default memo(
                         {
                             instituitionLogo && 
                             <Image 
-                                src={instituitionLogo}
+                                source={instituitionLogo}
                                 resizeMode="cover"
                                 size="2xs"
                                 rounded="sm"
