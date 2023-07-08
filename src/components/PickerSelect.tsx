@@ -10,7 +10,7 @@ export default function PickerSelect<DataType>({data, placeholderStyle, selected
     const { fontSizes, colors, radii, sizes } = useTheme()
     return (
         <Dropdown
-            mode="modal"
+            mode="default"
             data={data}
             placeholder="Selecione..."
             placeholderStyle={StyleSheet.flatten([{ 
@@ -30,6 +30,7 @@ export default function PickerSelect<DataType>({data, placeholderStyle, selected
                 borderRadius:radii.lg, 
                 marginTop: sizes[0.5], 
                 marginBottom: sizes[5],
+                overflow: "hidden"
             }}  
             style={StyleSheet.flatten([{
                 backgroundColor: colors.gray[100], 

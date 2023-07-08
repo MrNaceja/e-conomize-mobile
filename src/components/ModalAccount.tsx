@@ -144,7 +144,6 @@ export default memo(
                                             errorMsg={error?.message}
                                             _renderComponent={() => (
                                                 <PickerSelect
-                                                    mode="modal"
                                                     search={false}
                                                     data={INSTITUITIONS}
                                                     labelField="name"
@@ -195,17 +194,15 @@ export default memo(
                                                 return (
                                                     <PickerSelect
                                                         search={false}
-                                                        mode="modal"
                                                         data={highlightColors}
                                                         labelField="color"
                                                         valueField="color"
                                                         style={{ backgroundColor: colors[highLightColor][100] }}
-                                                        selectedTextStyle={{ color: colors[highLightColor][500] }}
-                                                        renderLeftIcon={() => <Box p="5" bg={`${highLightColor}.500`} rounded="lg" mr="2" />}
+                                                        selectedTextStyle={{ display: "none" }}
+                                                        renderLeftIcon={() => <Box p="5" bg={`${highLightColor}.500`} rounded="lg" w="full" />}
                                                         renderItem={({ color }) => (
                                                             <HStack space="2" alignItems="center" p="2">
-                                                                <Box rounded="lg" bg={`${color}.500`} p="5" />
-                                                                <Text color={`${color}.500`} fontSize="lg">{color}</Text>
+                                                                <Box rounded="lg" bg={`${color}.500`} p="5" w="full" />
                                                             </HStack>
                                                         )}
                                                         value={highLightColor}
