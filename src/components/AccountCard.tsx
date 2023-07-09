@@ -13,16 +13,21 @@ import { INSTITUITIONS } from "utils/interfaces/InstituitionDTO";
 
 interface IAccountCardProps {
     account: TAccount | null
+    refresh?: boolean
 }
 export default memo(
-    function AccountCard({ account } : IAccountCardProps) {
+    function AccountCard({ account, refresh = false } : IAccountCardProps) {
         const { sizes } = useTheme()
-        const { read: readTransactions, reading: readingTransactions, reduceType } = useTransaction()
+        const { 
+            read: readTransactions, 
+            reading: readingTransactions,
+            gains: accountGains,
+            expenses: accountExpenses
+         } = useTransaction()
+
         let total        = account ? account.total : 0
         let totalGain    = 0;
         let totalExpense = 0;
-    
-        const [accountGains, accountExpenses] = useMemo(reduceType, [ readingTransactions ])
     
         if (!readingTransactions && account) {
             totalGain    = accountGains   .reduce((total, gain)    => total += gain.value   , 0)
@@ -38,13 +43,14 @@ export default memo(
             endColor: hardlightColorOpacity,
             isLoaded: !readingTransactions && !!account,
         }
-        const instituitionLogo = INSTITUITIONS.find(inst => inst.name == account?.instituition)?.logo
+
+        const accountInstituitionLogo = INSTITUITIONS.find(inst => inst.name == account?.instituition)?.logo
     
         useEffect(() => {
-            if (account) {
+            if (account || (account && refresh)) {
                 readTransactions(account.id)
             }
-        }, [ account ])
+        }, [ account, refresh ])
         return (
             <VStack bg={hardlightColor} maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]} rounded="2xl" w={SCREEN_CONTAINER_WIDTH} p="3" space="2">
                 <Skeleton.Text lines={2} w="1/3" {...skeletonDefinition}>
@@ -54,9 +60,9 @@ export default memo(
                             <Heading color="white" fontSize="md">{account?.name}</Heading>
                         </VStack>
                         {
-                            instituitionLogo && 
+                            accountInstituitionLogo && 
                             <Image 
-                                source={instituitionLogo}
+                                source={accountInstituitionLogo}
                                 resizeMode="cover"
                                 size="2xs"
                                 rounded="sm"

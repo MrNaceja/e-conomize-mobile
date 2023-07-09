@@ -27,6 +27,7 @@ interface IModalTransactionProps {
 }
 export default memo(
     function ModalTransaction({accountSelected, onMutation} : IModalTransactionProps) {
+        console.log('modal transaction is render')
         const { opened, modalType, closeModal, param : transactionToEdit}   = useManagerModal<TTransaction>()
         const { create, update }                                            = useTransaction()
         const { colors }                                                    = useTheme()

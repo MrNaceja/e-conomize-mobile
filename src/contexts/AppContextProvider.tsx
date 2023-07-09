@@ -4,8 +4,7 @@ import {
     EManagerModalActionTypes, 
     TManagerModalType,
     MANAGER_MODAL_INITIAL_STATE,
-    TManagerModalState,
-    TManagerModalPayloadParam
+    TManagerModalState
 } from "utils/interfaces/ReducerManagerModalDTO";
 import ReducerManagerModal from "reducers/ReducerManagerModal";
 import StorageAccount, { IStorageAccountActions }      from "services/StorageAccount";
@@ -26,10 +25,10 @@ export type TAppContextProps = {
         state     : TManagerModalState
     }
 }
-export const AppContext = createContext<TAppContextProps>({} as TAppContextProps)
 
 const storageUser = StorageUser()
 
+export const AppContext = createContext<TAppContextProps>({} as TAppContextProps)
 /**
  * Contexto do App.
  */

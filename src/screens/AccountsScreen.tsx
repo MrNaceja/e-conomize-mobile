@@ -24,7 +24,6 @@ export default function AccountsScreen() {
     const { 
         read: readAccounts, 
         remove: deleteAccount, 
-        update: updateAccount,
         accounts  
     } = useAccount()
 
@@ -36,11 +35,19 @@ export default function AccountsScreen() {
                 bg: "red.500"
             })
         }
-        await deleteAccount(accountId)
-        Message.show({
-            title: "Conta deletada com sucesso",
-            bg: "green.500"
-        })
+        try {
+            await deleteAccount(accountId)
+            Message.show({
+                title: "Conta deletada com sucesso",
+                bg: "green.500"
+            })
+        }
+        catch (error) {
+            throw error
+        }
+        finally {
+            load()
+        }
     }
 
     function handleSwipeEditAccount(accountId : TAccount['id']) {
@@ -105,7 +112,7 @@ export default function AccountsScreen() {
                         <Pressable h="full" p="5" justifyContent="center">
                             <Icon
                                 as={MaterialCommunityIcons}
-                                name="dots-vertical"
+                                name="playlist-edit"
                                 color="gray.500"
                                 size="6xl"
                             />

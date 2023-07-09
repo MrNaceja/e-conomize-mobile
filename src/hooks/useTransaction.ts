@@ -3,31 +3,35 @@ import { useCallback, useContext, useState } from "react";
 import { ETransactionTypes, TTransaction } from "utils/interfaces/TransactionDTO";
 
 export default function useTransaction() {
-    const [transactions, setTransactions] = useState<TTransaction[]>([])
-    const [reading, setReading]           = useState(true)
-    const { storageTransaction }          = useContext(AppContext)
+    const [gains, setGains]       = useState<TTransaction[]>([])
+    const [expenses, setExpenses] = useState<TTransaction[]>([])
+    const [reading, setReading]   = useState(true)
+    const { storageTransaction }  = useContext(AppContext)
 
-    const read = useCallback(async (accountId : string) => {
+    const read : (accountId : string) => Promise<TTransaction[]>= useCallback((accountId : string) => new Promise(async (onSucess, onError) => {
         setReading(true)
+        try {
             const transactions = await storageTransaction.read(accountId)
-            setTransactions(transactions)
-        setReading(false)
-    }, [transactions, reading])
+            const [gainTransactions, expenseTransactions] = transactions.reduce((state, transaction) => {
+                const [gains, expenses] = state
+                switch (transaction.type) {
+                    case ETransactionTypes.GAIN:
+                        return [[...gains, transaction], expenses]
+                    case ETransactionTypes.EXPENSE:
+                        return [gains, [...expenses, transaction]]
+                    default: 
+                        return state
+                }
+            }, [[], []] as TTransaction[][])
+            setGains(gainTransactions)
+            setExpenses(expenseTransactions)
+            setReading(false)
+            onSucess(transactions)
+        }
+        catch(error) {
+            onError(error)
+        }
+    }), [])
 
-    const reduceType = useCallback(() => {
-        return transactions.reduce((state, transaction) => {
-            const [gains, expenses] = state
-            switch (transaction.type) {
-                case ETransactionTypes.GAIN:
-                    return [[...gains, transaction], expenses]
-                case ETransactionTypes.EXPENSE:
-                    return [gains, [...expenses, transaction]]
-                default: 
-                    return state
-            }
-        }, [[], []] as TTransaction[][])
-    }, [ transactions ])
-
-
-    return { ...storageTransaction, read, reduceType, reading, transactions}
+    return { ...storageTransaction, read, reading, gains, expenses}
 }

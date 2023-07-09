@@ -8,12 +8,14 @@ import { SCREEN_CONTAINER_WIDTH } from "./Screen";
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import moment from 'moment';
-import 'moment/locale/pt-br';
 import useManagerModal from "hooks/useManagerModal";
 import useTransaction from "hooks/useTransaction";
 import { TAccount } from "utils/interfaces/AccountDTO";
+
+import moment from 'moment';
+import 'moment/locale/pt-br';
 moment.locale('pt-br');
+
 
 interface ITransactionsListViewProps {
     accountSelected: TAccount,
@@ -160,7 +162,7 @@ export default memo(
                                                     <Pressable onPress={() => !isSelection && handlePressToEdit(transaction)}>
                                                         <Icon
                                                             as={MaterialCommunityIcons}
-                                                            name="dots-vertical"
+                                                            name="playlist-edit"
                                                             color="gray.400"
                                                             size="lg"
                                                         />

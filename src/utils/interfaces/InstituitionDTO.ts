@@ -31,6 +31,10 @@ export const INSTITUITIONS : TInstituition[] = [
      logo: require("assets/InstituitionsLogos/bancobrasil.jpeg")
     },
     {
+     name: "Caixa",
+     logo: require("assets/InstituitionsLogos/caixa.jpg")
+    },
+    {
      name: "Santander",
      logo: require("assets/InstituitionsLogos/santander.jpeg")
     },
