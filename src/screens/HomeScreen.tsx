@@ -82,6 +82,7 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
             loadTransactions()
         }
     },[ indexAccountSelected, accounts ])
+    console.log('home is render :: acount selected => ', accountSelected)
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>

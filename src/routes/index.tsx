@@ -6,7 +6,6 @@ import LoadingScreen from "screens/LoadingScreen";
 
 export default function RoutesNavigator() {
     const { user, loadingUser } = useUser()
-    
     return (
         <NavigationContainer>
             { loadingUser ? <LoadingScreen /> : (user ? <MainRoutes /> : <StartRoutes />) }

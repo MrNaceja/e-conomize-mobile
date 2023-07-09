@@ -19,7 +19,7 @@ export type TMainRoutesNavigationProps = BottomTabNavigationProp<TMainRoutesScre
  * Rotas da pagina principal do App.
 */
 export default function MainRoutes() {
-    const TabNavigation = createBottomTabNavigator<TMainRoutesScreens>()
+    const TabNavigation     = createBottomTabNavigator<TMainRoutesScreens>()
     const { colors, sizes } = useTheme()
     return (
         <TabNavigation.Navigator 
@@ -47,10 +47,10 @@ export default function MainRoutes() {
             <TabNavigation.Screen 
                 name="new"
                 component={HomeScreen}
-                options={({ route }) => ({
+                options={() => ({
                     tabBarIcon: () => <MenuNew />
                 })}
-                listeners={({ navigation }) => ({
+                listeners={() => ({
                     tabPress: (e) => {
                       e.preventDefault();
                     },
