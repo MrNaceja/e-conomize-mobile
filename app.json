@@ -24,11 +24,11 @@
       },
       "package": "com.naceja.economize"
     },
+    "owner": "naceja",
     "extra": {
       "eas": {
-        "projectId": "44298a3e-6348-4b98-9cd5-86c9cbe46b7f"
+        "projectId": "79354107-006f-464a-9f0a-d2730b24d720"
       }
-    },
-    "owner": "naceja"
+    }
   }
 }

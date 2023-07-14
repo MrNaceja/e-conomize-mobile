@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { HStack, Heading, Icon, Pressable, Popover, useTheme, Text, useToast, VStack } from "native-base";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -21,6 +21,7 @@ import useManagerModal from "hooks/useManagerModal";
  * Tela de gerenciamento de contas.
  */
 export default function AccountsScreen() {
+    const [recalcResumeTransactions, setRecalcResumeTransactions] = useState(false)
     const { sizes }     = useTheme()
     const { openModal } = useManagerModal()
     const Message       = useToast()
@@ -57,6 +58,7 @@ export default function AccountsScreen() {
     }, [ accounts ])
     
     useFocusEffect(useCallback(() => {
+        setRecalcResumeTransactions(state => !state)
         if (!hasAccounts) {
             Alert.alert('Boas vindas ao e-conomize!', 'Você ainda não tem nenhuma conta, vamos criar uma?', [
                 {
@@ -92,7 +94,8 @@ export default function AccountsScreen() {
                 useFlatList
                 data={accounts}
                 keyExtractor={account => account.id}
-                renderItem={({ item: account }) => <AccountCard account={ !loadingAccounts ? account : null } />}
+                extraData={recalcResumeTransactions}
+                renderItem={({ item: account }) => <AccountCard account={ !loadingAccounts ? account : null } refresh={recalcResumeTransactions} />}
                 renderHiddenItem={() => (
                     <HStack justifyContent="space-between" h="full">
                         <Pressable p="5" justifyContent="center">

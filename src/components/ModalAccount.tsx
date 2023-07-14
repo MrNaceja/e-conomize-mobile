@@ -55,12 +55,12 @@ export default memo(
          * Lida com o fechar modal, tanto pelo botao fechar quando pela sobreposição do mesmo
          */
         const handleCloseModal = useCallback(() => {
-            if (isSubmitting || !hasAccounts) {
+            if (isSubmitting) {
                 return
             }
             reset()
             closeModal()
-        }, [isSubmitting, hasAccounts])
+        }, [isSubmitting])
 
         /**
          * Lida com a inclusão ou atualização de uma conta
@@ -111,7 +111,7 @@ export default memo(
             reset(defaultValues)
         }, [accountToEdit])
         return (
-            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{ bg: "gray.800" }}>
+            <Modal isOpen={modalOpen} onClose={hasAccounts && handleCloseModal} size="xl" _backdrop={{ bg: "gray.800" }}>
                 <Modal.Content alignSelf="center">
                     <Modal.CloseButton _icon={{ color: "gray.400" }} _pressed={{ bg: "transparent" }} />
                     <Modal.Header>
