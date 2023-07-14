@@ -23,14 +23,10 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 /**
  * Modal de Conta.
  */
-interface IModalAccountProps {
-    onMutation: () => Promise<void>
-    onClose: () => Promise<void>
-}
 export default memo(
-    function ModalAccount({ onMutation, onClose }: IModalAccountProps) {
+    function ModalAccount() {
         const { opened, modalType, closeModal, param: accountToEdit } = useManagerModal<TAccount>()
-        const { create, update } = useAccount()
+        const { newAccount, updateAccount, hasAccounts } = useAccount()
         const { colors } = useTheme()
         const Message = useToast()
 
@@ -53,13 +49,12 @@ export default memo(
         } = useForm<TSchemaAccount>({ defaultValues, resolver: zodResolver(schemaAccount) })
 
         const handleCloseModal = useCallback(() => {
-            if (isSubmitting) {
+            if (isSubmitting || !hasAccounts) {
                 return
             }
             reset()
             closeModal()
-            onClose()
-        }, [isSubmitting])
+        }, [isSubmitting, hasAccounts])
 
         const handleConfirmAccount = async (accountFormData: TSchemaAccount) => {
             const accountToSave: TAccount = isEdition
@@ -67,15 +62,14 @@ export default memo(
                 : { ...accountFormData, id: uuid.v4() as string }
             try {
                 if (isEdition) {
-                    await update(accountToSave)
+                    await updateAccount(accountToSave)
                 } else {
-                    await create(accountToSave)
+                    await newAccount(accountToSave)
                 }
                 Message.show({
                     title: `Conta ${isEdition ? "alterada" : 'criada'} com sucesso`,
                     bg: "green.500"
                 })
-                onMutation()
             }
             catch (error) {
                 console.log(error)
@@ -98,7 +92,7 @@ export default memo(
             reset(defaultValues)
         }, [accountToEdit])
         return (
-            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{ bg: "gray.900" }}>
+            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{ bg: "gray.800" }}>
                 <Modal.Content alignSelf="center">
                     <Modal.CloseButton _icon={{ color: "gray.400" }} _pressed={{ bg: "transparent" }} />
                     <Modal.Header>

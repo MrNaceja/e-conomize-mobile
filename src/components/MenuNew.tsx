@@ -21,7 +21,7 @@ export default function MenuNew() {
             shadow="10"
             rounded="2xl"
             overflow="hidden"
-            _backdrop={{bg:"gray.500"}}
+            _backdrop={{bg:"gray.800"}}
         >
             <Menu.Group title={displayedScreen == "home" ? "Transações" : "Contas"}>
                 {

@@ -23,7 +23,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
  */
 interface IModalTransactionProps {
     accountSelected: TAccount
-    onMutation: () => Promise<void>
+    onMutation: () => void
 }
 export default memo(
     function ModalTransaction({accountSelected, onMutation} : IModalTransactionProps) {
@@ -97,12 +97,11 @@ export default memo(
                 handleCloseModal()
            }
         }
-
         useEffect(() => {
             reset(defaultValues)
         }, [ transactionToEdit, typeTransaction ])
         return (
-            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.900"}}>
+            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.800"}}>
                 <Modal.Content>
                     <Modal.CloseButton _icon={{ color: "gray.400" }} _pressed={{bg: "transparent"}}/>
                     <Modal.Header>
@@ -143,6 +142,7 @@ export default memo(
                                     render={({ field: { onChange, value},  fieldState: { error } }) => (
                                         <CampoForm
                                             isReadOnly={isSubmitting}
+                                            isRequired
                                             type="monetary"
                                             label="Valor da transação"
                                             onChangeText={onChange}

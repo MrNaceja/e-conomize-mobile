@@ -7,6 +7,7 @@ import HomeScreen from 'screens/HomeScreen';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import MenuNew from 'components/MenuNew';
+import useAccount from 'hooks/useAccount';
 
 export type TMainRoutesScreens = {
     home: undefined,
@@ -21,9 +22,10 @@ export type TMainRoutesNavigationProps = BottomTabNavigationProp<TMainRoutesScre
 export default function MainRoutes() {
     const TabNavigation     = createBottomTabNavigator<TMainRoutesScreens>()
     const { colors, sizes } = useTheme()
+    const { hasAccounts }   = useAccount()
     return (
         <TabNavigation.Navigator 
-            initialRouteName="home"
+            initialRouteName={hasAccounts ? "home" : "accounts"}
             screenOptions={{
                 header: () => <Header />,
                 tabBarActiveTintColor: colors.green["500"],

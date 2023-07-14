@@ -23,7 +23,7 @@ interface ITransactionsListViewProps {
     type: TTransactionType,
     title: string,
     loading: boolean,
-    onMutation: () => Promise<void>
+    onMutation: () => void
 }
 export default memo(
     function TransactionsListView({ accountSelected, transactions, title, type, loading, onMutation }: ITransactionsListViewProps) {

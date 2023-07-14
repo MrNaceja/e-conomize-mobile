@@ -1,3 +1,5 @@
+import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import { useCallback, useEffect, useState } from "react";
 import { Box, FlatList, Heading, ScrollView, useTheme, HStack } from "native-base";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList/types";
 
@@ -6,27 +8,19 @@ import Screen, { SCREEN_HORIZONTAL_SPACING, SCREEN_CONTAINER_WIDTH } from "compo
 import TransactionsListView                                          from "components/TransactionsListView";
 import ModalTransaction                                              from "components/ModalTransaction";
 
-import useAccount  from "hooks/useAccount";
-
 import { TAccount } from "utils/interfaces/AccountDTO";
-import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+
+import useAccount     from "hooks/useAccount";
 import useTransaction from "hooks/useTransaction";
-import { TMainRoutesScreens } from "routes/main.routes";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useFocusEffect } from "@react-navigation/native";
 
 /**
  * Tela de Inicio do App.
  */
-export default function HomeScreen({ navigation } : NativeStackScreenProps<TMainRoutesScreens>) {
-    const { sizes }                                       = useTheme()
-    const [indexAccountSelected, setIndexAccountSelected] = useState<number>(0)
-    const { 
-        read: readAccounts,
-        reading: loadingAccounts,
-        accounts
-    } = useAccount()
+export default function HomeScreen() {
+    const [indexAccountSelected, setIndexAccountSelected]     = useState<number>(0)
+    const [refreshTransactions, setRefreshTransactions]   = useState(false)
+    const { sizes }                                           = useTheme()
+    const { accounts }                                        = useAccount()
     const { 
         read: readTransactions,
         reading: loadingTransactions,
@@ -34,8 +28,14 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
         expenses: accountExpenses
     } = useTransaction()
 
+    /**
+     * Conta selecionada no momento
+     */
     let accountSelected = accounts[indexAccountSelected]
 
+    /**
+     * Deslize de contas
+     */
     const handleSwipeAccount = useCallback((e : NativeSyntheticEvent<NativeScrollEvent>) => {
         const indexSwiped = parseInt((e.nativeEvent.contentOffset.x / SCREEN_CONTAINER_WIDTH).toFixed(0))
         if (indexSwiped != indexAccountSelected) {
@@ -45,20 +45,9 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
         }
     }, [ indexAccountSelected, accounts ])
 
-    const loadAccounts = useCallback(async () => {
-        try {
-            console.log('buscando contas...')
-            const accountsReaded = await readAccounts()
-            console.log(accountsReaded.length + ' contas encontradas')
-            if (accountsReaded.length == 0) {
-                return navigation.navigate('accounts')
-            }
-        }
-        catch (error) {
-            throw error
-        }
-    }, [])
-
+    /**
+     * Carrega as transações de ganho e despesa para a conta atual selecionada
+     */
     const loadTransactions = useCallback(async () => {
         console.log('contas => ' + accounts)
         console.log('conta selecionada => ' + accountSelected)
@@ -74,15 +63,17 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
         }
     }, [ accounts, indexAccountSelected ])
 
-    useFocusEffect(useCallback(() => {
-        loadAccounts()
-    }, []))
+    /**
+     * Ao mudar o estado das transações atualiza a listagem e o resumo no card de conta
+     */
+    const onMutationTransactions = useCallback(() => {
+        loadTransactions()
+        setRefreshTransactions(state => !state)
+    }, [])
+
     useEffect(() => {
-        if (accounts.length > 0) {
-            loadTransactions()
-        }
+        loadTransactions()
     },[ indexAccountSelected, accounts ])
-    console.log('home is render :: acount selected => ', accountSelected)
     return (
         <Screen>
             <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
@@ -90,15 +81,15 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
                 _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING } as Partial<IFlatListProps<TAccount>>}
                 showsHorizontalScrollIndicator={false} 
                 horizontal
-                scrollEnabled={!loadingAccounts}
+                scrollEnabled={!loadingTransactions}
                 maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]}
                 data={accounts}
                 keyExtractor={account => account.id}
                 renderItem={({ item: account }) => {
-                    const shouldRender = accountSelected.id == account.id && !loadingAccounts && !loadingTransactions
-                    return <AccountCard account={ shouldRender ? accountSelected : null } refresh={loadingTransactions}/>
+                    const shouldRender = accountSelected.id == account.id
+                    return <AccountCard account={ shouldRender ? accountSelected : null } refresh={refreshTransactions}/>
                 }}
-                extraData={loadingTransactions}
+                refreshing={refreshTransactions}
                 onMomentumScrollEnd={handleSwipeAccount}
                 decelerationRate="fast"
                 snapToInterval={(SCREEN_CONTAINER_WIDTH + (4 * sizes["0.5"]))}
@@ -116,7 +107,7 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
                         transactions={ accountGains } 
                         loading={ loadingTransactions } 
                         accountSelected={ accountSelected } 
-                        onMutation={ loadTransactions }
+                        onMutation={ onMutationTransactions }
                     />
                     <TransactionsListView 
                         title="Suas Despesas" 
@@ -124,12 +115,12 @@ export default function HomeScreen({ navigation } : NativeStackScreenProps<TMain
                         transactions={ accountExpenses } 
                         loading={ loadingTransactions } 
                         accountSelected={ accountSelected } 
-                        onMutation={ loadTransactions }
+                        onMutation={ onMutationTransactions }
                     />
                 </ScrollView>
             </Box>
             {
-                accountSelected && <ModalTransaction accountSelected={ accountSelected } onMutation={ loadTransactions } />
+                accountSelected && <ModalTransaction accountSelected={ accountSelected } onMutation={ onMutationTransactions } />
             }
         </Screen>
     )
