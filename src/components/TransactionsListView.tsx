@@ -18,11 +18,11 @@ moment.locale('pt-br');
 
 
 interface ITransactionsListViewProps {
-    accountSelected: TAccount,
-    transactions: TTransaction[],
-    type: TTransactionType,
-    title: string,
-    loading: boolean,
+    accountSelected: TAccount
+    transactions: TTransaction[]
+    type: TTransactionType
+    title: string
+    loading: boolean
     onMutation: () => void
 }
 export default memo(
@@ -33,6 +33,9 @@ export default memo(
         const [selectionedTransactions, setSelectionedTransactions] = useState<TTransaction[]>([])
         const isSelection = selectionedTransactions.length > 0
     
+        /**
+         * Formatando as transações para listagem por data
+         */
         const transactionsByDate = useMemo(() => (
             transactions.reduce((sections, item) => {
                 const dateCreated = item.createdAt

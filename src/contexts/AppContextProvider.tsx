@@ -62,28 +62,28 @@ export default function AppContextProvider(props : PropsWithChildren) {
         setLoadingAccounts(true)
             const accountsReaded = await storageAccount.read()
             setAccounts(accountsReaded)
-        setLoadingAccounts(true)
+        setLoadingAccounts(false)
     }, [])
 
     const newAccount = useCallback(async (newAccount : TAccount) => {
         setLoadingAccounts(true)
             const accountsWithNew = await storageAccount.create(newAccount)
             setAccounts(accountsWithNew)
-        setLoadingAccounts(true)
+        setLoadingAccounts(false)
     }, [])
 
     const updateAccount = useCallback(async (updatedAccount : TAccount) => {
         setLoadingAccounts(true)
             const accountsWithUpdated = await storageAccount.update(updatedAccount)
             setAccounts(accountsWithUpdated)
-        setLoadingAccounts(true)
+        setLoadingAccounts(false)
     }, [])
 
     const removeAccount = useCallback(async (removedAccountId : TAccount['id']) => {
         setLoadingAccounts(true)
             const accountsWithoutRemoved = await storageAccount.remove(removedAccountId)
             setAccounts(accountsWithoutRemoved)
-        setLoadingAccounts(true)
+        setLoadingAccounts(false)
     }, [])
 
     const storeUser = async () => {

@@ -17,10 +17,10 @@ import useTransaction from "hooks/useTransaction";
  * Tela de Inicio do App.
  */
 export default function HomeScreen() {
-    const [indexAccountSelected, setIndexAccountSelected]     = useState<number>(0)
+    const [indexAccountSelected, setIndexAccountSelected] = useState<number>(0)
     const [refreshTransactions, setRefreshTransactions]   = useState(false)
-    const { sizes }                                           = useTheme()
-    const { accounts }                                        = useAccount()
+    const { sizes }                                       = useTheme()
+    const { accounts }                                    = useAccount()
     const { 
         read: readTransactions,
         reading: loadingTransactions,
@@ -49,13 +49,9 @@ export default function HomeScreen() {
      * Carrega as transações de ganho e despesa para a conta atual selecionada
      */
     const loadTransactions = useCallback(async () => {
-        console.log('contas => ' + accounts)
-        console.log('conta selecionada => ' + accountSelected)
         try {
             if (accountSelected) {
-                console.log('buscando transacoes para a conta ' + accountSelected.name)
                 await readTransactions(accountSelected.id)
-                console.log('transações carregadas')
             }
         }
         catch (error) {
@@ -100,7 +96,12 @@ export default function HomeScreen() {
                 }
             />
             <Box px={SCREEN_HORIZONTAL_SPACING} mt="2" flex={1}>
-                <ScrollView horizontal snapToInterval={SCREEN_CONTAINER_WIDTH} decelerationRate="fast" showsHorizontalScrollIndicator={false}>
+                <ScrollView 
+                    horizontal 
+                    snapToInterval={SCREEN_CONTAINER_WIDTH} 
+                    decelerationRate="fast" 
+                    showsHorizontalScrollIndicator={false}
+                >
                     <TransactionsListView 
                         title="Seus Ganhos" 
                         type="gain"    

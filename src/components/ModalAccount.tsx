@@ -81,7 +81,7 @@ export default memo(
                 })
             }
             catch (error) {
-                console.log(error)
+                throw error
             }
             finally {
                 handleCloseModal()

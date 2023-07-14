@@ -16,7 +16,6 @@ export default function StorageAccount() : IStorageAccountActions {
             return accounts
         }
         catch (error) {
-            console.log(error)
             throw error
         }
     }
@@ -28,7 +27,6 @@ export default function StorageAccount() : IStorageAccountActions {
             return accountsWithNew
         }
         catch (error) {
-            console.log(error)
             throw error
         }
     }
@@ -40,7 +38,6 @@ export default function StorageAccount() : IStorageAccountActions {
             return accountsWithUpdated
         }
         catch (error) {
-            console.log(error)
             throw error
         }
     }
@@ -52,7 +49,6 @@ export default function StorageAccount() : IStorageAccountActions {
         return accountsWithoutDeleted
       }
       catch (error) {
-        console.log(error)
         throw error
       }
     }

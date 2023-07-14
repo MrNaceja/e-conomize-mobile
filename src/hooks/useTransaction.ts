@@ -8,7 +8,7 @@ export default function useTransaction() {
     const [reading, setReading]   = useState(true)
     const { storageTransaction }  = useContext(AppContext)
 
-    const read : (accountId : string) => Promise<TTransaction[]>= useCallback((accountId : string) => new Promise(async (onSucess, onError) => {
+    const read : (accountId : string) => Promise<TTransaction[]> = useCallback((accountId : string) => new Promise(async (onSucess, onError) => {
         setReading(true)
         try {
             const transactions = await storageTransaction.read(accountId)

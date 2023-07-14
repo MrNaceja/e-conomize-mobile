@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { HStack, Heading, Icon, Pressable, Popover, useTheme, Text, useToast, VStack } from "native-base";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -27,9 +27,10 @@ export default function AccountsScreen() {
     const { 
         accounts, 
         removeAccount, 
-        hasAccounts 
+        hasAccounts,
+        loadingAccounts
     } = useAccount()
-
+    
     /**
      * Ao deslizar da esquerda para direita deleta a conta
      */
@@ -91,7 +92,7 @@ export default function AccountsScreen() {
                 useFlatList
                 data={accounts}
                 keyExtractor={account => account.id}
-                renderItem={({ item: account }) => <AccountCard account={ account } />}
+                renderItem={({ item: account }) => <AccountCard account={ !loadingAccounts ? account : null } />}
                 renderHiddenItem={() => (
                     <HStack justifyContent="space-between" h="full">
                         <Pressable p="5" justifyContent="center">
