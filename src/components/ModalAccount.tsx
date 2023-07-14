@@ -33,6 +33,9 @@ export default memo(
         const isEdition = !!accountToEdit
         const modalOpen = opened && (['account'] as TManagerModalType[]).includes(modalType)
 
+        /**
+         * Valores padrão dos campos
+         */
         const defaultValues: TSchemaAccount = {
             name: isEdition ? accountToEdit.name : "",
             instituition: isEdition ? accountToEdit.instituition : "",
@@ -48,6 +51,9 @@ export default memo(
             formState: { isSubmitting }
         } = useForm<TSchemaAccount>({ defaultValues, resolver: zodResolver(schemaAccount) })
 
+        /**
+         * Lida com o fechar modal, tanto pelo botao fechar quando pela sobreposição do mesmo
+         */
         const handleCloseModal = useCallback(() => {
             if (isSubmitting || !hasAccounts) {
                 return
@@ -56,7 +62,10 @@ export default memo(
             closeModal()
         }, [isSubmitting, hasAccounts])
 
-        const handleConfirmAccount = async (accountFormData: TSchemaAccount) => {
+        /**
+         * Lida com a inclusão ou atualização de uma conta
+         */
+        const handleConfirmAccount = useCallback(async (accountFormData: TSchemaAccount) => {
             const accountToSave: TAccount = isEdition
                 ? { ...accountToEdit, ...accountFormData }
                 : { ...accountFormData, id: uuid.v4() as string }
@@ -77,13 +86,23 @@ export default memo(
             finally {
                 handleCloseModal()
             }
-        }
+        }, [ accountToEdit ])
 
+        /**
+         * Estado de monitoração de nome da instituição selecionada
+         */
         const instituitionSelectedName = watch('instituition');
+
+        /**
+         * Instituição selecionada
+         */
         const instituitionSelected = useMemo(() => (
             INSTITUITIONS.find(item => item.name == instituitionSelectedName)
         ), [instituitionSelectedName])
 
+        /**
+         * Cores de destaque 
+         */
         const highlightColors = useMemo(() => (
             ACCOUNT_COLORS_HIGHLIGHT.map(color => ({ color } as { color: TAccountColorHighlight }))
         ), [])

@@ -36,6 +36,9 @@ export default memo(
         const typeTransaction = isEdition ? transactionToEdit.type : modalType
         const modalOpen = opened && ([ETransactionTypes.GAIN, ETransactionTypes.EXPENSE] as TManagerModalType[]).includes(typeTransaction)
 
+        /**
+         * Valores padrão dos campos
+         */
         const defaultValues : TSchemaTransaction = {
             description: isEdition ? transactionToEdit.description : "",
             value      : isEdition ? transactionToEdit.value       : 0,
@@ -49,6 +52,9 @@ export default memo(
             formState: { isSubmitting } 
         } = useForm<TSchemaTransaction>({ defaultValues, resolver: zodResolver(schemaTransaction) })
         
+        /**
+         * Titulo do modal conforme tipo de transação
+         */
         const titleByTypeTransaction = useMemo(() => {
             switch (typeTransaction) {
                 case ETransactionTypes.EXPENSE:
@@ -59,6 +65,9 @@ export default memo(
             }
         }, [transactionToEdit, typeTransaction])
     
+        /**
+         * Lida com o fechar modal, tanto pelo botao fechar quando pela sobreposição do mesmo
+         */
         const handleCloseModal = useCallback(() => {
             if (isSubmitting) {
                 return 
@@ -67,6 +76,9 @@ export default memo(
             closeModal()
         }, [isSubmitting])
     
+        /**
+         * Lida com a inclusão ou atualização de uma transação
+         */
         const handleConfirmTransaction = async (transactionFormData : TSchemaTransaction) => {
             const transactionToSave : TTransaction = isEdition 
                                     ? { ...transactionToEdit, ...transactionFormData}
