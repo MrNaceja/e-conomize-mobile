@@ -11,28 +11,30 @@ export interface IStorageTransactionActions {
 }
 export default function StorageTransaction() : IStorageTransactionActions {
     
+    const getKeyStorageByAccount = (accountId : TAccount['id']) => `${TRANSACTION_STORAGE_KEY}::account:${accountId}`
+
     const read : IStorageTransactionActions['read'] = async (accountId) => {
-        const storedTransactions = await AsyncStorage.getItem(TRANSACTION_STORAGE_KEY)
+        const storedTransactions = await AsyncStorage.getItem(getKeyStorageByAccount(accountId))
         const transactions : TTransaction[] = storedTransactions ? JSON.parse(storedTransactions) : []
-        return transactions.filter(transaction => transaction.account == accountId)
+        return transactions
     }
 
     const create : IStorageTransactionActions['create'] = async (newTransaction) => {
         const existentTransactions = await read(newTransaction.account)
         const transactionsWithNew = [...existentTransactions, newTransaction]
-        return await AsyncStorage.setItem(TRANSACTION_STORAGE_KEY, JSON.stringify(transactionsWithNew))
+        return await AsyncStorage.setItem(getKeyStorageByAccount(newTransaction.account), JSON.stringify(transactionsWithNew))
     }
 
     const update : IStorageTransactionActions['update'] = async (updatedTransaction) =>  {
         const existentTransactions    = await read(updatedTransaction.account)
         const transactionsWithUpdated = existentTransactions.map(transaction => transaction.id == updatedTransaction.id ? updatedTransaction : transaction)
-        return await AsyncStorage.setItem(TRANSACTION_STORAGE_KEY, JSON.stringify(transactionsWithUpdated))
+        return await AsyncStorage.setItem(getKeyStorageByAccount(updatedTransaction.account), JSON.stringify(transactionsWithUpdated))
     }
 
     const remove : IStorageTransactionActions['remove'] = async (accountId, ...removedTransactions) =>  {
         const existentTransactions       = await read(accountId)
         const transactionsWithoutRemoved = existentTransactions.filter(transaction => !removedTransactions.includes(transaction.id))
-        return await AsyncStorage.setItem(TRANSACTION_STORAGE_KEY, JSON.stringify(transactionsWithoutRemoved))
+        return await AsyncStorage.setItem(getKeyStorageByAccount(accountId), JSON.stringify(transactionsWithoutRemoved))
     }
 
     return { read, create, update, remove }

@@ -57,7 +57,7 @@ export default function HomeScreen() {
         catch (error) {
             throw error
         }
-    }, [ accounts, indexAccountSelected ])
+    }, [ indexAccountSelected ])
 
     /**
      * Ao mudar o estado das transações atualiza a listagem e o resumo no card de conta
@@ -65,7 +65,7 @@ export default function HomeScreen() {
     const onMutationTransactions = useCallback(() => {
         loadTransactions()
         setRefreshTransactions(state => !state)
-    }, [])
+    }, [loadTransactions])
 
     useEffect(() => {
         loadTransactions()

@@ -13,12 +13,12 @@ export default function useTransaction() {
         try {
             const transactions = await storageTransaction.read(accountId)
             const [gainTransactions, expenseTransactions] = transactions.reduce((state, transaction) => {
-                const [gains, expenses] = state
+                const [_gains, _expenses] = state
                 switch (transaction.type) {
                     case ETransactionTypes.GAIN:
-                        return [[...gains, transaction], expenses]
+                        return [[..._gains, transaction], _expenses]
                     case ETransactionTypes.EXPENSE:
-                        return [gains, [...expenses, transaction]]
+                        return [_gains, [..._expenses, transaction]]
                     default: 
                         return state
                 }
@@ -31,7 +31,7 @@ export default function useTransaction() {
         catch(error) {
             onError(error)
         }
-    }), [])
+    }), [storageTransaction])
 
     return { ...storageTransaction, read, reading, gains, expenses}
 }
