@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { HStack, Heading, Icon, Pressable, Popover, useTheme, Text, useToast, VStack } from "native-base";
+import { HStack, Heading, Icon, Pressable, useTheme, useToast, VStack } from "native-base";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 import Screen, { SCREEN_CONTAINER_WIDTH, SCREEN_HORIZONTAL_SPACING } from "components/Screen";
@@ -11,11 +11,11 @@ import { TAccount } from "utils/interfaces/AccountDTO";
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import { ButtonCircular } from "components/ButtonCircular";
 import ModalAccount       from "components/ModalAccount";
 
 import useAccount      from "hooks/useAccount";
 import useManagerModal from "hooks/useManagerModal";
+import Hint from "components/Hint";
 
 /**
  * Tela de gerenciamento de contas.
@@ -72,23 +72,13 @@ export default function AccountsScreen() {
         <Screen space="2">
             <HStack px={SCREEN_HORIZONTAL_SPACING} alignItems="center" space="2">
                 <Heading color="gray.800">Suas contas</Heading>
-                <Popover 
-                    trigger={triggerProps => (
-                        <ButtonCircular {...triggerProps} iconName="info" iconSize="xs" size={sizes["1"]}/>
-                    )}
-                    placement="bottom"
-                >
-                    <Popover.Content>
-                        <Popover.Arrow />
-                        <Popover.Header>
-                            <Heading fontSize="md">Ações nas contas utilizando gestos</Heading>
-                        </Popover.Header>
-                        <Popover.Body>
-                            <Text>Deslize para direita para deletar uma conta</Text>
-                            <Text>Deslize para esquerda para editar uma conta</Text>
-                        </Popover.Body>
-                    </Popover.Content>
-                </Popover>
+                <Hint
+                    title="Ações nas contas utilizando gestos"
+                    lineMessage={[
+                        'Deslize para 👆👉 para deletar 🗑 uma conta',
+                        'Deslize para 👈👆 para editar 📝 uma conta'
+                    ]}
+                />
             </HStack>
             <SwipeListView 
                 useFlatList

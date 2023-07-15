@@ -3,7 +3,7 @@ import { Entypo } from '@expo/vector-icons'
 import { forwardRef } from 'react';
 import { ThemeComponentSizeType } from "native-base/lib/typescript/components/types";
 
-interface IButtonCircularProps extends IIconButtonProps{
+export interface IButtonCircularProps extends IIconButtonProps{
     iconName: keyof typeof Entypo.glyphMap,
     iconSize?: ThemeComponentSizeType<"Icon">
 }

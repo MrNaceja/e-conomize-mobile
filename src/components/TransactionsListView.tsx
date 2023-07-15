@@ -14,6 +14,7 @@ import { TAccount } from "utils/interfaces/AccountDTO";
 
 import moment from 'moment';
 import 'moment/locale/pt-br';
+import Hint from "./Hint";
 moment.locale('pt-br');
 
 
@@ -83,7 +84,22 @@ export default memo(
         return (
             <VStack space="1" w={SCREEN_CONTAINER_WIDTH} >
                 <HStack justifyContent="space-between" alignItems="center" h="10">
-                    <Heading color="white" fontSize="lg" bg={(type == "gain") ? "green.500" : "red.500"} p="1.5" rounded="md">{title}</Heading>
+                    <HStack alignItems="center" space="2">
+                        <Heading color="white" fontSize="md" bg={(type == "gain") ? "green.500" : "red.500"} p="1.5" rounded="md">{title}</Heading>
+                        <Hint
+                            title="Visualizar tipos de transação utilizando gestos"
+                            lineMessage={[
+                                'Deslize para 👆👉 para ver as despesas 💔 na conta',
+                                'Deslize para 👈👆 para ver os ganhos 💚 na conta'
+                            ]}
+                            _triggerProps={{
+                                bg: "gray.400",
+                                _pressed: {
+                                    bg: "gray.300"
+                                }
+                            }}
+                        />
+                    </HStack>
                     <HStack space="3" alignItems="center" display={isSelection ? "flex" : "none"}>
                         <Pressable bg="red.100" p="2" rounded="md" flexDir="row" alignItems="center" style={{ gap: sizes["1"] }} onPress={handleRemoveSelectioned}>
                             <Icon

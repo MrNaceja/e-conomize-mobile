@@ -12,6 +12,7 @@ import { TAccount } from "utils/interfaces/AccountDTO";
 
 import useAccount     from "hooks/useAccount";
 import useTransaction from "hooks/useTransaction";
+import Hint from "components/Hint";
 
 /**
  * Tela de Inicio do App.
@@ -72,7 +73,15 @@ export default function HomeScreen() {
     },[ indexAccountSelected, accounts ])
     return (
         <Screen>
-            <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
+            <HStack space="2">
+                <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
+                <Hint 
+                    title="Navegar entre contas utilizando gestos"
+                    lineMessage={[
+                        'Deslize 👈👆👉 para navegar entre as contas'
+                    ]}
+                />
+            </HStack>
             <FlatList
                 _contentContainerStyle={{gap: sizes["0.5"], px: SCREEN_HORIZONTAL_SPACING } as Partial<IFlatListProps<TAccount>>}
                 showsHorizontalScrollIndicator={false} 
