@@ -93,9 +93,11 @@ export default memo(
                                 'Deslize para 👈👆 para ver os ganhos 💚 na conta'
                             ]}
                             _triggerProps={{
-                                bg: "gray.400",
+                                _light: { bg: "gray.400" },
+                                _dark: { bg: "gray.600" },
                                 _pressed: {
-                                    bg: "gray.300"
+                                    _light: { bg: "gray.400" },
+                                    _dark: { bg: "gray.600" },
                                 }
                             }}
                         />
@@ -110,14 +112,31 @@ export default memo(
                             />
                             <Text color="red.500" fontWeight="bold" fontSize="sm">Deletar</Text>
                         </Pressable>
-                        <Pressable bg="gray.200" p="2" rounded="md" flexDir="row" alignItems="center" style={{ gap: sizes["1"] }} onPress={clearSelectionedTransactions}>
+                        <Pressable
+                            _light={{ bg: "gray.200" }}
+                            _dark={{ bg: "gray.600" }} 
+                            p="2" 
+                            rounded="md" 
+                            flexDir="row" 
+                            alignItems="center" 
+                            style={{ gap: sizes["1"] }} 
+                            onPress={clearSelectionedTransactions}
+                        >
                             <Icon
                                 as={MaterialCommunityIcons}
                                 name="block-helper"
-                                color="gray.500"
+                                _light={{ color: "gray.200" }}
+                                _dark={{ color: "gray.400" }} 
                                 size="sm"
                             />
-                            <Text color="gray.500" fontWeight="bold" fontSize="sm">Cancelar</Text>
+                            <Text 
+                                _light={{ bg: "gray.200" }}
+                                _dark={{ bg: "gray.600" }} 
+                                fontWeight="bold" 
+                                fontSize="sm"
+                            >
+                                Cancelar
+                            </Text>
                         </Pressable>
                     </HStack>
                 </HStack>
@@ -148,7 +167,7 @@ export default memo(
                                 renderItem={({ item: transaction, section }) => {
                                     const selected = selectionedTransactions.find(selectioned => selectioned.id == transaction.id)
                                     return (
-                                        <HStack alignItems="center" space="1">
+                                        <HStack alignItems="center" space="1" >
                                             <Icon
                                                 as={MaterialCommunityIcons}
                                                 name={selected ? "check-circle" : "circle-outline"}
@@ -161,7 +180,8 @@ export default memo(
                                                 onLongPress={() => handlePressTransaction(transaction, section.data)} 
                                                 onPress={() => isSelection && handlePressTransaction(transaction, section.data)}>
                                                 <HStack
-                                                    bg="white"
+                                                    _light={{ bg: "white" }}
+                                                    _dark={{ bg: "dark.200" }}
                                                     h="16"
                                                     p="3"
                                                     rounded="lg"
@@ -175,8 +195,20 @@ export default memo(
                                                         size="2xl"
                                                     />
                                                     <VStack flex={1}>
-                                                        <Heading color="gray.800" fontSize="lg">R$ {transaction.value.toFixed(2)}</Heading>
-                                                        <Text color="gray.500" fontSize="md">{transaction.description}</Text>
+                                                        <Heading 
+                                                            _light={{ color: "gray.800" }} 
+                                                            _dark={{ color: "gray.100" }} 
+                                                            fontSize="lg"
+                                                        >
+                                                            R$ {transaction.value.toFixed(2)}
+                                                        </Heading>
+                                                        <Text 
+                                                            _light={{ color: "gray.800" }} 
+                                                            _dark={{ color: "gray.400" }} 
+                                                            fontSize="md"
+                                                        >
+                                                            {transaction.description}
+                                                        </Text>
                                                     </VStack>
                                                     <Pressable onPress={() => !isSelection && handlePressToEdit(transaction)}>
                                                         <Icon
@@ -197,7 +229,8 @@ export default memo(
                                             as={MaterialCommunityIcons}
                                             name='block-helper'
                                             size='6xl'
-                                            color="gray.300"
+                                            _light={{ color: "gray.300" }}
+                                            _dark={{ color: "gray.500" }}
                                             mb="5"
                                             key={type + "_empty_icon"}
                                         />

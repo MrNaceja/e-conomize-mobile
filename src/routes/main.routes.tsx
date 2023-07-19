@@ -1,6 +1,6 @@
 import { createBottomTabNavigator, BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import Header from 'components/Header';
-import { useTheme } from 'native-base';
+import { useColorModeValue, useTheme } from 'native-base';
 
 import AccountsScreen from 'screens/AccountsScreen';
 import HomeScreen from 'screens/HomeScreen';
@@ -23,18 +23,20 @@ export default function MainRoutes() {
     const TabNavigation     = createBottomTabNavigator<TMainRoutesScreens>()
     const { colors, sizes } = useTheme()
     const { hasAccounts }   = useAccount()
+    const tabBarBgTheme = useColorModeValue(colors.white, colors.gray[900])
+    const tabBarIconInactiveBgTheme = useColorModeValue(colors.gray["300"], colors.gray["500"])
     return (
         <TabNavigation.Navigator 
             initialRouteName={hasAccounts ? "home" : "accounts"}
             screenOptions={{
                 header: () => <Header />,
                 tabBarActiveTintColor: colors.green["500"],
-                tabBarInactiveTintColor: colors.gray["300"],
+                tabBarInactiveTintColor: tabBarIconInactiveBgTheme,
                 tabBarShowLabel: false,
                 tabBarStyle: {
                     elevation: 0,
                     borderTopColor: "transparent",
-                    backgroundColor: colors.white,
+                    backgroundColor: tabBarBgTheme,
                     height: sizes["16"]
                 },
             }}

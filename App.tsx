@@ -11,7 +11,6 @@ import AppContextProvider from 'contexts/AppContextProvider';
 export default function App() {
   return (
     <NativeBaseProvider theme={THEME}>
-      <StatusBar style="dark" />
       <AppContextProvider>
         <RoutesNavigator />
       </AppContextProvider>

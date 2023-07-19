@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo } from "react";
-import { Image, Box, HStack, Heading, Icon, Skeleton, Text, VStack, useTheme, ISkeletonProps } from "native-base";
+import { Image, Box, HStack, Heading, Icon, Skeleton, Text, VStack, useTheme, ISkeletonProps, useColorMode } from "native-base";
 import { Ionicons } from "@expo/vector-icons"
 import { ISkeletonTextProps } from "native-base/lib/typescript/components/composites";
 
@@ -23,8 +23,8 @@ export default memo(
             reading: readingTransactions,
             gains: accountGains,
             expenses: accountExpenses
-         } = useTransaction()
-
+        } = useTransaction()
+        const { colorMode } = useColorMode()
         let total        = account ? account.total : 0
         let totalGain    = 0;
         let totalExpense = 0;
@@ -35,8 +35,8 @@ export default memo(
             total       += totalGain - totalExpense
         }
     
-        const hardlightColor        = (account ? account.color + ".500" : "gray.300") 
-        const hardlightColorOpacity = (account ? account.color + ".600" : "gray.200") 
+        const hardlightColor        = (account ? account.color + ".500" : colorMode == "light" ? "gray.300" : "gray.600") 
+        const hardlightColorOpacity = (account ? account.color + ".600" : colorMode == "light" ? "gray.200" : "gray.500") 
     
         const skeletonDefinition : Partial<ISkeletonProps & ISkeletonTextProps> = {
             startColor: hardlightColor,

@@ -1,4 +1,4 @@
-import { Icon, Menu, Text } from "native-base";
+import { Icon, Menu, Text, useTheme } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 import { ButtonCircular } from "./ButtonCircular";
@@ -12,16 +12,25 @@ import useMainScreens from "hooks/useMainScreens";
 export default function MenuNew() {
     const { openModal }       = useManagerModal()
     const { displayedScreen } = useMainScreens()
+    const { shadows, colors } = useTheme()
     return (
         <Menu 
             trigger={triggerProps => (
                 <ButtonCircular iconName="plus" size="20" mb="10" shadow="10" ref={triggerProps.ref} {...triggerProps}/>
             )}
             placement="top"
-            shadow="10"
+            _light={{
+                style: {...shadows[10], shadowColor: colors.gray[400]}
+            }}
+            _dark={{
+                style: {...shadows[10], shadowColor: colors.gray[900]}
+            }}
             rounded="2xl"
             overflow="hidden"
-            _backdrop={{bg:"gray.800"}}
+            _backdrop={{
+                _light: { bg:"gray.800" },
+                _dark: { bg:"dark.400" }
+            }}
         >
             <Menu.Group title={displayedScreen == "home" ? "Transações" : "Contas"}>
                 {

@@ -74,7 +74,15 @@ export default function HomeScreen() {
     return (
         <Screen>
             <HStack space="2">
-                <Heading pl="5" color="gray.800" fontSize="lg" mb="2">Suas contas</Heading>
+                <Heading 
+                    pl="5" 
+                    fontSize="lg" 
+                    mb="2"
+                    _light={{ color:"gray.800" }}
+                    _dark={{ color:"gray.200" }}
+                >
+                    Suas contas
+                </Heading>
                 <Hint 
                     title="Navegar entre contas utilizando gestos"
                     lineMessage={[
