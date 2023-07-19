@@ -109,8 +109,7 @@ export default function AccountsScreen() {
                 contentContainerStyle={{
                     gap: sizes["3"],
                     paddingBottom: sizes["10"],
-                    paddingHorizontal: sizes[SCREEN_HORIZONTAL_SPACING],
-                    justifyContent: accounts.length == 0 ? "center" : "flex-start"
+                    paddingHorizontal: sizes[SCREEN_HORIZONTAL_SPACING]
                 }}
                 showsVerticalScrollIndicator={false}
                 leftActivationValue={SCREEN_CONTAINER_WIDTH / 2}

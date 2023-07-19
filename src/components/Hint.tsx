@@ -35,7 +35,7 @@ export default function Hint({title, lineMessage, placementInfo = "bottom", _tri
                 </Popover.Header>
                 <Popover.Body>
                     {
-                        lineMessage.map(lineMsg => <Text fontSize="xs">{lineMsg}</Text>)
+                        lineMessage.map((lineMsg, line) => <Text fontSize="xs" key={line}>{lineMsg}</Text>)
                     }
                 </Popover.Body>
             </Popover.Content>

@@ -52,11 +52,11 @@ export default memo(
             }
         }, [ account, refresh ])
         return (
-            <VStack bg={hardlightColor} maxH={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]} rounded="2xl" w={SCREEN_CONTAINER_WIDTH} p="3" space="2">
+            <VStack bg={hardlightColor} h={SCREEN_CONTAINER_WIDTH / 2 + sizes["5"]} rounded="2xl" w={SCREEN_CONTAINER_WIDTH} p="3" space="2">
                 <Skeleton.Text lines={2} w="1/3" {...skeletonDefinition}>
                     <HStack justifyContent="space-between">
                         <VStack>
-                            <Text textTransform="uppercase" color="white" fontSize="2xs">{account?.instituition}</Text>
+                            <Text textTransform="uppercase" color="white" fontSize="xs">{account?.instituition}</Text>
                             <Heading color="white" fontSize="md">{account?.name}</Heading>
                         </VStack>
                         {
@@ -71,9 +71,9 @@ export default memo(
                         }
                     </HStack>
                 </Skeleton.Text>
-                <Skeleton h="16" rounded="md"  {...skeletonDefinition}>
-                    <Box>
-                        <Text color="gray.100" fontWeight="light" fontSize="md">total acumulado</Text>
+                <Skeleton h="16" flex={1} rounded="md"  {...skeletonDefinition}>
+                    <Box flex={1} justifyContent="center">
+                        <Text color="gray.100" fontWeight="light" fontSize="lg">total acumulado</Text>
                         <Heading fontSize="5xl" color="white">{ formatMonetary(total) }</Heading>
                     </Box>
                 </Skeleton>
@@ -84,7 +84,7 @@ export default memo(
                                 as={Ionicons}
                                 name="trending-up"
                                 color="white"
-                                size="md"
+                                size="lg"
                             />
                             <VStack>
                                 <Text color="gray.100" textTransform="uppercase" fontSize="2xs">ganhos</Text>
@@ -96,7 +96,7 @@ export default memo(
                                 as={Ionicons}
                                 name="trending-down"
                                 color="white"
-                                size="md"
+                                size="lg"
                             />
                             <VStack>
                                 <Text color="gray.100" textTransform="uppercase" fontSize="2xs">despesas</Text>
