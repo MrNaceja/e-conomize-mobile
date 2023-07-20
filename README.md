@@ -2,7 +2,8 @@
 Aplicação para gestão financeira e controle dos saldos em contas desenvolvida em React Native e Typescript e Native Base UI
 
 ## Tela de boas vindas
-<img src="./src/assets/Demo/Boas vindas.jpg" width="45%">
+
+<img src="https://github.com/MrNaceja/e-conomize-mobile/assets/71296941/bec99983-bc3f-4782-9cd5-f628e6d73e47" width="45%">
 
 ## Tela inicial
 <div>
