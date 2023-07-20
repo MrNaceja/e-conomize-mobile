@@ -22,7 +22,7 @@ export default function Screen(props : IScreenProps) {
     return (
         <VStack
             _light={{ bg: "gray.100" }} 
-            _dark={{ bg: "gray.800" }} 
+            _dark={{ bg: "gray.900" }} 
             flex={1} 
             space="2" 
             pt="5"

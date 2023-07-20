@@ -35,7 +35,7 @@ export default function Header() {
             px="5" 
             style={{marginTop: StatusBar.currentHeight}}
             _light={{ bg: "gray.100" }}
-            _dark={{ bg: "gray.800" }}
+            _dark={{ bg: "gray.900" }}
         >
            <VStack>
                 <Text
@@ -58,7 +58,7 @@ export default function Header() {
                     justifyContent="center"
                     bg="red.500"
                     _light={{ bg: "gray.800" }}
-                    _dark={{ bg: "gray.600" }}
+                    _dark={{ bg: "gray.700" }}
                 >
                     <Icon 
                         as={MaterialCommunityIcons}

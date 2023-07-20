@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Heading, Icon, Modal, Pressable, Spinner, Text, VStack, useTheme, useToast} from "native-base";
+import { Box, Button, Center, HStack, Heading, Icon, Modal, Pressable, Spinner, Text, VStack, useColorModeValue, useTheme, useToast} from "native-base";
 import { useForm, Controller } from "react-hook-form";
 import { memo, useCallback, useEffect, useMemo } from "react";
 
@@ -31,6 +31,8 @@ export default memo(
         const { create, update }                                            = useTransaction()
         const { colors }                                                    = useTheme()
         const Message                                                       = useToast()
+        const loadSpinnerColorTheme                                         = useColorModeValue(colors.gray[600], colors.gray[300])
+        const modalBgTheme                                                  = useColorModeValue(colors.white, colors.gray[800])
 
         const isEdition = !!transactionToEdit
         const typeTransaction = isEdition ? transactionToEdit.type : modalType
@@ -113,7 +115,7 @@ export default memo(
             reset(defaultValues)
         }, [ transactionToEdit, typeTransaction ])
         return (
-            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.800"}}>
+            <Modal isOpen={modalOpen} onClose={handleCloseModal} size="xl" _backdrop={{bg:"gray.400"}}>
                 <Modal.Content>
                     <Modal.CloseButton _icon={{ color: "gray.400" }} _pressed={{bg: "transparent"}}/>
                     <Modal.Header>
@@ -129,8 +131,8 @@ export default memo(
                             </Heading>
                         </HStack>
                     </Modal.Header>
-                    <KeyboardAwareScrollView style={{ width: '100%', backgroundColor: colors.gray[100]}} enableOnAndroid>
-                        <Modal.Body bg="white">
+                    <KeyboardAwareScrollView style={{ width: '100%', backgroundColor: modalBgTheme}} enableOnAndroid>
+                        <Modal.Body bg={modalBgTheme}>
                             <VStack space="4">
                                 <Controller 
                                     control={control}
@@ -172,7 +174,7 @@ export default memo(
                                     onPress={handleSubmit(handleConfirmTransaction)} 
                                     isLoading={isSubmitting} 
                                     _pressed={{ bg: "green.600" }}
-                                    _loading={{ bg:"gray.400:alpha.100", _spinner: { color: 'gray.600', size:"lg" } }}
+                                    _loading={{ bg:"gray.400:alpha.100", _spinner: { color: loadSpinnerColorTheme, size:"lg" } }}
                                 >
                                     <Text color="white" fontSize="2xl">Confirmar</Text>
                                 </Button>

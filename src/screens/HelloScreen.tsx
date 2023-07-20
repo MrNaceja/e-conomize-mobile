@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Center, Heading, Input, Text, VStack } from "native-base";
 
-import LogoSvg from 'assets/logo-economize.svg'
+import LogoEconomizeLightSvg from 'assets/LogoEconomizeLight.svg'
 
 import {ButtonCircular} from "components/ButtonCircular";
 import Screen from "components/Screen";
@@ -26,10 +26,16 @@ export default function HelloScreen({ navigation } : NativeStackScreenProps<TSta
         <Screen justifyContent="center">
             <VStack space="5" px="5">
                 <Center> 
-                    <LogoSvg /> 
+                    <LogoEconomizeLightSvg width="80%" /> 
                 </Center>
                 <Box>
-                    <Heading color="gray.900" fontSize="4xl">Bora economizar?</Heading>
+                    <Heading 
+                        _light={{ color: "gray.900" }}
+                        _dark={{ color: "gray.100" }}
+                        fontSize="4xl"
+                    >
+                        Bora economizar?
+                    </Heading>
                     <Text color="gray.500" textAlign="left">
                         Por aqui você pode gerenciar melhor suas finanças, se programar e conseguir alcançar suas metas
                     </Text>

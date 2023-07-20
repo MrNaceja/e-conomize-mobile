@@ -23,7 +23,7 @@ export default function MainRoutes() {
     const TabNavigation     = createBottomTabNavigator<TMainRoutesScreens>()
     const { colors, sizes } = useTheme()
     const { hasAccounts }   = useAccount()
-    const tabBarBgTheme = useColorModeValue(colors.white, colors.gray[900])
+    const tabBarBgTheme = useColorModeValue(colors.white, colors.gray[800])
     const tabBarIconInactiveBgTheme = useColorModeValue(colors.gray["300"], colors.gray["500"])
     return (
         <TabNavigation.Navigator 

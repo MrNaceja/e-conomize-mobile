@@ -27,15 +27,21 @@ export default function CampoForm({ label, errorMsg, type, onChangeText = value 
                 ? _renderComponent()
                 : (
                     <Input 
-                        bg="gray.100"
+                        _light={{ bg:"gray.100", placeholderTextColor: "gray.400", color: "gray.400" }}
+                        _dark={{ bg:"gray.700", placeholderTextColor: "gray.400", color: "gray.300" }}
                         borderColor="transparent"
-                        color="gray.400"
                         p="3"
                         borderRadius="lg"
                         fontSize={type == "monetary" ? "5xl" : "xl"}
                         _focus={{
-                            bg:"gray.100",
-                            borderColor:"gray.200"
+                            _light: {
+                                bg:"gray.100",
+                                borderColor:"gray.200"
+                            },
+                            _dark: {
+                                bg:"gray.700",
+                                borderColor:"gray.400"
+                            },
                         }}
                         keyboardType={type == "monetary" ? "number-pad" : keyboardType}
                         onChangeText={text => {

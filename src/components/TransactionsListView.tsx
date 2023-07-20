@@ -94,7 +94,7 @@ export default memo(
                             ]}
                             _triggerProps={{
                                 _light: { bg: "gray.400" },
-                                _dark: { bg: "gray.600" },
+                                _dark: { bg: "gray.700" },
                                 _pressed: {
                                     _light: { bg: "gray.400" },
                                     _dark: { bg: "gray.600" },
@@ -103,18 +103,35 @@ export default memo(
                         />
                     </HStack>
                     <HStack space="3" alignItems="center" display={isSelection ? "flex" : "none"}>
-                        <Pressable bg="red.100" p="2" rounded="md" flexDir="row" alignItems="center" style={{ gap: sizes["1"] }} onPress={handleRemoveSelectioned}>
+                        <Pressable 
+                            _light={{ bg: "red.100" }}
+                            _dark={{ bg: "red.900" }}  
+                            p="2" 
+                            rounded="md" 
+                            flexDir="row" 
+                            alignItems="center" 
+                            style={{ gap: sizes["1"] }} 
+                            onPress={handleRemoveSelectioned}
+                        >
                             <Icon
                                 as={MaterialCommunityIcons}
                                 name="delete"
-                                color="red.500"
+                                _light={{ color: "red.500" }}
+                                _dark={{ color: "red.400" }} 
                                 size="sm"
                             />
-                            <Text color="red.500" fontWeight="bold" fontSize="sm">Deletar</Text>
+                            <Text 
+                                _light={{ color: "red.500" }}
+                                _dark={{ color: "red.400" }}  
+                                fontWeight="bold" 
+                                fontSize="sm"
+                            >
+                                Deletar
+                            </Text>
                         </Pressable>
                         <Pressable
                             _light={{ bg: "gray.200" }}
-                            _dark={{ bg: "gray.600" }} 
+                            _dark={{ bg: "gray.700" }} 
                             p="2" 
                             rounded="md" 
                             flexDir="row" 
@@ -125,13 +142,13 @@ export default memo(
                             <Icon
                                 as={MaterialCommunityIcons}
                                 name="block-helper"
-                                _light={{ color: "gray.200" }}
+                                _light={{ color: "gray.500" }}
                                 _dark={{ color: "gray.400" }} 
                                 size="sm"
                             />
                             <Text 
-                                _light={{ bg: "gray.200" }}
-                                _dark={{ bg: "gray.600" }} 
+                                _light={{ color: "gray.500" }}
+                                _dark={{ color: "gray.400" }} 
                                 fontWeight="bold" 
                                 fontSize="sm"
                             >
@@ -163,7 +180,11 @@ export default memo(
                                 contentContainerStyle={{ gap: sizes["3"], paddingBottom: sizes["20"], paddingTop: sizes["2"] }}
                                 keyExtractor={item => item.id}
                                 sections={transactionsByDate}
-                                renderSectionHeader={({ section: { title } }) => <Heading fontSize="sm" color="gray.400">{moment(title, "DD/MM/AAAA").format('dddd, D [de] MMMM [de] YYYY')}</Heading>}
+                                renderSectionHeader={({ section: { title } }) => (
+                                    <Heading fontSize="sm" color="gray.400">
+                                        {moment(title, "DD/MM/AAAA").format('dddd, D [de] MMMM [de] YYYY')}
+                                    </Heading>
+                                )}
                                 renderItem={({ item: transaction, section }) => {
                                     const selected = selectionedTransactions.find(selectioned => selectioned.id == transaction.id)
                                     return (
@@ -181,7 +202,7 @@ export default memo(
                                                 onPress={() => isSelection && handlePressTransaction(transaction, section.data)}>
                                                 <HStack
                                                     _light={{ bg: "white" }}
-                                                    _dark={{ bg: "dark.200" }}
+                                                    _dark={{ bg: "dark.100" }}
                                                     h="16"
                                                     p="3"
                                                     rounded="lg"

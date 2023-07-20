@@ -71,7 +71,10 @@ export default function AccountsScreen() {
     return (
         <Screen space="2">
             <HStack px={SCREEN_HORIZONTAL_SPACING} alignItems="center" space="2">
-                <Heading color="gray.800">Suas contas</Heading>
+                <Heading 
+                    _light={{ color:"gray.800" }}
+                    _dark={{ color:"gray.200" }}
+                >Suas contas</Heading>
                 <Hint
                     title="Ações nas contas utilizando gestos"
                     lineMessage={[
