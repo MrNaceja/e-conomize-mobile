@@ -1,5 +1,10 @@
-# Economize v1.0
-Aplicação para gestão financeira e controle dos saldos em contas desenvolvida em React Native e Typescript e Native Base UI
+<div align="center">
+  <img src="https://github.com/MrNaceja/e-conomize-mobile/assets/71296941/c414b5fb-3320-46ab-a278-b2794c41fac1" width="25%">
+  <img src="https://github.com/MrNaceja/e-conomize-mobile/assets/71296941/a0aea924-1110-40b9-8089-c4d613b33052" width="25%">
+</div>
+
+
+# Aplicação para gestão financeira e controle dos saldos em contas desenvolvida em React Native e Typescript e Native Base UI
 
 ### Funcionalidades
 > * Criar, editar e remover contas
